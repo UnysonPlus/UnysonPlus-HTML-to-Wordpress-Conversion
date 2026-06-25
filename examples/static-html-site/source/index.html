@@ -1,0 +1,2165 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PayForItUK | Find UK Casinos by Payment Method</title>
+<meta name="description" content="The independent UK casino guide that ranks operators by how their cashier actually performs. Match yourself to a casino by your preferred payment method.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23185FA5'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='18' font-weight='600' fill='white' font-family='sans-serif'%3E%C2%A3%3C/text%3E%3C/svg%3E">
+
+<style>
+:root {
+  --blue: #185FA5;
+  --blue-light: #4A8BCC;
+  --blue-bg: #F0F6FC;
+  --amber: #EF9F27;
+  --green: #1FBA8E;
+  --green-dark: #15A179;
+  --green-bg: #E1F5EE;
+  --green-text: #0F6E56;
+  --red-text: #A32D2D;
+
+  --black: #0A0A0F;
+  --text: #14141A;
+  --text-muted: #5A5A65;
+  --text-light: #8E8E97;
+  --text-faint: #B8B8BE;
+  --bg: #FFFFFF;
+  --bg-alt: #FAFAF7;
+  --border: rgba(10, 10, 15, 0.07);
+  --border-strong: rgba(10, 10, 15, 0.12);
+
+  --dark: #0F0F1A;
+
+  --font: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.55;
+  font-size: 17px;
+  font-feature-settings: 'ss01', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; height: auto; display: block; }
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -300px; right: -300px;
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(24, 95, 165, 0.08) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -400px; left: -200px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(239, 159, 39, 0.05) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+
+main, header, footer, section { position: relative; z-index: 1; }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+/* ============ TOP BAR ============ */
+.topbar {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  position: sticky; top: 0; z-index: 100;
+}
+.topbar-inner { display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-mark {
+  width: 28px; height: 36px;
+  background: var(--blue);
+  border-radius: 6px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: white; font-weight: 600;
+  position: relative;
+}
+.brand-mark::after {
+  content: ''; position: absolute; bottom: 5px;
+  width: 11px; height: 1.6px; background: white; border-radius: 1px;
+}
+.brand-mark span { font-size: 17px; line-height: 1; padding-bottom: 5px; }
+.wordmark { font-size: 20px; font-weight: 600; letter-spacing: -0.4px; }
+.wordmark .blue-part { color: var(--blue); }
+.nav { display: flex; gap: 28px; }
+.nav a {
+  font-size: 14px; color: var(--text-muted); font-weight: 500;
+  transition: color 0.15s; letter-spacing: -0.1px;
+}
+.nav a:hover { color: var(--text); }
+
+/* ============ HERO ============ */
+.hero {
+  padding: 40px 0 48px;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 60px;
+  align-items: center;
+}
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 500;
+  color: var(--blue); letter-spacing: -0.1px;
+  margin-bottom: 28px;
+  padding: 6px 14px;
+  background: var(--blue-bg);
+  border-radius: 999px;
+}
+.eyebrow-dot { width: 5px; height: 5px; background: var(--blue); border-radius: 50%; }
+.h1 {
+  font-size: clamp(38px, 5vw, 60px);
+  line-height: 1.0; font-weight: 600;
+  letter-spacing: -2px;
+  color: var(--black);
+  margin-bottom: 16px;
+}
+.h1 em { font-style: italic; color: var(--blue); font-weight: 500; }
+.hero-sub {
+  font-size: 18px; color: var(--text-muted);
+  line-height: 1.5; margin-bottom: 22px;
+  max-width: 520px; letter-spacing: -0.2px;
+}
+.tested-by {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 8px 16px 8px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px; color: var(--text-muted);
+}
+.tested-avatars { display: flex; align-items: center; }
+.tested-avatar {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  margin-left: -8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 10px;
+  color: white;
+  letter-spacing: -0.2px;
+}
+.tested-avatar:first-child { margin-left: 0; }
+.tested-avatar.a1 { background: linear-gradient(135deg, var(--blue), var(--blue-light)); }
+.tested-avatar.a2 { background: linear-gradient(135deg, #1FBA8E, #16A074); }
+.tested-avatar.a3 { background: linear-gradient(135deg, #EF9F27, #D67F0A); }
+.tested-by strong { color: var(--text); font-weight: 600; }
+
+/* ============ HERO PHONE VISUAL ============ */
+.hero-visual {
+  display: flex; justify-content: center; align-items: center;
+  position: relative;
+}
+.phone {
+  width: 260px;
+  height: 520px;
+  background: linear-gradient(145deg, #1F1F2A 0%, #0A0A12 100%);
+  border-radius: 36px;
+  padding: 10px;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.1),
+    0 24px 60px -16px rgba(24, 95, 165, 0.3),
+    0 50px 100px -24px rgba(0,0,0,0.18);
+  position: relative;
+  transform: rotate(-3deg);
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.phone:hover { transform: rotate(0deg) translateY(-4px); }
+.phone-screen {
+  width: 100%; height: 100%;
+  background: linear-gradient(180deg, #FAFAF7 0%, #F0F4F8 100%);
+  border-radius: 26px;
+  overflow: hidden;
+  position: relative;
+  display: flex; flex-direction: column;
+}
+.phone-notch {
+  position: absolute; top: 8px; left: 50%;
+  transform: translateX(-50%);
+  width: 84px; height: 24px;
+  background: #0A0A12;
+  border-radius: 999px;
+  z-index: 2;
+}
+.phone-statusbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 24px 8px;
+  font-size: 12px; font-weight: 600;
+  color: var(--black);
+  font-feature-settings: 'tnum';
+}
+.phone-statusbar-icons { display: flex; gap: 5px; align-items: center; }
+.phone-statusbar-icons svg { width: 12px; height: 9px; opacity: 0.85; }
+.phone-content {
+  padding: 32px 20px 20px;
+  flex: 1;
+  display: flex; flex-direction: column;
+}
+.phone-app-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 22px;
+}
+.phone-app-name {
+  font-size: 12px; font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: -0.1px;
+}
+.phone-close { font-size: 16px; color: var(--text-light); font-weight: 400; }
+.phone-success {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+}
+.phone-check {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, #1FBA8E, #16A074);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 20px rgba(31, 186, 142, 0.35);
+}
+.phone-check svg { width: 28px; height: 28px; color: white; }
+.phone-confirm-text {
+  font-size: 15px; font-weight: 600;
+  color: var(--black); margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+.phone-confirm-sub {
+  font-size: 12px; color: var(--text-muted);
+  margin-bottom: 22px; line-height: 1.4;
+}
+.phone-receipt {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  width: 100%;
+  text-align: left;
+  font-feature-settings: 'tnum';
+}
+.phone-receipt-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 4px 0;
+  font-size: 11px;
+}
+.phone-receipt-label { color: var(--text-light); }
+.phone-receipt-value { color: var(--black); font-weight: 500; }
+.phone-receipt-amount { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: var(--black); }
+.phone-receipt-divider {
+  height: 1px; background: var(--border);
+  margin: 6px 0;
+}
+
+.float-shape {
+  position: absolute;
+  border-radius: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  display: flex; align-items: center; gap: 8px;
+  z-index: 2;
+}
+.float-shape-1 {
+  top: 18%; left: -4%;
+  color: var(--blue);
+  animation: float-a 6s ease-in-out infinite;
+}
+.float-shape-2 {
+  bottom: 16%; right: -2%;
+  color: var(--text);
+  animation: float-b 7s ease-in-out infinite;
+}
+@keyframes float-a {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-10px) rotate(-2deg); }
+}
+@keyframes float-b {
+  0%, 100% { transform: translateY(0) rotate(3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+.float-dot {
+  width: 5px; height: 5px;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+/* ============ MATCH ENGINE — UPGRADED ============ */
+.match-section {
+  padding: 8px 0 80px;
+  display: flex; justify-content: center;
+}
+.match-intro {
+  text-align: center;
+  max-width: 580px;
+  margin: 0 auto 24px;
+}
+.match-intro-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 600;
+  color: var(--green-dark);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: var(--green-bg);
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+.match-intro-eyebrow-dot {
+  width: 6px; height: 6px; background: var(--green); border-radius: 50%;
+  position: relative;
+}
+.match-intro-eyebrow-dot::after {
+  content: ''; position: absolute; inset: -3px;
+  border-radius: 50%;
+  background: rgba(31, 186, 142, 0.3);
+  animation: pulse 2s ease-out infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+.match-intro-text {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  letter-spacing: -0.15px;
+}
+.match-intro-text strong { color: var(--text); font-weight: 600; }
+
+.match-card {
+  width: 100%;
+  max-width: 760px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAFCFF 100%);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 0;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.02),
+    0 4px 16px rgba(0,0,0,0.04),
+    0 24px 60px rgba(24, 95, 165, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+.match-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--blue), var(--green) 60%, var(--amber));
+}
+
+.match-header {
+  padding: 28px 32px 0;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 16px;
+}
+.match-title-group {}
+.match-title {
+  font-size: 22px; font-weight: 600;
+  letter-spacing: -0.6px; margin-bottom: 4px;
+  color: var(--black);
+  display: flex; align-items: center; gap: 10px;
+}
+.match-title-icon {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, var(--blue), var(--blue-light));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(24, 95, 165, 0.25);
+}
+.match-title-icon svg { width: 14px; height: 14px; }
+.match-sub {
+  font-size: 13px; color: var(--text-muted);
+  letter-spacing: -0.1px;
+  padding-left: 38px;
+}
+.match-progress {
+  display: flex; gap: 4px;
+  align-items: center;
+}
+.match-progress-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--bg-alt);
+  border: 1.5px solid var(--border-strong);
+  transition: background 0.2s, border-color 0.2s;
+}
+.match-progress-dot.is-done {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.match-questions {
+  padding: 24px 32px;
+  display: grid; gap: 20px;
+}
+.match-q-row {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.match-q-row:last-child { border-bottom: none; padding-bottom: 0; }
+.match-q-label {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px;
+}
+.match-q-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--blue-light));
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(24, 95, 165, 0.2);
+}
+.match-q-text {
+  font-size: 15px; font-weight: 600;
+  color: var(--text); letter-spacing: -0.2px;
+}
+.match-options { display: flex; gap: 8px; flex-wrap: wrap; padding-left: 38px; }
+.match-option {
+  padding: 9px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: -0.1px;
+}
+.match-option:hover {
+  border-color: var(--blue);
+  color: var(--text);
+  background: var(--blue-bg);
+}
+.match-option.is-selected {
+  background: var(--black); color: white; border-color: var(--black);
+  box-shadow: 0 2px 6px rgba(10, 10, 15, 0.15);
+}
+.match-option.is-selected::before {
+  content: '✓'; margin-right: 5px; font-weight: 600;
+}
+
+.match-footer {
+  padding: 22px 32px 28px;
+  background: linear-gradient(180deg, transparent 0%, rgba(31, 186, 142, 0.03) 100%);
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+}
+.match-cta {
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+  color: white;
+  border: none;
+  padding: 14px 26px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 15px; font-weight: 600;
+  letter-spacing: -0.2px; cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex; align-items: center; gap: 10px;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.05),
+    0 4px 12px rgba(31, 186, 142, 0.3);
+}
+.match-cta:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.05),
+    0 8px 20px rgba(31, 186, 142, 0.4);
+}
+.match-cta:active { transform: translateY(0); }
+.match-cta svg { width: 16px; height: 16px; }
+.match-help {
+  font-size: 12px; color: var(--text-light);
+  letter-spacing: -0.1px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.match-help svg { width: 12px; height: 12px; opacity: 0.7; }
+
+/* ============ SECTION HEADERS ============ */
+.section-eyebrow {
+  font-size: 13px; font-weight: 500;
+  color: var(--text-muted); letter-spacing: -0.1px;
+  margin-bottom: 16px;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.section-eyebrow::before {
+  content: ''; width: 24px; height: 1px; background: var(--text-faint);
+}
+.section-h {
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 600; letter-spacing: -1.2px;
+  line-height: 1.1; color: var(--black);
+  margin-bottom: 16px; max-width: 820px;
+}
+.section-sub {
+  font-size: 17px; color: var(--text-muted);
+  max-width: 720px; line-height: 1.55;
+  letter-spacing: -0.1px; margin-bottom: 40px;
+}
+
+/* ============ WHAT WE DO ============ */
+.what-section { padding: 0 0 88px; }
+.what-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+.what-checks {
+  display: flex; flex-direction: column; gap: 18px;
+  margin-top: 28px;
+}
+.what-check { display: flex; align-items: flex-start; gap: 14px; }
+.what-check-icon {
+  width: 28px; height: 28px;
+  background: var(--green-bg);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--green-text);
+  flex-shrink: 0;
+}
+.what-check-icon svg { width: 14px; height: 14px; }
+.what-check-text {
+  font-size: 15px; line-height: 1.5;
+  color: var(--text);
+  letter-spacing: -0.15px;
+}
+.what-check-text strong { font-weight: 600; color: var(--black); }
+.what-visual {
+  background: linear-gradient(135deg, #FAFAF7 0%, #F0F6FC 100%);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.what-visual-caption {
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.what-visual-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600;
+  color: var(--blue);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.what-visual-eyebrow-dot {
+  width: 5px; height: 5px;
+  background: var(--blue);
+  border-radius: 50%;
+}
+.what-visual-h {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--black);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+.what-visual-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  letter-spacing: -0.1px;
+}
+.what-pay-stack { display: grid; gap: 8px; }
+.what-pay-row {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.what-pay-row:hover { transform: translateX(2px); border-color: var(--blue); }
+.what-pay-left { display: flex; align-items: center; gap: 12px; }
+.what-pay-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.what-pay-icon svg { width: 18px; height: 18px; }
+.what-pay-name { font-weight: 600; letter-spacing: -0.2px; color: var(--text); }
+.what-pay-count { font-size: 12px; color: var(--text-light); }
+.what-pay-arrow {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--bg-alt);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ============ WHY TRUST US ============ */
+.trust-section { padding: 0 0 80px; }
+.trust-pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.trust-pillar {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px;
+  transition: border-color 0.15s;
+}
+.trust-pillar:hover { border-color: var(--border-strong); }
+.trust-pillar-icon {
+  width: 40px; height: 40px;
+  background: var(--blue-bg);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--blue); margin-bottom: 18px;
+}
+.trust-pillar-icon svg { width: 20px; height: 20px; }
+.trust-pillar-h {
+  font-size: 17px; font-weight: 600;
+  letter-spacing: -0.4px; margin-bottom: 8px;
+  color: var(--black);
+}
+.trust-pillar-p {
+  font-size: 14px; line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* ============ TRUST BADGE STRIP ============ */
+.trust-strip {
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt);
+  margin-bottom: 80px;
+}
+.trust-strip-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; flex-wrap: wrap;
+}
+.trust-strip-label {
+  font-size: 11px; font-weight: 600;
+  color: var(--text-light);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+.trust-strip-badges {
+  display: flex; align-items: center;
+  gap: 32px; flex-wrap: wrap;
+}
+.trust-badge {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: -0.1px;
+}
+.trust-badge-mark {
+  display: flex; align-items: center; justify-content: center;
+}
+.trust-badge-mark svg { display: block; }
+
+/* ============ OPERATOR CARDS ============ */
+.listing-section { padding: 0 0 80px; }
+.card-wrap { margin-bottom: 16px; }
+.card-h {
+  font-size: 16px; font-weight: 600;
+  letter-spacing: -0.3px; margin-bottom: 8px;
+  color: var(--text); padding-left: 4px;
+}
+.card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--bg);
+  transition: border-color 0.15s;
+}
+.card:hover { border-color: var(--border-strong); }
+.card-row { display: flex; align-items: stretch; }
+.card-logo {
+  width: 180px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  position: relative;
+}
+.card-logo svg { display: block; max-width: 100%; height: auto; }
+.card-mid {
+  flex: 1; padding: 22px 24px;
+  display: flex; flex-direction: column; gap: 10px;
+  min-width: 0;
+}
+.card-headline {
+  font-size: 17px; font-weight: 600;
+  color: var(--text); letter-spacing: -0.3px;
+}
+.stars {
+  color: var(--amber); font-size: 14px;
+  letter-spacing: 3px; line-height: 1;
+}
+.stars-empty { color: var(--text-faint); }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.on, .meta {
+  font-size: 12px; padding: 4px 10px; border-radius: 6px;
+  font-weight: 500; letter-spacing: -0.1px;
+}
+.on { background: var(--green-bg); color: var(--green-text); }
+.meta { background: var(--bg-alt); color: var(--text-muted); }
+.card-right {
+  width: 180px; flex-shrink: 0;
+  padding: 22px;
+  display: flex; flex-direction: column; gap: 10px;
+  align-items: stretch; justify-content: center;
+  border-left: 1px solid var(--border);
+}
+.cta {
+  background: var(--black); color: white;
+  text-align: center; padding: 13px 16px;
+  border-radius: 10px;
+  font-weight: 600; font-size: 13px;
+  letter-spacing: -0.1px; cursor: pointer;
+  transition: background 0.15s, transform 0.08s;
+  border: none; font-family: inherit;
+}
+.cta:hover { background: #1F1F2A; }
+.cta:active { transform: scale(0.98); }
+.ukgc {
+  font-size: 9px; letter-spacing: 1px;
+  color: var(--text-light); text-align: center;
+  font-weight: 500;
+}
+.review-link {
+  font-size: 12px; color: var(--blue);
+  text-align: center; font-weight: 500;
+  letter-spacing: -0.1px;
+}
+.review-link:hover { text-decoration: underline; }
+.tcs {
+  font-size: 11px; color: var(--text-light);
+  padding: 12px 24px;
+  background: var(--bg-alt);
+  line-height: 1.5;
+  border-top: 1px solid var(--border);
+}
+.listing-more {
+  text-align: center; padding: 20px 0;
+  font-size: 14px; color: var(--blue);
+  font-weight: 500; display: block;
+}
+.listing-more:hover { text-decoration: underline; }
+
+/* ============ COMPARISON TABLE ============ */
+.section-grey { background: var(--bg-alt); padding: 72px 0; }
+.table-wrap {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.cmp-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.cmp-table thead th {
+  background: var(--bg-alt);
+  text-align: left; padding: 14px 18px;
+  font-weight: 500; font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.3px; text-transform: uppercase;
+}
+.cmp-table tbody td {
+  padding: 18px;
+  border-top: 1px solid var(--border);
+  letter-spacing: -0.1px;
+}
+.cmp-table tbody td:first-child { font-weight: 600; }
+.cmp-method-cell { display: flex; align-items: center; gap: 12px; }
+.cmp-method-icon {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cmp-method-icon svg { width: 15px; height: 15px; }
+.cmp-no { color: var(--red-text); font-weight: 500; }
+.cmp-yes { color: var(--green-text); font-weight: 500; }
+
+/* ============ METHODS GRID ============ */
+.methods-section { padding: 72px 0; }
+.methods-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.method-tile {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex; align-items: center; gap: 12px;
+  transition: border-color 0.15s, transform 0.1s;
+}
+.method-tile:hover {
+  border-color: var(--blue);
+  transform: translateY(-1px);
+}
+.method-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.method-icon svg { width: 18px; height: 18px; }
+.method-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.method-name {
+  font-weight: 600; font-size: 14px;
+  color: var(--text); letter-spacing: -0.2px;
+}
+.method-desc {
+  font-size: 11px; color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ============ FAQ ============ */
+.faq-section {
+  padding: 72px 0;
+  background: linear-gradient(180deg, var(--bg-alt) 0%, #F0F4F8 100%);
+}
+.faq {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02), 0 8px 24px rgba(0,0,0,0.04);
+}
+.faq details { border-bottom: 1px solid var(--border); }
+.faq details:last-child { border-bottom: none; }
+.faq summary {
+  padding: 20px 22px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer;
+  font-size: 15px; font-weight: 500;
+  letter-spacing: -0.2px; list-style: none;
+  transition: background 0.15s;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { background: var(--bg-alt); }
+.faq-num {
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 500;
+  color: var(--blue);
+  background: var(--blue-bg);
+  padding: 4px 8px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  letter-spacing: 0;
+}
+.faq-q { flex: 1; min-width: 0; }
+.faq-toggle {
+  font-size: 22px; color: var(--text-light);
+  font-weight: 300; transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.faq details[open] .faq-toggle { transform: rotate(45deg); }
+.faq-body {
+  padding: 0 22px 20px 64px;
+  font-size: 14px; line-height: 1.65;
+  color: var(--text-muted); letter-spacing: -0.1px;
+}
+
+/* ============ TRUST FOOTER STRIP ============ */
+.trust-footer { padding: 72px 0; }
+.trust-blocks-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.trust-block {
+  background: var(--bg);
+  padding: 26px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  transition: border-color 0.15s, transform 0.1s;
+  display: block;
+}
+.trust-block:hover {
+  border-color: var(--blue);
+  transform: translateY(-2px);
+}
+.trust-block-icon {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  background: var(--blue-bg);
+  color: var(--blue);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.trust-block-icon svg { width: 18px; height: 18px; }
+.trust-block-h {
+  font-size: 16px; font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px; color: var(--black);
+}
+.trust-block-d {
+  font-size: 13px; color: var(--text-muted);
+  line-height: 1.55; letter-spacing: -0.1px;
+}
+
+/* ============ STAYING IN CONTROL ============ */
+.sic {
+  background: var(--dark);
+  color: rgba(255,255,255,0.78);
+  padding: 56px 0 40px;
+}
+.sic-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.sic-eyebrow-dot {
+  width: 5px; height: 5px;
+  background: var(--green);
+  border-radius: 50%;
+}
+.sic-h {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.8px;
+  color: white;
+  margin-bottom: 12px;
+  line-height: 1.15;
+  max-width: 720px;
+}
+.sic-intro {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.72);
+  max-width: 720px;
+  margin-bottom: 36px;
+}
+.sic-intro strong { color: white; font-weight: 600; }
+
+.sic-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.sic-block-h {
+  font-size: 14px; font-weight: 600;
+  color: white;
+  letter-spacing: -0.2px;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.sic-block-h-icon {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.85);
+}
+.sic-block-h-icon svg { width: 13px; height: 13px; }
+
+.sic-tools {
+  display: grid; gap: 10px;
+}
+.sic-tool {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.sic-tool-name {
+  font-size: 13px; font-weight: 600;
+  color: white;
+  letter-spacing: -0.1px;
+  margin-bottom: 2px;
+}
+.sic-tool-desc {
+  font-size: 12px; color: rgba(255,255,255,0.65);
+  line-height: 1.45;
+  letter-spacing: -0.05px;
+}
+
+.sic-tbs {
+  display: grid; gap: 10px;
+}
+.sic-tbs-item {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.sic-tbs-letter {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  background: var(--green);
+  color: var(--dark);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px;
+  flex-shrink: 0;
+  letter-spacing: -0.3px;
+}
+.sic-tbs-content { flex: 1; min-width: 0; }
+.sic-tbs-text {
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.5;
+  letter-spacing: -0.05px;
+}
+.sic-tbs-text a {
+  color: white;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(255,255,255,0.4);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s;
+}
+.sic-tbs-text a:hover { text-decoration-color: white; }
+.sic-tbs-text strong { color: white; font-weight: 600; }
+
+.sic-helpline {
+  background: rgba(31, 186, 142, 0.12);
+  border: 1px solid rgba(31, 186, 142, 0.25);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 28px;
+}
+.sic-helpline-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--dark);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.sic-helpline-icon svg { width: 17px; height: 17px; }
+.sic-helpline-text {
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.45;
+  flex: 1;
+  letter-spacing: -0.05px;
+}
+.sic-helpline-text strong {
+  display: block; color: white;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-top: 2px;
+  font-feature-settings: 'tnum';
+}
+
+.sic-disclosure {
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: -0.05px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+@media (max-width: 768px) {
+  .sic-grid { grid-template-columns: 1fr; gap: 28px; }
+  .sic { padding: 44px 0 32px; }
+  .sic-helpline { flex-direction: row; padding: 14px; gap: 12px; }
+}
+
+/* ============ FOOTER ============ */
+.footer {
+  padding: 32px 0 36px;
+  font-size: 12px;
+  color: var(--text-light);
+  line-height: 1.7;
+  letter-spacing: -0.1px;
+}
+.footer-links {
+  display: flex; gap: 24px; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.footer-links a { color: var(--text-muted); font-weight: 500; }
+.footer-links a:hover { color: var(--text); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 980px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .hero-visual { order: -1; }
+  .phone { transform: rotate(0deg) scale(0.9); }
+  .what-grid { grid-template-columns: 1fr; gap: 36px; }
+  .trust-pillars { grid-template-columns: repeat(2, 1fr); }
+  .methods-grid { grid-template-columns: repeat(2, 1fr); }
+  .match-header { padding: 24px 24px 0; }
+  .match-questions { padding: 20px 24px; }
+  .match-footer { padding: 18px 24px 24px; }
+  .float-shape { display: none; }
+}
+
+@media (max-width: 640px) {
+  .wrap { padding: 0 20px; }
+  .nav { display: none; }
+  .hero { padding: 24px 0 28px; }
+  .h1 { letter-spacing: -1px; line-height: 1.05; }
+  .hero-sub { font-size: 16px; }
+  .section-grey, .methods-section, .faq-section, .trust-footer, .listing-section, .what-section { padding: 56px 0; }
+  .section-h { letter-spacing: -0.6px; }
+  .match-section { padding: 0 0 56px; }
+  .match-title { font-size: 19px; }
+  .match-sub { padding-left: 0; }
+  .match-progress { display: none; }
+  .match-options { padding-left: 0; }
+  .methods-grid { grid-template-columns: 1fr; }
+  .trust-pillars { grid-template-columns: 1fr; }
+  .trust-blocks-grid { grid-template-columns: 1fr; }
+  .card-row { flex-direction: column; }
+  .card-logo { width: 100%; padding: 22px; }
+  .card-right {
+    width: 100%; border-left: none;
+    border-top: 1px solid var(--border);
+    flex-direction: row; padding: 14px;
+    align-items: center;
+  }
+  .cta { flex: 1; padding: 14px; }
+  .ukgc { display: none; }
+  .cmp-table { font-size: 13px; }
+  .cmp-table tbody td, .cmp-table thead th { padding: 12px 10px; }
+  .what-visual { padding: 22px; }
+  .phone { transform: scale(0.8); margin: -30px 0; }
+  .trust-strip-inner { gap: 16px; }
+  .trust-strip-badges { gap: 20px; }
+  .trust-strip { margin-bottom: 56px; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="/" class="brand" aria-label="PayForItUK home">
+      <div class="brand-mark"><span>£</span></div>
+      <div class="wordmark"><span class="blue-part">PayForIt</span>UK</div>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/casinos/">Casinos</a>
+      <a href="/casino-payments/">Payment methods</a>
+      <a href="/reviews/">Reviews</a>
+      <a href="/guides/">Guides</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+
+      <div class="hero-content">
+        <h1 class="h1">Find your UK casino, by <em>how you pay.</em></h1>
+        <p class="hero-sub">PayForItUK is the only independent guide that ranks UKGC-licensed casinos by how their cashier actually performs — matched to the way you prefer to deposit and withdraw.</p>
+        <div class="tested-by">
+          <div class="tested-avatars">
+            <div class="tested-avatar a1">TJ</div>
+            <div class="tested-avatar a2">SM</div>
+            <div class="tested-avatar a3">+2</div>
+          </div>
+          Tested by <strong>our payments team</strong> · Independent reviews since 2014
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="float-shape float-shape-1">
+          <span class="float-dot"></span>
+          UKGC verified
+        </div>
+        <div class="float-shape float-shape-2">
+          <span class="float-dot"></span>
+          Pay your way
+        </div>
+
+        <div class="phone" aria-hidden="true">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="phone-statusbar">
+              <span>9:41</span>
+              <div class="phone-statusbar-icons">
+                <svg viewBox="0 0 14 10" fill="currentColor"><path d="M1 7h2v3H1zm4-2h2v5H5zm4-2h2v7H9zm4-2h2v9h-2z"/></svg>
+                <svg viewBox="0 0 14 10" fill="currentColor"><path d="M2 0h10a2 2 0 012 2v6a2 2 0 01-2 2H2a2 2 0 01-2-2V2a2 2 0 012-2zm0 1.5A.5.5 0 001.5 2v6a.5.5 0 00.5.5h10a.5.5 0 00.5-.5V2a.5.5 0 00-.5-.5H2z"/></svg>
+              </div>
+            </div>
+
+            <div class="phone-content">
+              <div class="phone-app-header">
+                <div class="phone-app-name">Casino Cashier</div>
+                <div class="phone-close">×</div>
+              </div>
+
+              <div class="phone-success">
+                <div class="phone-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 6L9 17l-5-5"></path>
+                  </svg>
+                </div>
+                <div class="phone-confirm-text">Deposit confirmed</div>
+                <div class="phone-confirm-sub">Funds available instantly</div>
+
+                <div class="phone-receipt">
+                  <div class="phone-receipt-row">
+                    <span class="phone-receipt-label">Amount</span>
+                    <span class="phone-receipt-amount">£10.00</span>
+                  </div>
+                  <div class="phone-receipt-divider"></div>
+                  <div class="phone-receipt-row">
+                    <span class="phone-receipt-label">To</span>
+                    <span class="phone-receipt-value">MrQ Casino</span>
+                  </div>
+                  <div class="phone-receipt-row">
+                    <span class="phone-receipt-label">Method</span>
+                    <span class="phone-receipt-value">Pay by Mobile</span>
+                  </div>
+                  <div class="phone-receipt-row">
+                    <span class="phone-receipt-label">Time</span>
+                    <span class="phone-receipt-value">9:41 AM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="match-section">
+  <div class="wrap">
+
+    <div class="match-intro">
+      <div class="match-intro-eyebrow">
+        <span class="match-intro-eyebrow-dot"></span>
+        Find your match
+      </div>
+      <p class="match-intro-text">Answer four quick questions about <strong>how you pay</strong> — we'll match you to the UK casino that fits best, with a clear reason why.</p>
+    </div>
+
+    <div class="match-card" style="margin: 0 auto;">
+
+      <div class="match-header">
+        <div class="match-title-group">
+          <div class="match-title">
+            <div class="match-title-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+            Match me to a casino
+          </div>
+          <div class="match-sub">Takes 30 seconds. No signup required.</div>
+        </div>
+        <div class="match-progress" aria-label="Progress: 4 of 4 answered">
+          <div class="match-progress-dot is-done"></div>
+          <div class="match-progress-dot is-done"></div>
+          <div class="match-progress-dot is-done"></div>
+          <div class="match-progress-dot is-done"></div>
+        </div>
+      </div>
+
+      <div class="match-questions">
+
+        <div class="match-q-row">
+          <div class="match-q-label">
+            <div class="match-q-num">1</div>
+            <div class="match-q-text">Which payment method?</div>
+          </div>
+          <div class="match-options">
+            <div class="match-option is-selected">Pay by Mobile</div>
+            <div class="match-option">Boku</div>
+            <div class="match-option">Apple Pay</div>
+            <div class="match-option">PayPal</div>
+            <div class="match-option">Trustly</div>
+          </div>
+        </div>
+
+        <div class="match-q-row">
+          <div class="match-q-label">
+            <div class="match-q-num">2</div>
+            <div class="match-q-text">Will you withdraw the same way?</div>
+          </div>
+          <div class="match-options">
+            <div class="match-option">Yes</div>
+            <div class="match-option is-selected">No</div>
+            <div class="match-option">Don't mind</div>
+          </div>
+        </div>
+
+        <div class="match-q-row">
+          <div class="match-q-label">
+            <div class="match-q-num">3</div>
+            <div class="match-q-text">Typical deposit size?</div>
+          </div>
+          <div class="match-options">
+            <div class="match-option is-selected">£10–30</div>
+            <div class="match-option">£30–100</div>
+            <div class="match-option">£100+</div>
+          </div>
+        </div>
+
+        <div class="match-q-row">
+          <div class="match-q-label">
+            <div class="match-q-num">4</div>
+            <div class="match-q-text">What matters most?</div>
+          </div>
+          <div class="match-options">
+            <div class="match-option is-selected">Welcome bonus</div>
+            <div class="match-option">Fast withdrawals</div>
+            <div class="match-option">Low minimum</div>
+            <div class="match-option">Game variety</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="match-footer">
+        <button class="match-cta">
+          Find my match
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 8h10m-4-4l4 4-4 4"/></svg>
+        </button>
+        <span class="match-help">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3M8 11h.01"/></svg>
+          Your answers stay on this device.
+        </span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="what-section">
+  <div class="wrap">
+    <div class="what-grid">
+
+      <div class="what-text">
+        <div class="section-eyebrow">What we do</div>
+        <h2 class="section-h">The UK casino guide built around how you pay.</h2>
+        <p class="section-sub">Every other UK casino site lists payment methods as an afterthought. We start there. You tell us how you want to deposit — pay by mobile, Apple Pay, PayPal, Trustly, debit card — and we match you to the UKGC-licensed casinos that actually optimise for it.</p>
+
+        <div class="what-checks">
+          <div class="what-check">
+            <div class="what-check-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div class="what-check-text"><strong>Match by payment method</strong> — Boku, Apple Pay, PayPal, Trustly and more, with editor-tested casino picks for each.</div>
+          </div>
+          <div class="what-check">
+            <div class="what-check-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div class="what-check-text"><strong>Tested cashier flows</strong> — real deposits on iPhone and Android, SMS verification timed, withdrawal routes confirmed.</div>
+          </div>
+          <div class="what-check">
+            <div class="what-check-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div class="what-check-text"><strong>UKGC-licensed only</strong> — every operator listed has a verified UK Gambling Commission licence. No grey-market sites, ever.</div>
+          </div>
+          <div class="what-check">
+            <div class="what-check-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div class="what-check-text"><strong>Independent rankings</strong> — operators that fail our tests don't appear here, regardless of commission.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="what-visual">
+        <div class="what-visual-caption">
+          <div class="what-visual-eyebrow">
+            <span class="what-visual-eyebrow-dot"></span>
+            Find a casino by payment method
+          </div>
+          <div class="what-visual-h">Tap a method to see matched casinos</div>
+          <div class="what-visual-sub">We'll surface the UKGC-licensed casinos that handle your chosen method best — with the reason why.</div>
+        </div>
+        <div class="what-pay-stack">
+          <div class="what-pay-row">
+            <div class="what-pay-left">
+              <div class="what-pay-icon" style="background: #185FA5; color: white;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+              </div>
+              <div>
+                <div class="what-pay-name">Pay by Mobile</div>
+                <div class="what-pay-count">Charge to your phone bill</div>
+              </div>
+            </div>
+            <div class="what-pay-arrow">→</div>
+          </div>
+          <div class="what-pay-row">
+            <div class="what-pay-left">
+              <div class="what-pay-icon" style="background: #000; color: white;">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+              </div>
+              <div>
+                <div class="what-pay-name">Apple Pay</div>
+                <div class="what-pay-count">Touch ID / Face ID deposits</div>
+              </div>
+            </div>
+            <div class="what-pay-arrow">→</div>
+          </div>
+          <div class="what-pay-row">
+            <div class="what-pay-left">
+              <div class="what-pay-icon" style="background: #003087; color: white;">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 4h7.2c2.5 0 4.3 1.8 3.9 4.5-.4 2.7-2.7 4.6-5.3 4.6h-2l-.7 4.7c-.1.5-.5.9-1 .9H8c-.4 0-.7-.4-.6-.8L9.2 4.8c.1-.5.5-.8 1-.8h-2.7zm6.4 2.5h-2.6l-.7 4.4h1.9c1.4 0 2.6-1 2.8-2.4.2-1.4-.6-2-1.4-2zM6 8.5h7c2.5 0 4.3 1.8 3.9 4.5-.4 2.7-2.7 4.6-5.3 4.6H9.6L8.9 22c-.1.5-.5.9-1 .9H6.4c-.4 0-.7-.4-.6-.8L7.7 9.3c.1-.5.5-.8 1-.8H6z" opacity="0.5"/><path d="M7.5 4h7.2c2.5 0 4.3 1.8 3.9 4.5-.4 2.7-2.7 4.6-5.3 4.6h-2l-.7 4.7c-.1.5-.5.9-1 .9H8c-.4 0-.7-.4-.6-.8L9.2 4.8c.1-.5.5-.8 1-.8h-2.7z"/></svg>
+              </div>
+              <div>
+                <div class="what-pay-name">PayPal</div>
+                <div class="what-pay-count">Privacy and dispute protection</div>
+              </div>
+            </div>
+            <div class="what-pay-arrow">→</div>
+          </div>
+          <div class="what-pay-row">
+            <div class="what-pay-left">
+              <div class="what-pay-icon" style="background: #0EE06E; color: #003319;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l4-4M3 12l4 4M21 12l-4-4M21 12l-4 4"/></svg>
+              </div>
+              <div>
+                <div class="what-pay-name">Trustly</div>
+                <div class="what-pay-count">Instant bank transfers</div>
+              </div>
+            </div>
+            <div class="what-pay-arrow">→</div>
+          </div>
+          <div class="what-pay-row">
+            <div class="what-pay-left">
+              <div class="what-pay-icon" style="background: #1A1F36; color: white;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              </div>
+              <div>
+                <div class="what-pay-name">Debit cards</div>
+                <div class="what-pay-count">Visa &amp; Mastercard</div>
+              </div>
+            </div>
+            <div class="what-pay-arrow">→</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="trust-section wrap">
+  <div class="section-eyebrow">Why trust PayForItUK</div>
+  <h2 class="section-h">Real testing. Real standards.</h2>
+  <p class="section-sub">Our team deposit-tests every UK casino we feature. Operators that fail our checks don't appear here.</p>
+
+  <div class="trust-pillars">
+    <div class="trust-pillar">
+      <div class="trust-pillar-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="2" width="14" height="20" rx="2"></rect>
+          <line x1="12" y1="18" x2="12" y2="18"></line>
+        </svg>
+      </div>
+      <div class="trust-pillar-h">Real deposit testing</div>
+      <div class="trust-pillar-p">Every operator is deposit-tested by our team on iPhone and Android. SMS verification timed. Withdrawal routes confirmed before publication.</div>
+    </div>
+    <div class="trust-pillar">
+      <div class="trust-pillar-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+      </div>
+      <div class="trust-pillar-h">UKGC-licensed only</div>
+      <div class="trust-pillar-p">Zero offshore or grey-market operators. Every casino features a UK Gambling Commission licence number, verified against the public register.</div>
+    </div>
+    <div class="trust-pillar">
+      <div class="trust-pillar-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 8v4l3 2"></path>
+        </svg>
+      </div>
+      <div class="trust-pillar-h">Transparent &amp; current</div>
+      <div class="trust-pillar-p">All affiliate links clearly disclosed. Operator scores re-tested regularly. Last test date shown on every operator review.</div>
+    </div>
+    <div class="trust-pillar">
+      <div class="trust-pillar-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="6"></circle>
+          <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+        </svg>
+      </div>
+      <div class="trust-pillar-h">Specialist expertise</div>
+      <div class="trust-pillar-p">Led by Thomas Jones, who has covered UK casino payments since 2014. Every review is signed off by a named editor — never anonymous, never outsourced.</div>
+    </div>
+    <div class="trust-pillar">
+      <div class="trust-pillar-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <path d="m9 15 2 2 4-4"></path>
+        </svg>
+      </div>
+      <div class="trust-pillar-h">Bonus terms verified</div>
+      <div class="trust-pillar-p">We read the small print so you don't have to. Wagering, minimum deposits, expiry dates, and game weighting are all checked on every welcome offer.</div>
+    </div>
+    <div class="trust-pillar">
+      <div class="trust-pillar-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      </div>
+      <div class="trust-pillar-h">Responsible gambling first</div>
+      <div class="trust-pillar-p">Every featured operator meets the UK Gambling Commission's responsible gambling standards. Self-exclusion, deposit limits, and reality checks always available.</div>
+    </div>
+  </div>
+</section>
+
+<section class="trust-strip">
+  <div class="wrap">
+    <div class="trust-strip-inner">
+      <div class="trust-strip-label">Aligned with</div>
+      <div class="trust-strip-badges">
+        <div class="trust-badge">
+          <div class="trust-badge-mark">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="6" fill="#012169"/>
+              <path d="M0 0v4l32 32h4v-4L4 0H0zm36 0v4L4 36H0v-4L32 0h4z" fill="#FFFFFF"/>
+              <path d="M0 0v2.5L33.5 36H36v-2.5L2.5 0H0zm36 0v2.5L2.5 36H0v-2.5L33.5 0H36z" fill="#C8102E"/>
+              <path d="M15 0v36h6V0h-6zM0 15v6h36v-6H0z" fill="#FFFFFF"/>
+              <path d="M16 0v36h4V0h-4zM0 16v4h36v-4H0z" fill="#C8102E"/>
+            </svg>
+          </div>
+          UKGC Licensed Only
+        </div>
+        <div class="trust-badge">
+          <div class="trust-badge-mark">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <circle cx="18" cy="18" r="17" fill="#F47B30" stroke="#F47B30" stroke-width="2"/>
+              <text x="18" y="22" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="white">18+</text>
+            </svg>
+          </div>
+          Over 18s Only
+        </div>
+        <div class="trust-badge">
+          <div class="trust-badge-mark">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="6" fill="#1A4D2E"/>
+              <path d="M9 18 L15 24 L27 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+          </div>
+          BeGambleAware
+        </div>
+        <div class="trust-badge">
+          <div class="trust-badge-mark">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="6" fill="#003D5B"/>
+              <text x="18" y="14" text-anchor="middle" font-family="sans-serif" font-size="6" font-weight="700" fill="white">GAM</text>
+              <text x="18" y="22" text-anchor="middle" font-family="sans-serif" font-size="6" font-weight="700" fill="white">CARE</text>
+              <circle cx="18" cy="28" r="2" fill="#F47B30"/>
+            </svg>
+          </div>
+          GamCare
+        </div>
+        <div class="trust-badge">
+          <div class="trust-badge-mark">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="6" fill="#0A0A0F"/>
+              <text x="18" y="22" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="700" fill="white">STOP</text>
+            </svg>
+          </div>
+          GAMSTOP
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="listing-section wrap">
+  <div class="section-eyebrow">Editor's picks</div>
+  <h2 class="section-h">Top UKGC-licensed UK casinos.</h2>
+  <p class="section-sub">Tested by our team. Skip ahead with the match engine if you have a specific payment method in mind.</p>
+
+  <article class="card-wrap">
+    <div class="card-h">MrQ — 30 free spins on £10 deposit, no wagering</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-logo" style="background: #002b6b;">
+          <svg viewBox="0 0 120 36" xmlns="http://www.w3.org/2000/svg">
+            <text x="60" y="26" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="26" fill="white">MrQ</text>
+          </svg>
+        </div>
+        <div class="card-mid">
+          <div class="card-headline">30 free spins, no wagering</div>
+          <div class="stars">★★★★★</div>
+          <div class="badges">
+            <span class="on">✓ Pay by Mobile</span>
+            <span class="on">✓ Boku</span>
+            <span class="on">✓ Apple Pay</span>
+          </div>
+          <div class="badges">
+            <span class="meta">£10 min</span>
+            <span class="meta">Withdraw: bank transfer</span>
+          </div>
+        </div>
+        <div class="card-right">
+          <a class="cta" href="#">Claim offer</a>
+          <div class="ukgc">UKGC LICENSED</div>
+          <a class="review-link" href="/reviews/mrq/">Read review →</a>
+        </div>
+      </div>
+      <div class="tcs">New customers only. Min deposit £10. 30 free spins on Big Bass Splash. No wagering on free spin winnings. Full T&amp;Cs apply. 18+. BeGambleAware.org</div>
+    </div>
+  </article>
+
+  <article class="card-wrap">
+    <div class="card-h">Mr Vegas — 11 free spins on first £10 deposit</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-logo" style="background: #c01818;">
+          <svg viewBox="0 0 130 40" xmlns="http://www.w3.org/2000/svg">
+            <text x="65" y="18" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="13" fill="#FFD700">MR</text>
+            <text x="65" y="34" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="13" fill="white">VEGAS</text>
+          </svg>
+        </div>
+        <div class="card-mid">
+          <div class="card-headline">11 free spins on Big Bass Bonanza</div>
+          <div class="stars">★★★★<span class="stars-empty">★</span></div>
+          <div class="badges">
+            <span class="on">✓ Pay by Mobile</span>
+            <span class="on">✓ Boku</span>
+            <span class="on">✓ Apple Pay</span>
+          </div>
+          <div class="badges">
+            <span class="meta">£10 min</span>
+            <span class="meta">Withdraw: debit card</span>
+          </div>
+        </div>
+        <div class="card-right">
+          <a class="cta" href="#">Claim offer</a>
+          <div class="ukgc">UKGC LICENSED</div>
+          <a class="review-link" href="/reviews/mr-vegas/">Read review →</a>
+        </div>
+      </div>
+      <div class="tcs">New customers only. Min deposit £10. 11 free spins on Big Bass Bonanza. 10x wagering. Full T&amp;Cs apply. 18+. BeGambleAware.org</div>
+    </div>
+  </article>
+
+  <article class="card-wrap">
+    <div class="card-h">PlayOJO — 50 free spins, no wagering</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-logo" style="background: #ed8b00;">
+          <svg viewBox="0 0 130 36" xmlns="http://www.w3.org/2000/svg">
+            <text x="65" y="26" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="22" fill="white" letter-spacing="-1">PLAY<tspan fill="#0a0a0f">OJO</tspan></text>
+          </svg>
+        </div>
+        <div class="card-mid">
+          <div class="card-headline">50 free spins on Book of Dead</div>
+          <div class="stars">★★★★<span class="stars-empty">★</span></div>
+          <div class="badges">
+            <span class="on">✓ Apple Pay</span>
+            <span class="on">✓ Google Pay</span>
+            <span class="on">✓ PayPal</span>
+          </div>
+          <div class="badges">
+            <span class="meta">£10 min</span>
+            <span class="meta">Withdraw: any method</span>
+          </div>
+        </div>
+        <div class="card-right">
+          <a class="cta" href="#">Claim offer</a>
+          <div class="ukgc">UKGC LICENSED</div>
+          <a class="review-link" href="/reviews/playojo/">Read review →</a>
+        </div>
+      </div>
+      <div class="tcs">New customers only. Min deposit £10. 50 free spins. No wagering on winnings. Full T&amp;Cs apply. 18+. BeGambleAware.org</div>
+    </div>
+  </article>
+
+  <article class="card-wrap">
+    <div class="card-h">Magic Red — 100% match up to £150 + 50 spins</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-logo" style="background: #b40000;">
+          <svg viewBox="0 0 140 40" xmlns="http://www.w3.org/2000/svg">
+            <text x="70" y="17" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="11" fill="white" letter-spacing="2">MAGIC</text>
+            <text x="70" y="32" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="14" fill="white" letter-spacing="1">RED</text>
+          </svg>
+        </div>
+        <div class="card-mid">
+          <div class="card-headline">100% deposit match up to £150</div>
+          <div class="stars">★★★★<span class="stars-empty">★</span></div>
+          <div class="badges">
+            <span class="on">✓ Pay by Mobile</span>
+            <span class="on">✓ Boku</span>
+            <span class="on">✓ PayPal</span>
+          </div>
+          <div class="badges">
+            <span class="meta">£10 min</span>
+            <span class="meta">Withdraw: PayPal</span>
+          </div>
+        </div>
+        <div class="card-right">
+          <a class="cta" href="#">Claim offer</a>
+          <div class="ukgc">UKGC LICENSED</div>
+          <a class="review-link" href="/reviews/magic-red/">Read review →</a>
+        </div>
+      </div>
+      <div class="tcs">New customers only. Min deposit £10. 100% match up to £150. 35x wagering. Full T&amp;Cs apply. 18+. BeGambleAware.org</div>
+    </div>
+  </article>
+
+  <article class="card-wrap">
+    <div class="card-h">Luna Casino — 100% match up to £50 + 50 free spins</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-logo" style="background: #1a1a2e;">
+          <svg viewBox="0 0 130 40" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="22" cy="20" r="9" fill="none" stroke="#FFD700" stroke-width="2"/>
+            <circle cx="26" cy="18" r="9" fill="#1a1a2e"/>
+            <text x="78" y="18" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="600" font-size="13" fill="white">LUNA</text>
+            <text x="78" y="32" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="400" font-size="9" fill="#FFD700" letter-spacing="2">CASINO</text>
+          </svg>
+        </div>
+        <div class="card-mid">
+          <div class="card-headline">100% match up to £50 + 50 spins</div>
+          <div class="stars">★★★★<span class="stars-empty">★</span></div>
+          <div class="badges">
+            <span class="on">✓ Pay by Mobile</span>
+            <span class="on">✓ Apple Pay</span>
+            <span class="on">✓ Google Pay</span>
+          </div>
+          <div class="badges">
+            <span class="meta">£10 min</span>
+            <span class="meta">Withdraw: bank transfer</span>
+          </div>
+        </div>
+        <div class="card-right">
+          <a class="cta" href="#">Claim offer</a>
+          <div class="ukgc">UKGC LICENSED</div>
+          <a class="review-link" href="/reviews/luna/">Read review →</a>
+        </div>
+      </div>
+      <div class="tcs">New customers only. Min deposit £10. 100% match up to £50. 50 free spins. 35x wagering. 18+. BeGambleAware.org</div>
+    </div>
+  </article>
+
+  <a href="/casinos/" class="listing-more">View all UK casinos →</a>
+</section>
+
+<section class="section-grey">
+  <div class="wrap">
+    <div class="section-eyebrow">Compare methods</div>
+    <h2 class="section-h">UK casino payment methods, compared.</h2>
+    <p class="section-sub">The trade-offs across the metrics that actually affect your deposit and withdrawal experience.</p>
+    <div class="table-wrap">
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Min deposit</th>
+            <th>Max deposit</th>
+            <th>Withdraw</th>
+            <th>Best for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="cmp-method-cell">
+                <div class="cmp-method-icon" style="background: var(--blue); color: white;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                </div>
+                Pay by Mobile
+              </div>
+            </td>
+            <td>£5</td>
+            <td>£30/day</td>
+            <td><span class="cmp-no">No</span></td>
+            <td>Casual play, spending controls</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="cmp-method-cell">
+                <div class="cmp-method-icon" style="background: #000; color: white;">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                </div>
+                Apple / Google Pay
+              </div>
+            </td>
+            <td>£10</td>
+            <td>Card limit</td>
+            <td><span class="cmp-yes">Yes</span></td>
+            <td>Quick deposits, biometric security</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="cmp-method-cell">
+                <div class="cmp-method-icon" style="background: #003087; color: white;">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 4h7.2c2.5 0 4.3 1.8 3.9 4.5-.4 2.7-2.7 4.6-5.3 4.6h-2l-.7 4.7c-.1.5-.5.9-1 .9H8c-.4 0-.7-.4-.6-.8L9.2 4.8c.1-.5.5-.8 1-.8h-2.7zm6.4 2.5h-2.6l-.7 4.4h1.9c1.4 0 2.6-1 2.8-2.4.2-1.4-.6-2-1.4-2z"/></svg>
+                </div>
+                PayPal
+              </div>
+            </td>
+            <td>£5</td>
+            <td>£10,000</td>
+            <td><span class="cmp-yes">Yes</span></td>
+            <td>Privacy, dispute protection</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="cmp-method-cell">
+                <div class="cmp-method-icon" style="background: #0EE06E; color: #003319;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l4-4M3 12l4 4M21 12l-4-4M21 12l-4 4"/></svg>
+                </div>
+                Trustly / Pay N Play
+              </div>
+            </td>
+            <td>£10</td>
+            <td>No limit</td>
+            <td><span class="cmp-yes">Yes (instant)</span></td>
+            <td>Fast withdrawals, no signup</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="methods-section wrap">
+  <div class="section-eyebrow">Browse all methods</div>
+  <h2 class="section-h">Every UK casino payment method, reviewed.</h2>
+  <p class="section-sub">Each method has a dedicated guide, ranked operator list, and tested deposit experience.</p>
+  <div class="methods-grid">
+    <a href="/casino-payments/payforit/" class="method-tile">
+      <div class="method-icon" style="background: var(--blue); color: white;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">Payforit</span>
+        <span class="method-desc">Phone-bill deposits</span>
+      </div>
+    </a>
+    <a href="/casino-payments/boku/" class="method-tile">
+      <div class="method-icon" style="background: #FF4D4D; color: white;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">Boku</span>
+        <span class="method-desc">Pay by mobile leader</span>
+      </div>
+    </a>
+    <a href="/casino-payments/apple-pay/" class="method-tile">
+      <div class="method-icon" style="background: #000; color: white;">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">Apple Pay</span>
+        <span class="method-desc">Biometric deposits</span>
+      </div>
+    </a>
+    <a href="/casino-payments/google-pay/" class="method-tile">
+      <div class="method-icon" style="background: #4285F4; color: white;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">Google Pay</span>
+        <span class="method-desc">Android wallet</span>
+      </div>
+    </a>
+    <a href="/casino-payments/paypal/" class="method-tile">
+      <div class="method-icon" style="background: #003087; color: white;">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 4h7.2c2.5 0 4.3 1.8 3.9 4.5-.4 2.7-2.7 4.6-5.3 4.6h-2l-.7 4.7c-.1.5-.5.9-1 .9H8c-.4 0-.7-.4-.6-.8L9.2 4.8c.1-.5.5-.8 1-.8h-2.7zm6.4 2.5h-2.6l-.7 4.4h1.9c1.4 0 2.6-1 2.8-2.4.2-1.4-.6-2-1.4-2z"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">PayPal</span>
+        <span class="method-desc">Private &amp; protected</span>
+      </div>
+    </a>
+    <a href="/casino-payments/trustly/" class="method-tile">
+      <div class="method-icon" style="background: #0EE06E; color: #003319;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l4-4M3 12l4 4M21 12l-4-4M21 12l-4 4"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">Trustly</span>
+        <span class="method-desc">Instant bank transfer</span>
+      </div>
+    </a>
+    <a href="/casino-payments/pay-n-play/" class="method-tile">
+      <div class="method-icon" style="background: #6C5CE7; color: white;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">Pay N Play</span>
+        <span class="method-desc">No-signup casinos</span>
+      </div>
+    </a>
+    <a href="/casino-payments/skrill/" class="method-tile">
+      <div class="method-icon" style="background: #862165; color: white;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">Skrill</span>
+        <span class="method-desc">E-wallet</span>
+      </div>
+    </a>
+    <a href="/casino-payments/visa/" class="method-tile">
+      <div class="method-icon" style="background: #1A1F71; color: white;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">Visa</span>
+        <span class="method-desc">Debit cards</span>
+      </div>
+    </a>
+    <a href="/casino-payments/mastercard/" class="method-tile">
+      <div class="method-icon" style="background: #EB001B; color: white;">
+        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="12" r="6" opacity="0.85"/><circle cx="15" cy="12" r="6" opacity="0.6"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">Mastercard</span>
+        <span class="method-desc">Debit cards</span>
+      </div>
+    </a>
+    <a href="/casino-payments/paysafecard/" class="method-tile">
+      <div class="method-icon" style="background: #00A0E1; color: white;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h2M12 15h5"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name">Paysafecard</span>
+        <span class="method-desc">Prepaid voucher</span>
+      </div>
+    </a>
+    <a href="/casino-payments/" class="method-tile" style="border-color: var(--blue); background: var(--blue-bg);">
+      <div class="method-icon" style="background: var(--blue); color: white;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+      <div class="method-text">
+        <span class="method-name" style="color: var(--blue);">View all</span>
+        <span class="method-desc">All methods</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="section-grey">
+  <div class="wrap">
+    <div class="section-eyebrow">FAQs</div>
+    <h2 class="section-h">Common questions.</h2>
+    <p class="section-sub">How we work, what we test, and why we do it this way.</p>
+    <div class="faq">
+      <details>
+        <summary><span class="faq-num">Q1</span><span class="faq-q">How do you choose which casinos to feature?</span><span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Our team deposit-tests every UKGC-licensed UK casino we cover. Operators that fail our payment-experience tests — slow withdrawals, blocked welcome offers, support issues — don't make it onto the site, regardless of what commission they offer.</div>
+      </details>
+      <details>
+        <summary><span class="faq-num">Q2</span><span class="faq-q">What does UKGC-licensed mean?</span><span class="faq-toggle">+</span></summary>
+        <div class="faq-body">The UK Gambling Commission regulates every legal online casino operating in Britain. UKGC licensing means the operator is bound by rules covering player protection, responsible gambling tools, fair play, and complaint handling. We don't feature casinos without a current UKGC licence.</div>
+      </details>
+      <details>
+        <summary><span class="faq-num">Q3</span><span class="faq-q">How does PayForItUK make money?</span><span class="faq-toggle">+</span></summary>
+        <div class="faq-body">We earn commission when players sign up to a casino through our links. This is standard affiliate revenue, fully disclosed on every page. Crucially, commission has no influence on our editorial — failing operators don't appear here, no matter what they pay.</div>
+      </details>
+      <details>
+        <summary><span class="faq-num">Q4</span><span class="faq-q">How often do you re-test casinos?</span><span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Every operator gets re-tested regularly, with checks on welcome offers and bonus terms whenever they change. The "last tested" date appears on every operator review page so you can see how current our information is.</div>
+      </details>
+      <details>
+        <summary><span class="faq-num">Q5</span><span class="faq-q">Why focus on payment methods?</span><span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Most UK casino sites list payment methods as a footnote. We start there. The differences in cashier experience — SMS verification times, daily caps that break welcome offers, withdrawal routes that aren't obvious — matter enormously to your experience as a player, and nobody else covers them properly.</div>
+      </details>
+      <details>
+        <summary><span class="faq-num">Q6</span><span class="faq-q">Can I trust your reviews?</span><span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Every review on PayForItUK is signed off by our editorial team, led by Thomas Jones who has covered UK casino payments since 2014. We follow a published editorial policy, disclose every commercial relationship, and don't take operator-supplied content. If we say a casino is good, we mean it.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="trust-footer wrap">
+  <div class="trust-blocks-grid">
+    <a href="/how-we-rate/" class="trust-block">
+      <div class="trust-block-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="3" width="16" height="18" rx="2"/>
+          <path d="M9 7h6M9 12h6M9 17h4"/>
+        </svg>
+      </div>
+      <div class="trust-block-h">How we test</div>
+      <div class="trust-block-d">The full methodology — every test we run on every operator before they appear here.</div>
+    </a>
+    <a href="/editorial-policy/" class="trust-block">
+      <div class="trust-block-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="9" y1="13" x2="15" y2="13"/>
+          <line x1="9" y1="17" x2="15" y2="17"/>
+        </svg>
+      </div>
+      <div class="trust-block-h">Editorial policy</div>
+      <div class="trust-block-d">Independent. UKGC-only. Affiliate-disclosed. The rules we hold ourselves to.</div>
+    </a>
+    <a href="/authors/" class="trust-block">
+      <div class="trust-block-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="trust-block-h">Meet the team</div>
+      <div class="trust-block-d">UK casino payments specialists with verified industry credentials.</div>
+    </a>
+  </div>
+</section>
+
+</main>
+
+<section class="sic">
+  <div class="wrap">
+
+    <div class="sic-eyebrow">
+      <span class="sic-eyebrow-dot"></span>
+      Staying in control
+    </div>
+    <h2 class="sic-h">An important word on responsible gambling.</h2>
+    <p class="sic-intro">Many people enjoy gambling, but <strong>it can be addictive</strong> and, for some, <strong>it comes at a cost</strong>. PayForItUK only features operators licensed by the <strong>UK Gambling Commission</strong> who are committed to the BGC 7th Edition Industry Code.</p>
+
+    <div class="sic-grid">
+
+      <div class="sic-block">
+        <div class="sic-block-h">
+          <div class="sic-block-h-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          Your protection toolkit
+        </div>
+        <div class="sic-tools">
+          <div class="sic-tool">
+            <div class="sic-tool-name">Deposit limits</div>
+            <div class="sic-tool-desc">Set daily, weekly or monthly spending caps to manage your budget.</div>
+          </div>
+          <div class="sic-tool">
+            <div class="sic-tool-name">Reality checks</div>
+            <div class="sic-tool-desc">Automated alerts that keep you aware of how long your session has lasted.</div>
+          </div>
+          <div class="sic-tool">
+            <div class="sic-tool-name">Time-outs</div>
+            <div class="sic-tool-desc">Take an instant break from your account, from 24 hours up to six weeks.</div>
+          </div>
+          <div class="sic-tool">
+            <div class="sic-tool-name">10x wagering cap</div>
+            <div class="sic-tool-desc">All featured brands comply with the Jan 2026 UKGC rule capping bonus wagering at 10x.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sic-block">
+        <div class="sic-block-h">
+          <div class="sic-block-h-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          Talk · Ban · Stop
+        </div>
+        <div class="sic-tbs">
+          <div class="sic-tbs-item">
+            <div class="sic-tbs-letter">T</div>
+            <div class="sic-tbs-content">
+              <div class="sic-tbs-text"><strong>Talk</strong> — for free, confidential advice 24/7, call the National Gambling Helpline on <a href="tel:08088020133">0808 8020 133</a>, operated by <a href="https://www.gamcare.org.uk/" target="_blank" rel="noopener">GamCare</a>.</div>
+            </div>
+          </div>
+          <div class="sic-tbs-item">
+            <div class="sic-tbs-letter">B</div>
+            <div class="sic-tbs-content">
+              <div class="sic-tbs-text"><strong>Ban</strong> — install <a href="https://gamban.com/" target="_blank" rel="noopener">GamBan</a> on your devices to block thousands of gambling sites and apps.</div>
+            </div>
+          </div>
+          <div class="sic-tbs-item">
+            <div class="sic-tbs-letter">S</div>
+            <div class="sic-tbs-content">
+              <div class="sic-tbs-text"><strong>Stop</strong> — register with <a href="https://www.gamstop.co.uk/" target="_blank" rel="noopener">GAMSTOP</a> to self-exclude from every UK-licensed online gambling site in one step.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sic-helpline">
+      <div class="sic-helpline-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <div class="sic-helpline-text">
+        Need to speak to someone now? National Gambling Helpline
+        <strong><a href="tel:08088020133" style="color: white;">0808 8020 133</a></strong>
+      </div>
+    </div>
+
+    <div class="sic-disclosure">
+      Professional clinical support and treatment are available through the <a href="https://www.gambleaware.org/tools-and-support/national-gambling-support-network/" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.75); text-decoration: underline;">National Gambling Support Network</a> and the NHS. PayForItUK is a vetted affiliate. All featured operators are licensed by the UK Gambling Commission and compliant with the BGC 7th Edition Industry Code. 18+ only.
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-links">
+      <a href="/about/">About</a>
+      <a href="/editorial-policy/">Editorial policy</a>
+      <a href="/authors/">Authors</a>
+      <a href="/affiliate-disclosure/">Affiliate disclosure</a>
+      <a href="/responsible-gambling/">Responsible gambling</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/cookies/">Cookies</a>
+      <a href="/terms/">Terms</a>
+      <a href="/contact/">Contact</a>
+    </div>
+    <div>© 2026 PayForItUK. Operated by [Company Ltd], registered in England &amp; Wales (Company No. XXXXXXX). 18+. Gambling can be addictive — please play responsibly.</div>
+  </div>
+</footer>
+
+</body>
+</html>

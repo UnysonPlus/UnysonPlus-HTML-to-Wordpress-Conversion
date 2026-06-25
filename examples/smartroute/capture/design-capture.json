@@ -1,0 +1,2007 @@
+{
+  "url": "https://smart-route-approve.lovable.app/",
+  "title": "SmartRoute — Internal request management",
+  "tokens": {
+    "vars": {
+      "--border": "oklch(85% .012 80)",
+      "--container-md": "28rem",
+      "--tw-inset-shadow-alpha": "100%",
+      "--color-amber-400": "oklch(82.8% .189 84.429)",
+      "--tw-ring-shadow": "0 0 #0000",
+      "--text-2xl": "1.5rem",
+      "--sidebar-primary-foreground": "oklch(98% .012 95)",
+      "--aspect-video": "16 / 9",
+      "--card": "oklch(96% .008 90)",
+      "--tw-drop-shadow-alpha": "100%",
+      "--tw-animation-delay": "0s",
+      "--text-lg": "1.125rem",
+      "--primary-foreground": "oklch(98% .012 95)",
+      "--color-amber-600": "oklch(66.6% .179 58.318)",
+      "--font-body": "\"Manrope\", system-ui, sans-serif",
+      "--card-foreground": "oklch(28% .025 45)",
+      "--tw-outline-style": "solid",
+      "--tw-inset-ring-shadow": "0 0 #0000",
+      "--text-base--line-height": "1.5",
+      "--color-emerald-700": "oklch(50.8% .118 165.612)",
+      "--sidebar-accent-foreground": "oklch(28% .025 45)",
+      "--muted": "oklch(92% .008 90)",
+      "--tw-animation-direction": "normal",
+      "--tw-enter-scale": "1",
+      "--accent-foreground": "oklch(28% .025 45)",
+      "--tracking-wider": ".05em",
+      "--color-amber-300": "oklch(87.9% .169 91.605)",
+      "--warning": "oklch(72% .14 80)",
+      "--popover": "oklch(96% .008 90)",
+      "--ring": "oklch(50% .12 45)",
+      "--color-emerald-600": "oklch(59.6% .145 163.225)",
+      "--tw-inset-shadow": "0 0 #0000",
+      "--tw-ring-offset-color": "#fff",
+      "--text-lg--line-height": "calc(1.75 / 1.125)",
+      "--color-white": "#fff",
+      "--tw-shadow-alpha": "100%",
+      "--sidebar-foreground": "oklch(28% .025 45)",
+      "--sidebar-accent": "oklch(94% .01 90)",
+      "--tw-exit-rotate": "0",
+      "--tw-scale-z": "1",
+      "--font-weight-bold": "700",
+      "--radius": "1rem",
+      "--popover-foreground": "oklch(28% .025 45)",
+      "--color-background": "oklch(98% .012 95)",
+      "--container-sm": "24rem",
+      "--tw-ring-offset-width": "0px",
+      "--tw-exit-translate-y": "0",
+      "--text-xs--line-height": "calc(1 / .75)",
+      "--tw-space-x-reverse": "0",
+      "--container-lg": "32rem",
+      "--color-amber-800": "oklch(47.3% .137 46.201)",
+      "--destructive-foreground": "oklch(98% .012 95)",
+      "--default-transition-duration": ".15s",
+      "--chart-4": "oklch(50% .14 25)",
+      "--chart-2": "oklch(55% .08 140)",
+      "--animate-pulse": "pulse 2s cubic-bezier(.4, 0, .6, 1) infinite",
+      "--text-xl": "1.25rem",
+      "--container-xs": "20rem",
+      "--sidebar-primary": "oklch(50% .12 45)",
+      "--font-heading": "\"Noto Serif\", Georgia, serif",
+      "--ease-in-out": "cubic-bezier(.4, 0, .2, 1)",
+      "--tw-ring-offset-shadow": "0 0 #0000",
+      "--leading-relaxed": "1.625",
+      "--leading-snug": "1.375",
+      "--accent": "oklch(94% .01 90)",
+      "--default-transition-timing-function": "cubic-bezier(.4, 0, .2, 1)",
+      "--tw-animation-iteration-count": "1",
+      "--tw-exit-opacity": "1",
+      "--tw-animation-fill-mode": "none",
+      "--text-2xl--line-height": "calc(2 / 1.5)",
+      "--tw-exit-blur": "0",
+      "--secondary-foreground": "oklch(98% .012 95)",
+      "--color-amber-500": "oklch(76.9% .188 70.08)",
+      "--spacing": ".25rem",
+      "--background": "oklch(98% .012 95)",
+      "--tw-translate-z": "0",
+      "--tw-scale-y": "1",
+      "--container-6xl": "72rem",
+      "--tracking-wide": ".025em",
+      "--text-xl--line-height": "calc(1.75 / 1.25)",
+      "--font-weight-semibold": "600",
+      "--tw-exit-translate-x": "0",
+      "--container-3xl": "48rem",
+      "--text-sm": ".875rem",
+      "--tw-translate-y": "0",
+      "--ease-out": "cubic-bezier(0, 0, .2, 1)",
+      "--color-emerald-500": "oklch(69.6% .17 162.48)",
+      "--animate-spin": "spin 1s linear infinite",
+      "--tw-enter-translate-x": "0",
+      "--color-amber-700": "oklch(55.5% .163 48.998)",
+      "--tw-content": "\"\"",
+      "--warning-foreground": "oklch(28% .025 45)",
+      "--sidebar-border": "oklch(85% .012 80)",
+      "--chart-5": "oklch(60% .06 50)",
+      "--leading-tight": "1.25",
+      "--font-weight-extrabold": "800",
+      "--muted-foreground": "oklch(55% .015 60)",
+      "--tw-divide-y-reverse": "0",
+      "--tw-border-style": "solid",
+      "--color-amber-950": "oklch(27.9% .077 45.635)",
+      "--container-2xl": "42rem",
+      "--tw-exit-scale": "1",
+      "--tw-shadow": "0 0 #0000",
+      "--text-sm--line-height": "calc(1.25 / .875)",
+      "--tw-translate-x": "0",
+      "--color-border": "oklch(85% .012 80)",
+      "--input": "oklch(85% .012 80)",
+      "--text-3xl--line-height": "1.2",
+      "--tw-enter-rotate": "0",
+      "--text-3xl": "1.875rem",
+      "--color-black": "#000",
+      "--tracking-widest": ".1em",
+      "--text-xs": ".75rem",
+      "--destructive": "oklch(50% .14 25)",
+      "--font-weight-medium": "500",
+      "--color-foreground": "oklch(28% .025 45)",
+      "--tw-scale-x": "1",
+      "--tw-enter-translate-y": "0",
+      "--font-weight-normal": "400",
+      "--color-emerald-400": "oklch(76.5% .177 163.223)",
+      "--chart-3": "oklch(72% .14 80)",
+      "--sidebar": "oklch(92% .008 90)",
+      "--tw-enter-blur": "0",
+      "--tw-space-y-reverse": "0",
+      "--container-xl": "36rem",
+      "--primary": "oklch(50% .12 45)",
+      "--color-amber-50": "oklch(98.7% .022 95.277)",
+      "--tw-enter-opacity": "1",
+      "--foreground": "oklch(28% .025 45)",
+      "--text-base": "1rem",
+      "--secondary": "oklch(60% .06 50)",
+      "--blur-sm": "8px",
+      "--sidebar-ring": "oklch(50% .12 45)",
+      "--chart-1": "oklch(50% .12 45)",
+      "--tracking-tight": "-.025em"
+    },
+    "body": {
+      "fontFamily": "Manrope, system-ui, sans-serif",
+      "color": "oklch(0.28 0.025 45)",
+      "backgroundColor": "oklch(0.98 0.012 95)",
+      "lineHeight": "24px",
+      "fontSize": "16px"
+    }
+  },
+  "header": {
+    "element": {
+      "display": "block",
+      "justifyContent": "normal",
+      "alignItems": "normal",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "position": "fixed",
+      "padding": "0px"
+    },
+    "bar": {
+      "display": "block",
+      "justifyContent": "normal",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "border": "0px solid oklch(0.85 0.012 80)",
+      "padding": "16px 32px 0px",
+      "maxWidth": "1280px",
+      "backdropFilter": "none"
+    },
+    "logo": {
+      "type": "text",
+      "text": "SmartRoute",
+      "computed": {
+        "fontFamily": "Fraunces, serif",
+        "fontSize": "24px",
+        "fontWeight": "600",
+        "color": "oklch(0.28 0.025 45)",
+        "letterSpacing": "-0.6px"
+      }
+    },
+    "nav": [
+      {
+        "label": "Features",
+        "href": "https://smart-route-approve.lovable.app/",
+        "computed": {
+          "fontFamily": "Manrope, system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "500",
+          "color": "oklch(0.5 0.12 45)"
+        }
+      },
+      {
+        "label": "How it works",
+        "href": "https://smart-route-approve.lovable.app/",
+        "computed": {
+          "fontFamily": "Manrope, system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "500",
+          "color": "oklch(0.28 0.025 45)"
+        }
+      },
+      {
+        "label": "Studio",
+        "href": "https://smart-route-approve.lovable.app/",
+        "computed": {
+          "fontFamily": "Manrope, system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "500",
+          "color": "oklch(0.28 0.025 45)"
+        }
+      },
+      {
+        "label": "Pricing",
+        "href": "https://smart-route-approve.lovable.app/",
+        "computed": {
+          "fontFamily": "Manrope, system-ui, sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "500",
+          "color": "oklch(0.28 0.025 45)"
+        }
+      }
+    ],
+    "cta": {
+      "label": "Get started",
+      "href": "https://smart-route-approve.lovable.app/signup",
+      "computed": {
+        "backgroundColor": "oklch(0.28 0.025 45)",
+        "color": "oklch(0.98 0.012 95)",
+        "borderRadius": "3.35544e+07px",
+        "padding": "8px 24px",
+        "fontFamily": "Manrope, system-ui, sans-serif",
+        "fontWeight": "500"
+      }
+    }
+  },
+  "footer": {
+    "computed": {
+      "backgroundColor": "oklch(0.98 0.012 95)",
+      "color": "oklch(0.28 0.025 45)",
+      "padding": "48px 0px"
+    },
+    "brand": "",
+    "groups": [],
+    "social": [],
+    "copyright": "© 2026 SmartRoute studio. Crafted for the sunlit path.",
+    "links": [
+      {
+        "label": "Privacy policy",
+        "href": "https://smart-route-approve.lovable.app/#"
+      },
+      {
+        "label": "Terms of service",
+        "href": "https://smart-route-approve.lovable.app/#"
+      },
+      {
+        "label": "Contact us",
+        "href": "https://smart-route-approve.lovable.app/#"
+      },
+      {
+        "label": "Journal",
+        "href": "https://smart-route-approve.lovable.app/#"
+      }
+    ],
+    "text": "SmartRoute studioPrivacy policyTerms of serviceContact usJournal© 2026 SmartRoute studio. Crafted for the sunlit path."
+  },
+  "sections": [
+    {
+      "heading": "Routing with aPulse.",
+      "headingHtml": "<strong>Routing with a</strong><br><em>Pulse.</em>",
+      "level": 1,
+      "headingComputed": {
+        "fontFamily": "Fraunces, serif",
+        "fontSize": "72px",
+        "fontWeight": "400",
+        "color": "oklch(0.28 0.025 45)"
+      },
+      "overline": "Human-centric logic",
+      "overlineComputed": {
+        "backgroundColor": "oklch(0.28 0.025 45)",
+        "color": "oklch(0.98 0.012 95)",
+        "textTransform": "uppercase",
+        "letterSpacing": "1.2px",
+        "borderRadius": "3.35544e+07px",
+        "fontSize": "12px"
+      },
+      "lead": "Beyond scattered emails lies a heartbeat. We've designed an operations studio that values every team member's time as much as the request's resolution.",
+      "paragraphs": [
+        "Beyond scattered emails lies a heartbeat. We've designed an operations studio that values every team member's time as much as the request's resolution."
+      ],
+      "buttons": [
+        {
+          "label": "Explore the studio",
+          "href": "https://smart-route-approve.lovable.app/signup",
+          "primary": true
+        },
+        {
+          "label": "Our story",
+          "href": "https://smart-route-approve.lovable.app/#how-it-works",
+          "primary": true
+        }
+      ],
+      "cards": [],
+      "images": [
+        "https://smart-route-approve.lovable.app/assets/hero-workspace-4p6i8zLy.png"
+      ],
+      "grids": [],
+      "bgPattern": {
+        "image": "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232E2421' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+        "repeat": "repeat",
+        "size": "auto",
+        "opacity": 0.03
+      },
+      "computed": {
+        "backgroundColor": "oklch(0.98 0.012 95)",
+        "padding": "0px",
+        "textAlign": "start",
+        "color": "oklch(0.28 0.025 45)"
+      },
+      "text": "Human-centric logicRouting with aPulse.Beyond scattered emails lies a heartbeat. We've designed an operations studio that values every team member's time as much as the request's resolution.Explore the studioOur story",
+      "mirror": {
+        "role": "container",
+        "tag": "section",
+        "styles": {
+          "bg": "oklch(0.98 0.012 95)",
+          "flex": {
+            "dir": "row",
+            "justify": "normal",
+            "align": "center",
+            "gap": "normal",
+            "wrap": "nowrap"
+          }
+        },
+        "children": [
+          {
+            "role": "container",
+            "tag": "div",
+            "styles": {
+              "padding": "48px 32px 0px",
+              "maxWidth": "1280px"
+            },
+            "children": [
+              {
+                "role": "container",
+                "tag": "div",
+                "styles": {
+                  "grid": {
+                    "cols": "72px 72px 72px 72px 72px 72px 72px 72px 72px 72px 72px 72px",
+                    "gap": "32px"
+                  }
+                },
+                "children": [
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {},
+                    "children": [
+                      {
+                        "role": "text",
+                        "html": "Human-centric logic",
+                        "text": "Human-centric logic",
+                        "styles": {
+                          "bg": "oklch(0.28 0.025 45)",
+                          "padding": "6px 16px",
+                          "borderRadius": "3.35544e+07px",
+                          "color": "oklch(0.98 0.012 95)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "12px",
+                          "fontWeight": "600",
+                          "letterSpacing": "1.2px",
+                          "lineHeight": "16px",
+                          "textTransform": "uppercase"
+                        }
+                      },
+                      {
+                        "role": "heading",
+                        "level": 1,
+                        "html": "<strong>Routing with a</strong><br><em>Pulse.</em>",
+                        "text": "Routing with aPulse.",
+                        "styles": {
+                          "color": "oklch(0.28 0.025 45)",
+                          "fontFamily": "Fraunces, serif",
+                          "fontSize": "72px",
+                          "letterSpacing": "-1.44px",
+                          "lineHeight": "75.6px"
+                        }
+                      },
+                      {
+                        "role": "text",
+                        "html": "Beyond scattered emails lies a heartbeat. We've designed an operations studio that values every team member's time as much as the request's resolution.",
+                        "text": "Beyond scattered emails lies a heartbeat. We've designed an operations studio that values every team member's time as much as the request's resolution.",
+                        "styles": {
+                          "color": "oklch(0.55 0.015 60)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "18px",
+                          "lineHeight": "29.25px"
+                        }
+                      },
+                      {
+                        "role": "container",
+                        "tag": "div",
+                        "styles": {
+                          "padding": "4px 0px 0px",
+                          "flex": {
+                            "dir": "row",
+                            "justify": "normal",
+                            "align": "normal",
+                            "gap": "12px",
+                            "wrap": "wrap"
+                          }
+                        },
+                        "children": [
+                          {
+                            "role": "button",
+                            "label": "Explore the studio",
+                            "href": "https://smart-route-approve.lovable.app/signup",
+                            "styles": {
+                              "bg": "oklch(0.5 0.12 45)",
+                              "padding": "14px 28px",
+                              "borderRadius": "3.35544e+07px",
+                              "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(142, 77, 49, 0.25) 0px 2px 8px 0px",
+                              "color": "oklch(0.98 0.012 95)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "14px",
+                              "fontWeight": "600",
+                              "lineHeight": "20px"
+                            }
+                          },
+                          {
+                            "role": "button",
+                            "label": "Our story",
+                            "href": "https://smart-route-approve.lovable.app/#how-it-works",
+                            "styles": {
+                              "bg": "oklch(0.96 0.008 90)",
+                              "padding": "14px 28px",
+                              "borderRadius": "3.35544e+07px",
+                              "border": "1px solid oklch(0.85 0.012 80)",
+                              "color": "oklch(0.28 0.025 45)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "14px",
+                              "fontWeight": "600",
+                              "lineHeight": "20px"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "flex": {
+                        "dir": "row",
+                        "justify": "flex-end",
+                        "align": "normal",
+                        "gap": "normal",
+                        "wrap": "nowrap"
+                      }
+                    },
+                    "children": [
+                      {
+                        "role": "container",
+                        "tag": "div",
+                        "styles": {
+                          "maxWidth": "640px"
+                        },
+                        "children": [
+                          {
+                            "role": "image",
+                            "src": "https://smart-route-approve.lovable.app/assets/hero-workspace-4p6i8zLy.png",
+                            "alt": "Sunlit workspace desk with monitor showing SmartRoute dashboard, terracotta pottery, coffee, and plants",
+                            "styles": {
+                              "borderRadius": "28px",
+                              "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(46, 36, 33, 0.15) 0px 8px 40px -8px",
+                              "color": "oklch(0.28 0.025 45)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "16px",
+                              "lineHeight": "24px"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "heading": "Everything your team needs",
+      "headingHtml": "",
+      "level": 2,
+      "headingComputed": {
+        "fontFamily": "Fraunces, serif",
+        "fontSize": "40px",
+        "fontWeight": "700",
+        "color": "oklch(0.28 0.025 45)"
+      },
+      "overline": "",
+      "overlineComputed": null,
+      "lead": "From submission to resolution, SmartRoute replaces scattered emails and rigid spreadsheets with a calm, connected workflow.",
+      "paragraphs": [
+        "From submission to resolution, SmartRoute replaces scattered emails and rigid spreadsheets with a calm, connected workflow.",
+        "Where precision meets artisan design.",
+        "Requests find the right approver automatically based on type, urgency, department, and workload — no manual triage needed.",
+        "Multi-stage approvals with conditions, delegation, and out-of-office coverage — nothing falls through the cracks.",
+        "4.2h",
+        "Avg resolution time",
+        "96%",
+        "SLA compliance"
+      ],
+      "buttons": [],
+      "cards": [
+        {
+          "number": "",
+          "icon": "",
+          "title": "",
+          "text": "From submission to resolution, SmartRoute replaces scattered emails and rigid spreadsheets with a calm, connected workflow.",
+          "image": ""
+        },
+        {
+          "number": "",
+          "icon": "auto_awesome",
+          "title": "SmartRoute studio",
+          "text": "Where precision meets artisan design.",
+          "image": "https://smart-route-approve.lovable.app/__l5e/assets-v1/240473cb-6e91-47f8-985c-95c24613f205/studio-dashboard-new.jpg"
+        },
+        {
+          "number": "",
+          "icon": "",
+          "title": "",
+          "text": "4.2h",
+          "image": ""
+        },
+        {
+          "number": "",
+          "icon": "edit_note",
+          "title": "Custom forms",
+          "text": "Dynamic fields adapt to each request type — no rigid templates, just the right questions.",
+          "image": ""
+        }
+      ],
+      "images": [
+        "https://smart-route-approve.lovable.app/__l5e/assets-v1/240473cb-6e91-47f8-985c-95c24613f205/studio-dashboard-new.jpg"
+      ],
+      "grids": [
+        {
+          "cols": 2,
+          "tiles": [
+            {
+              "kind": "showcase",
+              "title": "SmartRoute studio",
+              "text": "Where precision meets artisan design.",
+              "icon": "",
+              "image": "https://smart-route-approve.lovable.app/__l5e/assets-v1/240473cb-6e91-47f8-985c-95c24613f205/studio-dashboard-new.jpg"
+            },
+            {
+              "kind": "feature",
+              "title": "Smart routing",
+              "text": "Requests find the right approver automatically based on type, urgency, department, and workload — no manual triage needed.",
+              "icon": "auto_awesome",
+              "image": ""
+            }
+          ]
+        },
+        {
+          "cols": 3,
+          "tiles": [
+            {
+              "kind": "stat",
+              "stat": "4.2h",
+              "label": "Avg resolution time"
+            },
+            {
+              "kind": "stat",
+              "stat": "96%",
+              "label": "SLA compliance"
+            },
+            {
+              "kind": "stat",
+              "stat": "500+",
+              "label": "Teams onboarded"
+            }
+          ]
+        },
+        {
+          "cols": 3,
+          "tiles": [
+            {
+              "kind": "feature",
+              "title": "Custom forms",
+              "text": "Dynamic fields adapt to each request type — no rigid templates, just the right questions.",
+              "icon": "edit_note",
+              "image": ""
+            },
+            {
+              "kind": "feature",
+              "title": "Real-time dashboard",
+              "text": "Live views of queue health, bottlenecks, and SLA countdowns across every department.",
+              "icon": "monitoring",
+              "image": ""
+            },
+            {
+              "kind": "feature",
+              "title": "Audit trail",
+              "text": "Every action timestamped and attributed — full transparency for compliance and trust.",
+              "icon": "history",
+              "image": ""
+            }
+          ]
+        }
+      ],
+      "bgPattern": null,
+      "computed": {
+        "backgroundColor": "oklab(0.96 -3.49691e-10 0.008 / 0.6)",
+        "padding": "128px 0px",
+        "textAlign": "start",
+        "color": "oklch(0.28 0.025 45)"
+      },
+      "text": "Everything your team needsFrom submission to resolution, SmartRoute replaces scattered emails and rigid spreadsheets with a calm, connected workflow.SmartRoute studioWhere precision meets artisan design.auto_awesomeSmart routingRequests find the right approver automatically based on type, urgency, department, and workload — no manual triage needed.checklistApproval workflowsMulti-stage approvals with conditions, delegation, and out-of-office coverage — nothing falls through the cracks.4.2hAvg resolution time96%SLA compliance500+Teams onboardededit_noteCustom formsDynamic fields adapt to each request type — no rigid templates, just the right questions.monitoringReal-time dashboardLive views of queue health, bottlenecks, and SLA countdowns across every department.historyAudit trailEvery action timestamped and attributed — full transparency for compliance and trust.",
+      "mirror": {
+        "role": "container",
+        "tag": "section",
+        "styles": {
+          "bg": "oklab(0.96 -3.49691e-10 0.008 / 0.6)",
+          "padding": "128px 0px"
+        },
+        "children": [
+          {
+            "role": "container",
+            "tag": "div",
+            "styles": {
+              "padding": "0px 32px",
+              "maxWidth": "1280px"
+            },
+            "children": [
+              {
+                "role": "container",
+                "tag": "div",
+                "styles": {
+                  "maxWidth": "576px"
+                },
+                "children": [
+                  {
+                    "role": "heading",
+                    "level": 2,
+                    "html": "Everything your team needs",
+                    "text": "Everything your team needs",
+                    "styles": {
+                      "color": "oklch(0.28 0.025 45)",
+                      "fontFamily": "Fraunces, serif",
+                      "fontSize": "40px",
+                      "fontWeight": "700",
+                      "lineHeight": "44px"
+                    }
+                  },
+                  {
+                    "role": "text",
+                    "html": "From submission to resolution, SmartRoute replaces scattered emails and rigid spreadsheets with a calm, connected workflow.",
+                    "text": "From submission to resolution, SmartRoute replaces scattered emails and rigid spreadsheets with a calm, connected workflow.",
+                    "styles": {
+                      "color": "oklch(0.55 0.015 60)",
+                      "fontFamily": "Manrope, system-ui, sans-serif",
+                      "fontSize": "16px",
+                      "lineHeight": "26px"
+                    }
+                  }
+                ]
+              },
+              {
+                "role": "container",
+                "tag": "div",
+                "styles": {
+                  "grid": {
+                    "cols": "83px 83px 83px 83px 83px 83px 83px 83px 83px 83px 83px 83px",
+                    "gap": "20px"
+                  }
+                },
+                "children": [
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "bg": "rgb(91, 138, 138)",
+                      "padding": "32px",
+                      "borderRadius": "24px",
+                      "flex": {
+                        "dir": "column",
+                        "justify": "space-between",
+                        "align": "normal",
+                        "gap": "normal",
+                        "wrap": "nowrap"
+                      }
+                    },
+                    "children": [
+                      {
+                        "role": "container",
+                        "tag": "div",
+                        "styles": {
+                          "flex": {
+                            "dir": "row",
+                            "justify": "center",
+                            "align": "center",
+                            "gap": "normal",
+                            "wrap": "nowrap"
+                          }
+                        },
+                        "children": [
+                          {
+                            "role": "container",
+                            "tag": "div",
+                            "styles": {
+                              "borderRadius": "20px",
+                              "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.2) 0px 8px 32px 0px",
+                              "maxWidth": "520px"
+                            },
+                            "children": [
+                              {
+                                "role": "image",
+                                "src": "https://smart-route-approve.lovable.app/__l5e/assets-v1/240473cb-6e91-47f8-985c-95c24613f205/studio-dashboard-new.jpg",
+                                "alt": "Team collaborating on approval workflows in a warm workspace",
+                                "styles": {
+                                  "color": "oklch(0.28 0.025 45)",
+                                  "fontFamily": "Manrope, system-ui, sans-serif",
+                                  "fontSize": "16px",
+                                  "lineHeight": "24px"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "role": "container",
+                        "tag": "div",
+                        "styles": {},
+                        "children": [
+                          {
+                            "role": "heading",
+                            "level": 3,
+                            "html": "SmartRoute studio",
+                            "text": "SmartRoute studio",
+                            "styles": {
+                              "color": "rgb(255, 255, 255)",
+                              "fontFamily": "\"Noto Serif\", serif",
+                              "fontSize": "24px",
+                              "fontWeight": "600",
+                              "lineHeight": "36px"
+                            }
+                          },
+                          {
+                            "role": "text",
+                            "html": "Where precision meets artisan design.",
+                            "text": "Where precision meets artisan design.",
+                            "styles": {
+                              "color": "oklab(0.999994 0.0000455677 0.0000200868 / 0.7)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "14px",
+                              "lineHeight": "20px"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "flex": {
+                        "dir": "column",
+                        "justify": "normal",
+                        "align": "normal",
+                        "gap": "20px",
+                        "wrap": "nowrap"
+                      }
+                    },
+                    "children": [
+                      {
+                        "role": "container",
+                        "tag": "div",
+                        "styles": {
+                          "bg": "oklch(0.5 0.12 45)",
+                          "padding": "28px",
+                          "borderRadius": "24px",
+                          "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(142, 77, 49, 0.15) 0px 2px 12px 0px"
+                        },
+                        "children": [
+                          {
+                            "role": "heading",
+                            "level": 3,
+                            "html": "Smart routing",
+                            "text": "Smart routing",
+                            "styles": {
+                              "color": "oklch(0.98 0.012 95)",
+                              "fontFamily": "\"Noto Serif\", Georgia, serif",
+                              "fontSize": "16px",
+                              "fontWeight": "600",
+                              "lineHeight": "24px"
+                            }
+                          },
+                          {
+                            "role": "text",
+                            "html": "Requests find the right approver automatically based on type, urgency, department, and workload — no manual triage needed.",
+                            "text": "Requests find the right approver automatically based on type, urgency, department, and workload — no manual triage needed.",
+                            "styles": {
+                              "color": "oklab(0.98 -0.00104587 0.0119543 / 0.7)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "14px",
+                              "lineHeight": "22.75px"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "role": "container",
+                        "tag": "div",
+                        "styles": {
+                          "bg": "oklch(0.96 0.008 90)",
+                          "padding": "28px",
+                          "borderRadius": "24px",
+                          "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.04) 0px 1px 3px 0px",
+                          "border": "1px solid oklch(0.85 0.012 80)"
+                        },
+                        "children": [
+                          {
+                            "role": "text",
+                            "html": "checklist",
+                            "text": "checklist",
+                            "styles": {
+                              "color": "oklch(0.5 0.12 45)",
+                              "fontFamily": "\"Material Symbols Outlined\"",
+                              "fontSize": "28px",
+                              "lineHeight": "28px"
+                            }
+                          },
+                          {
+                            "role": "heading",
+                            "level": 3,
+                            "html": "Approval workflows",
+                            "text": "Approval workflows",
+                            "styles": {
+                              "color": "oklch(0.28 0.025 45)",
+                              "fontFamily": "\"Noto Serif\", Georgia, serif",
+                              "fontSize": "16px",
+                              "fontWeight": "600",
+                              "lineHeight": "24px"
+                            }
+                          },
+                          {
+                            "role": "text",
+                            "html": "Multi-stage approvals with conditions, delegation, and out-of-office coverage — nothing falls through the cracks.",
+                            "text": "Multi-stage approvals with conditions, delegation, and out-of-office coverage — nothing falls through the cracks.",
+                            "styles": {
+                              "color": "oklch(0.55 0.015 60)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "14px",
+                              "lineHeight": "22.75px"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "role": "container",
+                "tag": "div",
+                "styles": {
+                  "grid": {
+                    "cols": "392px 392px 392px",
+                    "gap": "20px"
+                  }
+                },
+                "children": [
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "textAlign": "center",
+                      "bg": "oklch(0.96 0.008 90)",
+                      "padding": "24px",
+                      "borderRadius": "24px",
+                      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.04) 0px 1px 3px 0px",
+                      "border": "1px solid oklch(0.85 0.012 80)"
+                    },
+                    "children": [
+                      {
+                        "role": "text",
+                        "html": "4.2h",
+                        "text": "4.2h",
+                        "styles": {
+                          "textAlign": "center",
+                          "color": "oklch(0.28 0.025 45)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "30px",
+                          "fontWeight": "700",
+                          "letterSpacing": "-0.75px",
+                          "lineHeight": "36px"
+                        }
+                      },
+                      {
+                        "role": "text",
+                        "html": "Avg resolution time",
+                        "text": "Avg resolution time",
+                        "styles": {
+                          "textAlign": "center",
+                          "color": "oklch(0.55 0.015 60)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "14px",
+                          "lineHeight": "20px"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "textAlign": "center",
+                      "bg": "oklch(0.96 0.008 90)",
+                      "padding": "24px",
+                      "borderRadius": "24px",
+                      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.04) 0px 1px 3px 0px",
+                      "border": "1px solid oklch(0.85 0.012 80)"
+                    },
+                    "children": [
+                      {
+                        "role": "text",
+                        "html": "96%",
+                        "text": "96%",
+                        "styles": {
+                          "textAlign": "center",
+                          "color": "oklch(0.28 0.025 45)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "30px",
+                          "fontWeight": "700",
+                          "letterSpacing": "-0.75px",
+                          "lineHeight": "36px"
+                        }
+                      },
+                      {
+                        "role": "text",
+                        "html": "SLA compliance",
+                        "text": "SLA compliance",
+                        "styles": {
+                          "textAlign": "center",
+                          "color": "oklch(0.55 0.015 60)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "14px",
+                          "lineHeight": "20px"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "textAlign": "center",
+                      "bg": "oklch(0.96 0.008 90)",
+                      "padding": "24px",
+                      "borderRadius": "24px",
+                      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.04) 0px 1px 3px 0px",
+                      "border": "1px solid oklch(0.85 0.012 80)"
+                    },
+                    "children": [
+                      {
+                        "role": "text",
+                        "html": "500+",
+                        "text": "500+",
+                        "styles": {
+                          "textAlign": "center",
+                          "color": "oklch(0.28 0.025 45)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "30px",
+                          "fontWeight": "700",
+                          "letterSpacing": "-0.75px",
+                          "lineHeight": "36px"
+                        }
+                      },
+                      {
+                        "role": "text",
+                        "html": "Teams onboarded",
+                        "text": "Teams onboarded",
+                        "styles": {
+                          "textAlign": "center",
+                          "color": "oklch(0.55 0.015 60)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "14px",
+                          "lineHeight": "20px"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "role": "container",
+                "tag": "div",
+                "styles": {
+                  "grid": {
+                    "cols": "392px 392px 392px",
+                    "gap": "20px"
+                  }
+                },
+                "children": [
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "bg": "oklch(0.96 0.008 90)",
+                      "padding": "28px",
+                      "borderRadius": "24px",
+                      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.04) 0px 1px 3px 0px",
+                      "border": "1px solid oklch(0.85 0.012 80)"
+                    },
+                    "children": [
+                      {
+                        "role": "heading",
+                        "level": 3,
+                        "html": "Custom forms",
+                        "text": "Custom forms",
+                        "styles": {
+                          "color": "oklch(0.28 0.025 45)",
+                          "fontFamily": "\"Noto Serif\", Georgia, serif",
+                          "fontSize": "16px",
+                          "fontWeight": "600",
+                          "lineHeight": "24px"
+                        }
+                      },
+                      {
+                        "role": "text",
+                        "html": "Dynamic fields adapt to each request type — no rigid templates, just the right questions.",
+                        "text": "Dynamic fields adapt to each request type — no rigid templates, just the right questions.",
+                        "styles": {
+                          "color": "oklch(0.55 0.015 60)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "14px",
+                          "lineHeight": "22.75px"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "bg": "oklch(0.96 0.008 90)",
+                      "padding": "28px",
+                      "borderRadius": "24px",
+                      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.04) 0px 1px 3px 0px",
+                      "border": "1px solid oklch(0.85 0.012 80)"
+                    },
+                    "children": [
+                      {
+                        "role": "text",
+                        "html": "monitoring",
+                        "text": "monitoring",
+                        "styles": {
+                          "color": "oklch(0.5 0.12 45)",
+                          "fontFamily": "\"Material Symbols Outlined\"",
+                          "fontSize": "28px",
+                          "lineHeight": "28px"
+                        }
+                      },
+                      {
+                        "role": "heading",
+                        "level": 3,
+                        "html": "Real-time dashboard",
+                        "text": "Real-time dashboard",
+                        "styles": {
+                          "color": "oklch(0.28 0.025 45)",
+                          "fontFamily": "\"Noto Serif\", Georgia, serif",
+                          "fontSize": "16px",
+                          "fontWeight": "600",
+                          "lineHeight": "24px"
+                        }
+                      },
+                      {
+                        "role": "text",
+                        "html": "Live views of queue health, bottlenecks, and SLA countdowns across every department.",
+                        "text": "Live views of queue health, bottlenecks, and SLA countdowns across every department.",
+                        "styles": {
+                          "color": "oklch(0.55 0.015 60)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "14px",
+                          "lineHeight": "22.75px"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "bg": "oklch(0.96 0.008 90)",
+                      "padding": "28px",
+                      "borderRadius": "24px",
+                      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.04) 0px 1px 3px 0px",
+                      "border": "1px solid oklch(0.85 0.012 80)"
+                    },
+                    "children": [
+                      {
+                        "role": "text",
+                        "html": "history",
+                        "text": "history",
+                        "styles": {
+                          "color": "oklch(0.5 0.12 45)",
+                          "fontFamily": "\"Material Symbols Outlined\"",
+                          "fontSize": "28px",
+                          "lineHeight": "28px"
+                        }
+                      },
+                      {
+                        "role": "heading",
+                        "level": 3,
+                        "html": "Audit trail",
+                        "text": "Audit trail",
+                        "styles": {
+                          "color": "oklch(0.28 0.025 45)",
+                          "fontFamily": "\"Noto Serif\", Georgia, serif",
+                          "fontSize": "16px",
+                          "fontWeight": "600",
+                          "lineHeight": "24px"
+                        }
+                      },
+                      {
+                        "role": "text",
+                        "html": "Every action timestamped and attributed — full transparency for compliance and trust.",
+                        "text": "Every action timestamped and attributed — full transparency for compliance and trust.",
+                        "styles": {
+                          "color": "oklch(0.55 0.015 60)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "14px",
+                          "lineHeight": "22.75px"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "heading": "Three steps. Zero chaos.",
+      "headingHtml": "",
+      "level": 2,
+      "headingComputed": {
+        "fontFamily": "Fraunces, serif",
+        "fontSize": "40px",
+        "fontWeight": "700",
+        "color": "oklch(0.28 0.025 45)"
+      },
+      "overline": "",
+      "overlineComputed": null,
+      "lead": "From request to resolution in a flow that feels natural — not another learning curve.",
+      "paragraphs": [
+        "From request to resolution in a flow that feels natural — not another learning curve.",
+        "Employees fill a smart form tailored to the request type — no guesswork, no wrong channels.",
+        "The engine evaluates rules, workload, and availability to find the right approver instantly.",
+        "Real-time SLA tracking, status updates, and satisfaction feedback — all in one place."
+      ],
+      "buttons": [],
+      "cards": [
+        {
+          "number": "01",
+          "icon": "edit_note",
+          "title": "Submit a request",
+          "text": "Employees fill a smart form tailored to the request type — no guesswork, no wrong channels.",
+          "image": ""
+        },
+        {
+          "number": "02",
+          "icon": "route",
+          "title": "Automatic routing",
+          "text": "The engine evaluates rules, workload, and availability to find the right approver instantly.",
+          "image": ""
+        },
+        {
+          "number": "03",
+          "icon": "trending_up",
+          "title": "Track to resolution",
+          "text": "Real-time SLA tracking, status updates, and satisfaction feedback — all in one place.",
+          "image": ""
+        }
+      ],
+      "images": [
+        "https://smart-route-approve.lovable.app/__l5e/assets-v1/0c2c42e8-d93d-4057-bc51-ae80adc49df9/how-it-works-desk-new.jpg"
+      ],
+      "grids": [],
+      "bgPattern": null,
+      "computed": {
+        "backgroundColor": "oklch(0.98 0.012 95)",
+        "padding": "128px 0px",
+        "textAlign": "start",
+        "color": "oklch(0.28 0.025 45)"
+      },
+      "text": "Three steps. Zero chaos.From request to resolution in a flow that feels natural — not another learning curve.01edit_noteSubmit a requestEmployees fill a smart form tailored to the request type — no guesswork, no wrong channels.02routeAutomatic routingThe engine evaluates rules, workload, and availability to find the right approver instantly.03trending_upTrack to resolutionReal-time SLA tracking, status updates, and satisfaction feedback — all in one place.",
+      "mirror": {
+        "role": "container",
+        "tag": "section",
+        "styles": {
+          "bg": "oklch(0.98 0.012 95)",
+          "padding": "128px 0px"
+        },
+        "children": [
+          {
+            "role": "container",
+            "tag": "div",
+            "styles": {
+              "padding": "0px 32px",
+              "maxWidth": "1280px"
+            },
+            "children": [
+              {
+                "role": "container",
+                "tag": "div",
+                "styles": {
+                  "grid": {
+                    "cols": "42.6562px 42.6562px 42.6562px 42.6562px 42.6562px 42.6562px 42.6562px 42.6562px 42.6562px 42.6562px 42.6562px 42.6562px",
+                    "gap": "64px"
+                  }
+                },
+                "children": [
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {},
+                    "children": [
+                      {
+                        "role": "image",
+                        "src": "https://smart-route-approve.lovable.app/__l5e/assets-v1/0c2c42e8-d93d-4057-bc51-ae80adc49df9/how-it-works-desk-new.jpg",
+                        "alt": "Clean desk with laptop showing a request form, coffee, and notebook",
+                        "styles": {
+                          "borderRadius": "28px",
+                          "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 8px 40px 0px",
+                          "color": "oklch(0.28 0.025 45)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "16px",
+                          "lineHeight": "24px"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {},
+                    "children": [
+                      {
+                        "role": "container",
+                        "tag": "div",
+                        "styles": {},
+                        "children": [
+                          {
+                            "role": "heading",
+                            "level": 2,
+                            "html": "Three steps. Zero chaos.",
+                            "text": "Three steps. Zero chaos.",
+                            "styles": {
+                              "color": "oklch(0.28 0.025 45)",
+                              "fontFamily": "Fraunces, serif",
+                              "fontSize": "40px",
+                              "fontWeight": "700",
+                              "lineHeight": "44px"
+                            }
+                          },
+                          {
+                            "role": "text",
+                            "html": "From request to resolution in a flow that feels natural — not another learning curve.",
+                            "text": "From request to resolution in a flow that feels natural — not another learning curve.",
+                            "styles": {
+                              "color": "oklch(0.55 0.015 60)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "16px",
+                              "lineHeight": "26px"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "role": "container",
+                        "tag": "div",
+                        "styles": {},
+                        "children": [
+                          {
+                            "role": "container",
+                            "tag": "div",
+                            "styles": {
+                              "flex": {
+                                "dir": "row",
+                                "justify": "normal",
+                                "align": "normal",
+                                "gap": "20px",
+                                "wrap": "nowrap"
+                              }
+                            },
+                            "children": [
+                              {
+                                "role": "text",
+                                "html": "01",
+                                "text": "01",
+                                "styles": {
+                                  "color": "oklab(0.5 0.0848528 0.0848528 / 0.3)",
+                                  "fontFamily": "Fraunces, serif",
+                                  "fontSize": "24px",
+                                  "fontWeight": "700",
+                                  "lineHeight": "32px"
+                                }
+                              },
+                              {
+                                "role": "container",
+                                "tag": "div",
+                                "styles": {},
+                                "children": [
+                                  {
+                                    "role": "container",
+                                    "tag": "div",
+                                    "styles": {
+                                      "flex": {
+                                        "dir": "row",
+                                        "justify": "normal",
+                                        "align": "center",
+                                        "gap": "8px",
+                                        "wrap": "nowrap"
+                                      }
+                                    },
+                                    "children": [
+                                      {
+                                        "role": "heading",
+                                        "level": 3,
+                                        "html": "Submit a request",
+                                        "text": "Submit a request",
+                                        "styles": {
+                                          "color": "oklch(0.28 0.025 45)",
+                                          "fontFamily": "\"Noto Serif\", Georgia, serif",
+                                          "fontSize": "16px",
+                                          "fontWeight": "600",
+                                          "lineHeight": "24px"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "role": "text",
+                                    "html": "Employees fill a smart form tailored to the request type — no guesswork, no wrong channels.",
+                                    "text": "Employees fill a smart form tailored to the request type — no guesswork, no wrong channels.",
+                                    "styles": {
+                                      "color": "oklch(0.55 0.015 60)",
+                                      "fontFamily": "Manrope, system-ui, sans-serif",
+                                      "fontSize": "14px",
+                                      "lineHeight": "22.75px"
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "role": "container",
+                            "tag": "div",
+                            "styles": {
+                              "flex": {
+                                "dir": "row",
+                                "justify": "normal",
+                                "align": "normal",
+                                "gap": "20px",
+                                "wrap": "nowrap"
+                              }
+                            },
+                            "children": [
+                              {
+                                "role": "text",
+                                "html": "02",
+                                "text": "02",
+                                "styles": {
+                                  "color": "oklab(0.5 0.0848528 0.0848528 / 0.3)",
+                                  "fontFamily": "Fraunces, serif",
+                                  "fontSize": "24px",
+                                  "fontWeight": "700",
+                                  "lineHeight": "32px"
+                                }
+                              },
+                              {
+                                "role": "container",
+                                "tag": "div",
+                                "styles": {},
+                                "children": [
+                                  {
+                                    "role": "container",
+                                    "tag": "div",
+                                    "styles": {
+                                      "flex": {
+                                        "dir": "row",
+                                        "justify": "normal",
+                                        "align": "center",
+                                        "gap": "8px",
+                                        "wrap": "nowrap"
+                                      }
+                                    },
+                                    "children": [
+                                      {
+                                        "role": "text",
+                                        "html": "route",
+                                        "text": "route",
+                                        "styles": {
+                                          "color": "oklch(0.5 0.12 45)",
+                                          "fontFamily": "\"Material Symbols Outlined\"",
+                                          "fontSize": "22px",
+                                          "lineHeight": "22px"
+                                        }
+                                      },
+                                      {
+                                        "role": "heading",
+                                        "level": 3,
+                                        "html": "Automatic routing",
+                                        "text": "Automatic routing",
+                                        "styles": {
+                                          "color": "oklch(0.28 0.025 45)",
+                                          "fontFamily": "\"Noto Serif\", Georgia, serif",
+                                          "fontSize": "16px",
+                                          "fontWeight": "600",
+                                          "lineHeight": "24px"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "role": "text",
+                                    "html": "The engine evaluates rules, workload, and availability to find the right approver instantly.",
+                                    "text": "The engine evaluates rules, workload, and availability to find the right approver instantly.",
+                                    "styles": {
+                                      "color": "oklch(0.55 0.015 60)",
+                                      "fontFamily": "Manrope, system-ui, sans-serif",
+                                      "fontSize": "14px",
+                                      "lineHeight": "22.75px"
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "role": "container",
+                            "tag": "div",
+                            "styles": {
+                              "flex": {
+                                "dir": "row",
+                                "justify": "normal",
+                                "align": "normal",
+                                "gap": "20px",
+                                "wrap": "nowrap"
+                              }
+                            },
+                            "children": [
+                              {
+                                "role": "text",
+                                "html": "03",
+                                "text": "03",
+                                "styles": {
+                                  "color": "oklab(0.5 0.0848528 0.0848528 / 0.3)",
+                                  "fontFamily": "Fraunces, serif",
+                                  "fontSize": "24px",
+                                  "fontWeight": "700",
+                                  "lineHeight": "32px"
+                                }
+                              },
+                              {
+                                "role": "container",
+                                "tag": "div",
+                                "styles": {},
+                                "children": [
+                                  {
+                                    "role": "container",
+                                    "tag": "div",
+                                    "styles": {
+                                      "flex": {
+                                        "dir": "row",
+                                        "justify": "normal",
+                                        "align": "center",
+                                        "gap": "8px",
+                                        "wrap": "nowrap"
+                                      }
+                                    },
+                                    "children": [
+                                      {
+                                        "role": "heading",
+                                        "level": 3,
+                                        "html": "Track to resolution",
+                                        "text": "Track to resolution",
+                                        "styles": {
+                                          "color": "oklch(0.28 0.025 45)",
+                                          "fontFamily": "\"Noto Serif\", Georgia, serif",
+                                          "fontSize": "16px",
+                                          "fontWeight": "600",
+                                          "lineHeight": "24px"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "role": "text",
+                                    "html": "Real-time SLA tracking, status updates, and satisfaction feedback — all in one place.",
+                                    "text": "Real-time SLA tracking, status updates, and satisfaction feedback — all in one place.",
+                                    "styles": {
+                                      "color": "oklch(0.55 0.015 60)",
+                                      "fontFamily": "Manrope, system-ui, sans-serif",
+                                      "fontSize": "14px",
+                                      "lineHeight": "22.75px"
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "heading": "",
+      "headingHtml": "",
+      "level": 0,
+      "headingComputed": null,
+      "overline": "",
+      "overlineComputed": null,
+      "lead": "\"SmartRoute transformed our operations team from a queue of tickets into a network of connected people. The empathy built into their workflow engine is palpable.\"",
+      "paragraphs": [
+        "\"SmartRoute transformed our operations team from a queue of tickets into a network of connected people. The empathy built into their workflow engine is palpable.\"",
+        "Priya Anand",
+        "Head of IT, Meridian Tech",
+        "\"We cut our average resolution time by 60% in the first month. But what surprised us most was how much calmer the team felt — no more chasing approvals through email chains.\"",
+        "Marcus Chen",
+        "VP Operations, Atlas Corp"
+      ],
+      "buttons": [],
+      "cards": [],
+      "images": [],
+      "grids": [
+        {
+          "cols": 2,
+          "tiles": [
+            {
+              "kind": "plain",
+              "title": "",
+              "text": "\"SmartRoute transformed our operations team from a queue of tickets into a network of connected people. The empathy built into their workflow engine is palpable.\"",
+              "icon": "format_quote",
+              "image": ""
+            },
+            {
+              "kind": "plain",
+              "title": "",
+              "text": "\"We cut our average resolution time by 60% in the first month. But what surprised us most was how much calmer the team felt — no more chasing approvals through email chains.\"",
+              "icon": "format_quote",
+              "image": ""
+            }
+          ]
+        }
+      ],
+      "bgPattern": null,
+      "computed": {
+        "backgroundColor": "oklab(0.96 -3.49691e-10 0.008 / 0.6)",
+        "padding": "128px 0px",
+        "textAlign": "start",
+        "color": "oklch(0.28 0.025 45)"
+      },
+      "text": "Meridian TechAtlas CorpPinnacle HRForge SystemsEmber LabsCedar Groupformat_quote\"SmartRoute transformed our operations team from a queue of tickets into a network of connected people. The empathy built into their workflow engine is palpable.\"Priya AnandHead of IT, Meridian Techformat_quote\"We cut our average resolution time by 60% in the first month. But what surprised us most was how much calmer the team felt — no more chasing approvals through email chains.\"Marcus ChenVP Operations, Atlas Corp",
+      "mirror": {
+        "role": "container",
+        "tag": "section",
+        "styles": {
+          "bg": "oklab(0.96 -3.49691e-10 0.008 / 0.6)",
+          "padding": "128px 0px"
+        },
+        "children": [
+          {
+            "role": "container",
+            "tag": "div",
+            "styles": {
+              "padding": "0px 32px",
+              "maxWidth": "1280px"
+            },
+            "children": [
+              {
+                "role": "container",
+                "tag": "div",
+                "styles": {
+                  "flex": {
+                    "dir": "row",
+                    "justify": "center",
+                    "align": "center",
+                    "gap": "16px 40px",
+                    "wrap": "wrap"
+                  }
+                },
+                "children": [
+                  {
+                    "role": "text",
+                    "html": "Meridian Tech",
+                    "text": "Meridian Tech",
+                    "styles": {
+                      "color": "oklab(0.55 0.0075 0.0129904 / 0.5)",
+                      "fontFamily": "Manrope, system-ui, sans-serif",
+                      "fontSize": "14px",
+                      "fontWeight": "500",
+                      "letterSpacing": "0.35px",
+                      "lineHeight": "20px",
+                      "textTransform": "uppercase"
+                    }
+                  },
+                  {
+                    "role": "text",
+                    "html": "Atlas Corp",
+                    "text": "Atlas Corp",
+                    "styles": {
+                      "color": "oklab(0.55 0.0075 0.0129904 / 0.5)",
+                      "fontFamily": "Manrope, system-ui, sans-serif",
+                      "fontSize": "14px",
+                      "fontWeight": "500",
+                      "letterSpacing": "0.35px",
+                      "lineHeight": "20px",
+                      "textTransform": "uppercase"
+                    }
+                  },
+                  {
+                    "role": "text",
+                    "html": "Pinnacle HR",
+                    "text": "Pinnacle HR",
+                    "styles": {
+                      "color": "oklab(0.55 0.0075 0.0129904 / 0.5)",
+                      "fontFamily": "Manrope, system-ui, sans-serif",
+                      "fontSize": "14px",
+                      "fontWeight": "500",
+                      "letterSpacing": "0.35px",
+                      "lineHeight": "20px",
+                      "textTransform": "uppercase"
+                    }
+                  },
+                  {
+                    "role": "text",
+                    "html": "Forge Systems",
+                    "text": "Forge Systems",
+                    "styles": {
+                      "color": "oklab(0.55 0.0075 0.0129904 / 0.5)",
+                      "fontFamily": "Manrope, system-ui, sans-serif",
+                      "fontSize": "14px",
+                      "fontWeight": "500",
+                      "letterSpacing": "0.35px",
+                      "lineHeight": "20px",
+                      "textTransform": "uppercase"
+                    }
+                  },
+                  {
+                    "role": "text",
+                    "html": "Ember Labs",
+                    "text": "Ember Labs",
+                    "styles": {
+                      "color": "oklab(0.55 0.0075 0.0129904 / 0.5)",
+                      "fontFamily": "Manrope, system-ui, sans-serif",
+                      "fontSize": "14px",
+                      "fontWeight": "500",
+                      "letterSpacing": "0.35px",
+                      "lineHeight": "20px",
+                      "textTransform": "uppercase"
+                    }
+                  },
+                  {
+                    "role": "text",
+                    "html": "Cedar Group",
+                    "text": "Cedar Group",
+                    "styles": {
+                      "color": "oklab(0.55 0.0075 0.0129904 / 0.5)",
+                      "fontFamily": "Manrope, system-ui, sans-serif",
+                      "fontSize": "14px",
+                      "fontWeight": "500",
+                      "letterSpacing": "0.35px",
+                      "lineHeight": "20px",
+                      "textTransform": "uppercase"
+                    }
+                  }
+                ]
+              },
+              {
+                "role": "container",
+                "tag": "div",
+                "styles": {
+                  "grid": {
+                    "cols": "598px 598px",
+                    "gap": "20px"
+                  }
+                },
+                "children": [
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "bg": "oklch(0.96 0.008 90)",
+                      "padding": "40px",
+                      "borderRadius": "24px",
+                      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.04) 0px 1px 4px 0px",
+                      "border": "1px solid oklch(0.85 0.012 80)",
+                      "flex": {
+                        "dir": "column",
+                        "justify": "normal",
+                        "align": "normal",
+                        "gap": "normal",
+                        "wrap": "nowrap"
+                      }
+                    },
+                    "children": [
+                      {
+                        "role": "text",
+                        "html": "\"SmartRoute transformed our operations team from a queue of tickets into a network of connected people. The empathy built into their workflow engine is palpable.\"",
+                        "text": "\"SmartRoute transformed our operations team from a queue of tickets into a network of connected people. The empathy built into their workflow engine is palpable.\"",
+                        "styles": {
+                          "color": "oklch(0.28 0.025 45)",
+                          "fontFamily": "\"Noto Serif\", Georgia, serif",
+                          "fontSize": "18px",
+                          "lineHeight": "29.25px"
+                        }
+                      },
+                      {
+                        "role": "container",
+                        "tag": "div",
+                        "styles": {
+                          "padding": "8px 0px 0px"
+                        },
+                        "children": [
+                          {
+                            "role": "text",
+                            "html": "Priya Anand",
+                            "text": "Priya Anand",
+                            "styles": {
+                              "color": "oklch(0.28 0.025 45)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "14px",
+                              "fontWeight": "600",
+                              "lineHeight": "20px"
+                            }
+                          },
+                          {
+                            "role": "text",
+                            "html": "Head of IT, Meridian Tech",
+                            "text": "Head of IT, Meridian Tech",
+                            "styles": {
+                              "color": "oklch(0.55 0.015 60)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "12px",
+                              "lineHeight": "16px"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "bg": "oklch(0.96 0.008 90)",
+                      "padding": "40px",
+                      "borderRadius": "24px",
+                      "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.04) 0px 1px 4px 0px",
+                      "border": "1px solid oklch(0.85 0.012 80)",
+                      "flex": {
+                        "dir": "column",
+                        "justify": "normal",
+                        "align": "normal",
+                        "gap": "normal",
+                        "wrap": "nowrap"
+                      }
+                    },
+                    "children": [
+                      {
+                        "role": "text",
+                        "html": "\"We cut our average resolution time by 60% in the first month. But what surprised us most was how much calmer the team felt — no more chasing approvals through email chains.\"",
+                        "text": "\"We cut our average resolution time by 60% in the first month. But what surprised us most was how much calmer the team felt — no more chasing approvals through email chains.\"",
+                        "styles": {
+                          "color": "oklch(0.28 0.025 45)",
+                          "fontFamily": "\"Noto Serif\", Georgia, serif",
+                          "fontSize": "18px",
+                          "lineHeight": "29.25px"
+                        }
+                      },
+                      {
+                        "role": "container",
+                        "tag": "div",
+                        "styles": {
+                          "padding": "8px 0px 0px"
+                        },
+                        "children": [
+                          {
+                            "role": "text",
+                            "html": "Marcus Chen",
+                            "text": "Marcus Chen",
+                            "styles": {
+                              "color": "oklch(0.28 0.025 45)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "14px",
+                              "fontWeight": "600",
+                              "lineHeight": "20px"
+                            }
+                          },
+                          {
+                            "role": "text",
+                            "html": "VP Operations, Atlas Corp",
+                            "text": "VP Operations, Atlas Corp",
+                            "styles": {
+                              "color": "oklch(0.55 0.015 60)",
+                              "fontFamily": "Manrope, system-ui, sans-serif",
+                              "fontSize": "12px",
+                              "lineHeight": "16px"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "heading": "Ready to bring clarity to your operations?",
+      "headingHtml": "",
+      "level": 2,
+      "headingComputed": {
+        "fontFamily": "Fraunces, serif",
+        "fontSize": "36px",
+        "fontWeight": "700",
+        "color": "oklch(0.98 0.012 95)"
+      },
+      "overline": "",
+      "overlineComputed": null,
+      "lead": "Join teams that traded scattered emails and rigid spreadsheets for a more human way to route.",
+      "paragraphs": [
+        "Join teams that traded scattered emails and rigid spreadsheets for a more human way to route.",
+        "No credit card required. Pure craftsmanship included."
+      ],
+      "buttons": [
+        {
+          "label": "Get started for free",
+          "href": "https://smart-route-approve.lovable.app/signup",
+          "primary": true
+        }
+      ],
+      "cards": [],
+      "images": [],
+      "grids": [],
+      "bgPattern": null,
+      "computed": {
+        "backgroundColor": "oklch(0.5 0.12 45)",
+        "padding": "128px 0px",
+        "textAlign": "start",
+        "color": "oklch(0.28 0.025 45)"
+      },
+      "text": "rocket_launchReady to bring clarity to your operations?Join teams that traded scattered emails and rigid spreadsheets for a more human way to route.Get started for freeNo credit card required. Pure craftsmanship included.",
+      "mirror": {
+        "role": "container",
+        "tag": "section",
+        "styles": {
+          "bg": "oklch(0.5 0.12 45)",
+          "padding": "128px 0px"
+        },
+        "children": [
+          {
+            "role": "container",
+            "tag": "div",
+            "styles": {
+              "padding": "0px 32px",
+              "maxWidth": "1280px"
+            },
+            "children": [
+              {
+                "role": "container",
+                "tag": "div",
+                "styles": {
+                  "textAlign": "center",
+                  "maxWidth": "560px"
+                },
+                "children": [
+                  {
+                    "role": "heading",
+                    "level": 2,
+                    "html": "Ready to bring clarity to your operations?",
+                    "text": "Ready to bring clarity to your operations?",
+                    "styles": {
+                      "textAlign": "center",
+                      "color": "oklch(0.98 0.012 95)",
+                      "fontFamily": "Fraunces, serif",
+                      "fontSize": "36px",
+                      "fontWeight": "700",
+                      "lineHeight": "41.4px"
+                    }
+                  },
+                  {
+                    "role": "text",
+                    "html": "Join teams that traded scattered emails and rigid spreadsheets for a more human way to route.",
+                    "text": "Join teams that traded scattered emails and rigid spreadsheets for a more human way to route.",
+                    "styles": {
+                      "textAlign": "center",
+                      "color": "oklab(0.98 -0.00104587 0.0119543 / 0.7)",
+                      "fontFamily": "Manrope, system-ui, sans-serif",
+                      "fontSize": "16px",
+                      "lineHeight": "26px"
+                    }
+                  },
+                  {
+                    "role": "container",
+                    "tag": "div",
+                    "styles": {
+                      "textAlign": "center",
+                      "padding": "8px 0px 0px"
+                    },
+                    "children": [
+                      {
+                        "role": "button",
+                        "label": "Get started for free",
+                        "href": "https://smart-route-approve.lovable.app/signup",
+                        "styles": {
+                          "textAlign": "center",
+                          "bg": "oklch(0.98 0.012 95)",
+                          "padding": "14px 32px",
+                          "borderRadius": "3.35544e+07px",
+                          "color": "oklch(0.5 0.12 45)",
+                          "fontFamily": "Manrope, system-ui, sans-serif",
+                          "fontSize": "14px",
+                          "fontWeight": "600",
+                          "lineHeight": "20px"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "role": "text",
+                    "html": "No credit card required. Pure craftsmanship included.",
+                    "text": "No credit card required. Pure craftsmanship included.",
+                    "styles": {
+                      "textAlign": "center",
+                      "color": "oklab(0.98 -0.00104587 0.0119543 / 0.5)",
+                      "fontFamily": "Manrope, system-ui, sans-serif",
+                      "fontSize": "12px",
+                      "lineHeight": "16px"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "heading": "",
+      "headingHtml": "",
+      "level": 0,
+      "headingComputed": null,
+      "overline": "",
+      "overlineComputed": null,
+      "lead": "",
+      "paragraphs": [],
+      "buttons": [],
+      "cards": [],
+      "images": [],
+      "grids": [],
+      "bgPattern": null,
+      "computed": {
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "padding": "0px",
+        "textAlign": "start",
+        "color": "oklch(0.28 0.025 45)"
+      },
+      "text": "",
+      "mirror": null
+    }
+  ],
+  "assets": {
+    "images": [
+      "https://smart-route-approve.lovable.app/assets/hero-workspace-4p6i8zLy.png",
+      "https://smart-route-approve.lovable.app/__l5e/assets-v1/240473cb-6e91-47f8-985c-95c24613f205/studio-dashboard-new.jpg",
+      "https://smart-route-approve.lovable.app/__l5e/assets-v1/0c2c42e8-d93d-4057-bc51-ae80adc49df9/how-it-works-desk-new.jpg"
+    ],
+    "fonts": [
+      "https://fonts.googleapis.com/",
+      "https://fonts.gstatic.com/",
+      "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Inter:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Manrope:wght@400;500;600;700&display=swap",
+      "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    ]
+  }
+}

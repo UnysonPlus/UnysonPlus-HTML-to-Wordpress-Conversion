@@ -1,0 +1,6 @@
+{
+  "_note": "SmartRoute — media. Only the OG preview is statically reachable; the hero photo is lazy-loaded (heavy-SPA limit). The agent that built the site can supply the real asset URLs.",
+  "urls": [
+    "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c0a74dca-9144-4fbf-b3af-5d8a59b99a23/id-preview-43a27e7b--6d5d02c9-25e2-46aa-a409-b813b636c1b8.lovable.app-1774168134235.png"
+  ]
+}

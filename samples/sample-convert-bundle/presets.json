@@ -1,0 +1,9 @@
+{
+  "values": {
+    "theme_colors": [
+      { "name": "Primary", "color": "#0d6efd" },
+      { "name": "Accent", "color": "#fd7e14" },
+      { "name": "Ink", "color": "#1d2327" }
+    ]
+  }
+}

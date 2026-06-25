@@ -1,0 +1,40 @@
+{
+  "name": "unysonplus-site-capture",
+  "version": "1.5.0",
+  "description": "Local capture service + AI companion + CLI for the Unyson+ Site Converter: render a (JS) website in headless Chrome and produce a Convert bundle .zip, and (with ANTHROPIC_API_KEY set) refine a conversion mapping + write matching CSS via Claude. Run `npx unysonplus-site-capture` to start the service the WordPress admin's Site Converter talks to.",
+  "type": "commonjs",
+  "bin": {
+    "unysonplus-site-capture": "serve.mjs"
+  },
+  "main": "capture.mjs",
+  "files": [
+    "serve.mjs",
+    "capture.mjs",
+    "capture-extract.mjs",
+    "to-design-config.mjs",
+    "to-pages.mjs",
+    "to-ai.mjs",
+    "minimal-zip.mjs",
+    "atom-templates.json",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node serve.mjs",
+    "capture": "node capture.mjs"
+  },
+  "keywords": [
+    "unysonplus",
+    "wordpress",
+    "site-converter",
+    "playwright",
+    "capture"
+  ],
+  "author": "UnysonPlus",
+  "license": "GPL-2.0-or-later",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "playwright-core": "^1.60.0"
+  }
+}

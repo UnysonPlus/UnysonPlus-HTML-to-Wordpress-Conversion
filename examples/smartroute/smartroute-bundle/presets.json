@@ -1,0 +1,29 @@
+{
+  "_note": "SmartRoute (smart-route-approve.lovable.app) — Styling Presets (palette + type scale). Phase 1 of the convert bundle.",
+  "values": {
+    "theme_colors": [
+      { "name": "Primary", "color": "#994920" },
+      { "name": "Secondary", "color": "#9e7660" },
+      { "name": "Ink", "color": "#34251f" },
+      { "name": "Cream", "color": "#fbf9f0" },
+      { "name": "Card", "color": "#f4f2ec" },
+      { "name": "Muted", "color": "#e6e4df" },
+      { "name": "Border", "color": "#d2cdc5" },
+      { "name": "Muted Text", "color": "#787069" },
+      { "name": "Gold", "color": "#d29922" },
+      { "name": "Brick", "color": "#a43b38" },
+      { "name": "White", "color": "#ffffff" },
+      { "name": "Black", "color": "#000000" }
+    ],
+    "font_sizes": [
+      { "name": "Display 1", "size": "60", "class": "display-1" },
+      { "name": "Display 2", "size": "48", "class": "display-2" },
+      { "name": "Heading 1", "size": "36", "class": "h1" },
+      { "name": "Heading 2", "size": "30", "class": "h2" },
+      { "name": "Heading 3", "size": "24", "class": "h3" },
+      { "name": "Lead", "size": "20", "class": "lead" },
+      { "name": "Body", "size": "16", "class": "body" },
+      { "name": "Small", "size": "14", "class": "small" }
+    ]
+  }
+}

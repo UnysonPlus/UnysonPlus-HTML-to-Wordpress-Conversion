@@ -1,0 +1,11 @@
+{
+ "_note": "SmartRoute — Theme Settings design file. misc_custom_css is a multi(custom_css) → {custom_css:...}. CSS scoped to body:not(.wp-admin) so the combiner-absorbed bundle can't restyle wp-admin.",
+ "_fw_settings_export": {
+  "theme_id": "unysonplus"
+ },
+ "values": {
+  "misc_custom_css": {
+   "custom_css": "@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap');\n:root{--sr-primary:#994920;--sr-secondary:#9e7660;--sr-ink:#34251f;--sr-cream:#fbf9f0;--sr-gold:#d29922}\nbody:not(.wp-admin){font-family:'Manrope',system-ui,sans-serif;color:#34251f;background:#fbf9f0;line-height:1.6}\nbody:not(.wp-admin) :is(h1,h2,h3,h4,h5,h6,.display-1,.display-2){font-family:'Noto Serif',Georgia,serif;color:#34251f;letter-spacing:-.02em;line-height:1.15}\nbody:not(.wp-admin) :is(h1,h2) em{font-style:italic;color:#994920}\nbody:not(.wp-admin) a{color:#994920}\nbody:not(.wp-admin) a:hover{color:#7c3a18}\n#masthead{background:#fbf9f0}.primary-menu a{color:#34251f}\n#colophon{background:#34251f;color:#fbf9f0}#colophon a{color:#fbf9f0}\n.sr-center{text-align:center}\n.sr-lead{font-size:1.15rem;color:#6b6058;max-width:52ch}\n.sr-center.sr-lead{margin-left:auto;margin-right:auto}\n.sr-card{background:#f4f2ec;border:1px solid #d2cdc5;border-radius:1rem;padding:1.6rem;margin-bottom:1.25rem}\n.sr-card svg{width:28px;height:28px;color:#994920;margin-bottom:.6rem}\n.sr-card :is(h3,h4){font-size:1.15rem;margin:.2rem 0 .45rem}\n.sr-stat h2{font-size:2.6rem;margin:0;color:#994920}\n.sr-stat{padding:.5rem 0}\n.sr-hero,.sr-features-intro,.sr-cards,.sr-stats,.sr-studio{padding-top:2.5rem!important;padding-bottom:2.5rem!important}\n"
+  }
+ }
+}

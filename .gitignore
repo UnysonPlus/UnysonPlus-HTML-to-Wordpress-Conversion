@@ -1,0 +1,11 @@
+# Dependencies (regenerate with `npm install`)
+node_modules/
+
+# Capture / build output
+capture-out/
+**/capture-out/
+*.log
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db

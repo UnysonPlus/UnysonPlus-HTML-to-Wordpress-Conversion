@@ -1,0 +1,90 @@
+{
+  "_note": "Phase-1 Styling Presets for the PayForItUK round-trip. No preset import file/UI yet (contract gap, roadmap #2) — this is the payload to apply per-key to wp_option `fw_ext_settings_options:shortcodes` via the future importer / update_option / WP-CLI. Shapes mirror framework/includes/presets/*.php defaults (all verified against the default fns).",
+  "_apply_to_option": "fw_ext_settings_options:shortcodes",
+  "_strategy": "Robust palette (gap G10): the built-in button/border presets reference fixed color slugs (primary, green, teal, indigo, light-gray, red, white). Rather than rename the whole palette (which blanks those presets via the slug-equality migration), we KEEP those slugs and re-point their hex to brand values, then ADD brand-only colors. So `btn-primary`, `btn-success`, `colb-card` keep working with brand colors for free.",
+  "values": {
+    "theme_colors": [
+      { "name": "Primary",       "color": "#185FA5" },
+      { "name": "Primary Light", "color": "#4A8BCC" },
+      { "name": "Primary Soft",  "color": "#F0F6FC" },
+      { "name": "Indigo",        "color": "#3F51B5" },
+      { "name": "Accent",        "color": "#EF9F27" },
+      { "name": "Amber",         "color": "#EF9F27" },
+      { "name": "Green",         "color": "#1FBA8E" },
+      { "name": "Teal",          "color": "#15A179" },
+      { "name": "Success Soft",  "color": "#E1F5EE" },
+      { "name": "Success Text",  "color": "#0F6E56" },
+      { "name": "Red",           "color": "#DC3545" },
+      { "name": "Danger Text",   "color": "#A32D2D" },
+      { "name": "Ink",           "color": "#0A0A0F" },
+      { "name": "Text",          "color": "#14141A" },
+      { "name": "Muted",         "color": "#5A5A65" },
+      { "name": "Light",         "color": "#8E8E97" },
+      { "name": "Light Gray",    "color": "#B8B8BE" },
+      { "name": "Surface",       "color": "#FAFAF7" },
+      { "name": "White",         "color": "#FFFFFF" },
+      { "name": "Dark",          "color": "#0F0F1A" }
+    ],
+    "font_sizes": [
+      { "name": "Hero",     "size": "60", "class": "font-hero" },
+      { "name": "Heading",  "size": "40", "class": "font-heading" },
+      { "name": "Title",    "size": "22", "class": "font-title" },
+      { "name": "Lead",     "size": "18", "class": "font-lead" },
+      { "name": "Body",     "size": "17", "class": "font-body" },
+      { "name": "Small",    "size": "15", "class": "font-small" },
+      { "name": "Caption",  "size": "14", "class": "font-caption" },
+      { "name": "Micro",    "size": "13", "class": "font-micro" },
+      { "name": "Tiny",     "size": "12", "class": "font-tiny" },
+      { "name": "Overline", "size": "11", "class": "font-overline" }
+    ],
+    "button_colors": [
+      {
+        "id": "0000000002", "color_name": "Primary",
+        "states": {
+          "default": { "text_color": {"predefined":"white","custom":""}, "bg_color": {"predefined":"primary","custom":""}, "border_color": {"predefined":"primary","custom":""} },
+          "hover":   { "bg_color": {"predefined":"indigo","custom":""}, "border_color": {"predefined":"indigo","custom":""} },
+          "active": {}, "focus": {}, "disabled": {}
+        }
+      },
+      {
+        "id": "0000000003", "color_name": "Success",
+        "states": {
+          "default": { "text_color": {"predefined":"white","custom":""}, "bg_color": {"predefined":"green","custom":""}, "border_color": {"predefined":"green","custom":""} },
+          "hover":   { "bg_color": {"predefined":"teal","custom":""}, "border_color": {"predefined":"teal","custom":""} },
+          "active": {}, "focus": {}, "disabled": {}
+        }
+      },
+      {
+        "id": "0000000040", "color_name": "Dark",
+        "_intent": "the operator/nav `.cta` — solid Ink, subtle lift on hover",
+        "states": {
+          "default": { "text_color": {"predefined":"white","custom":""}, "bg_color": {"predefined":"ink","custom":""}, "border_color": {"predefined":"ink","custom":""} },
+          "hover":   { "bg_color": {"predefined":"dark","custom":""}, "border_color": {"predefined":"dark","custom":""} },
+          "active": {}, "focus": {}, "disabled": {}
+        }
+      },
+      {
+        "id": "0000000041", "color_name": "CTA",
+        "_intent": "the `.match-cta` — green gradient, white text, no border; hover reverses stops",
+        "states": {
+          "default": {
+            "text_color": {"predefined":"white","custom":""}, "bg_color": {"predefined":"","custom":""}, "border_color": {"predefined":"","custom":""}, "border_style": "none",
+            "gradient": { "type": "linear", "angle": 135, "stops": [ {"color":"#1FBA8E","position":0}, {"color":"#15A179","position":100} ] }
+          },
+          "hover": { "gradient": { "type": "linear", "angle": 135, "stops": [ {"color":"#15A179","position":0}, {"color":"#1FBA8E","position":100} ] } },
+          "active": {}, "focus": {}, "disabled": {}
+        }
+      },
+      {
+        "id": "0000000021", "color_name": "Link",
+        "states": {
+          "default": { "text_color": {"predefined":"primary","custom":""}, "bg_color": {"predefined":"","custom":""}, "border_color": {"predefined":"","custom":""}, "border_style": "none" },
+          "hover":   { "text_color": {"predefined":"indigo","custom":""} },
+          "active": {}, "focus": {}, "disabled": {}
+        }
+      }
+    ],
+    "_button_sizes": "Use plugin defaults (xl/lg/md/sm/xs) — radii 10/8/6/5/3 match the design's button radii. No override needed.",
+    "_border_presets": "Use plugin defaults — 'Card' (.colb-card: radius 8, light-gray hairline, soft shadow, lifts on hover) maps the .trust-pillar/.card/.faq/.trust-block look now that 'light-gray' is in the palette. 'Hover Lift' (.colb-hover-lift) maps the .method-tile/.what-pay-row hover-to-primary. No override needed."
+  }
+}

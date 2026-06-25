@@ -1,0 +1,25 @@
+{
+  "menus": [
+    {
+      "name": "Primary",
+      "location": "primary",
+      "items": [
+        { "label": "Home", "url": "/" },
+        { "label": "About", "url": "/about" },
+        { "label": "Services", "url": "#", "children": [
+          { "label": "Web Design", "url": "/services/web-design" },
+          { "label": "Branding", "url": "/services/branding" }
+        ] },
+        { "label": "Contact", "url": "/contact" }
+      ]
+    },
+    {
+      "name": "Footer",
+      "location": "footer",
+      "items": [
+        { "label": "Privacy Policy", "url": "/privacy" },
+        { "label": "Terms", "url": "/terms" }
+      ]
+    }
+  ]
+}

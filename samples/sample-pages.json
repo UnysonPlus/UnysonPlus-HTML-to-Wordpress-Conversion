@@ -1,0 +1,33 @@
+{
+  "pages": [
+    {
+      "title": "Converter Test Page",
+      "slug": "converter-test",
+      "status": "publish",
+      "builder": [
+        {
+          "type": "section",
+          "unique_id": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+          "atts": {},
+          "_items": [
+            {
+              "type": "column",
+              "width": "1_1",
+              "unique_id": "b2c3d4e5f60718293a4b5c6d7e8f9012",
+              "atts": {},
+              "_items": [
+                {
+                  "type": "simple",
+                  "shortcode": "text_block",
+                  "unique_id": "c3d4e5f60718293a4b5c6d7e8f901234",
+                  "atts": { "text": "<h2>Hello from the Site Converter</h2><p>This page was created automatically and is fully editable in the page builder.</p>" },
+                  "_items": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

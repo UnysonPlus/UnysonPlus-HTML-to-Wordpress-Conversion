@@ -1,0 +1,25 @@
+{
+  "_note": "SmartRoute — single-page nav (in-page anchors) + CTA. Phase 5.",
+  "menus": [
+    {
+      "name": "Primary",
+      "location": "primary",
+      "items": [
+        { "label": "Features", "url": "#features" },
+        { "label": "How it works", "url": "#how-it-works" },
+        { "label": "Studio", "url": "#studio" },
+        { "label": "Pricing", "url": "#pricing" },
+        { "label": "Get started", "url": "#get-started" }
+      ]
+    },
+    {
+      "name": "Footer",
+      "location": "footer",
+      "items": [
+        { "label": "Features", "url": "#features" },
+        { "label": "Pricing", "url": "#pricing" },
+        { "label": "Get started", "url": "#get-started" }
+      ]
+    }
+  ]
+}
