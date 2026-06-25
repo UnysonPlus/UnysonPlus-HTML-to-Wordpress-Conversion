@@ -21,11 +21,11 @@ import { readFileSync, mkdtempSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { aiReady, refineMapping } from './to-ai.mjs';
+import { aiReady, aiBackend, refineMapping } from './to-ai.mjs';
 
 const PORT = Number(process.env.PORT) || 8787;
 const CAPTURE = fileURLToPath(new URL('./capture.mjs', import.meta.url));
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 
 const setCors = (res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -54,14 +54,14 @@ createServer((req, res) => {
   const u = new URL(req.url, `http://localhost:${PORT}`);
 
   if (u.pathname === '/health') {
-    json(res, 200, { ok: true, service: 'unysonplus-design-capture', version: VERSION, aiReady: aiReady() });
+    json(res, 200, { ok: true, service: 'unysonplus-design-capture', version: VERSION, aiReady: aiReady(), aiBackend: aiBackend() });
     return;
   }
 
   // POST /ai-convert — refine a draft mapping with Claude (returns a better mapping + custom CSS).
   if (u.pathname === '/ai-convert') {
     if (req.method !== 'POST') { json(res, 405, { error: 'POST only.' }); return; }
-    if (!aiReady()) { json(res, 503, { error: 'AI is off — set ANTHROPIC_API_KEY before starting the service.' }); return; }
+    if (!aiReady()) { json(res, 503, { error: 'AI is off — set ANTHROPIC_API_KEY, or install Claude Code (claude) and sign in, then restart.' }); return; }
     readJson(req)
       .then((body) => refineMapping({ html: body.html, mapping: body.mapping, source: body.source }))
       .then((out) => { console.log('[ai-convert] refined via', out.model); json(res, 200, { ok: true, mapping: out.mapping, custom_css: out.custom_css, model: out.model }); })
@@ -101,5 +101,6 @@ createServer((req, res) => {
   console.log(`UnysonPlus capture service → http://localhost:${PORT}`);
   console.log('  GET  /health');
   console.log('  GET  /capture?url=https://example.com  → convert-bundle.zip');
-  console.log(`  POST /ai-convert  → AI refine  (AI ${aiReady() ? 'ON' : 'OFF — set ANTHROPIC_API_KEY to enable'})`);
+  const be = aiBackend();
+  console.log('  POST /ai-convert  → AI refine  (' + ( be === 'api' ? 'AI ON — Anthropic API key' : be === 'claude-code' ? 'AI ON — Claude Code subscription' : 'AI OFF — set ANTHROPIC_API_KEY, or install + sign in to Claude Code' ) + ')');
 });

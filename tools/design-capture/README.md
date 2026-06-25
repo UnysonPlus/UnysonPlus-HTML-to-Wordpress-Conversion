@@ -43,20 +43,38 @@ the rebuilt WordPress markup to look like the original. The plugin then builds t
 mapping and folds the CSS into the generated child theme — so the model never hand-writes fragile
 page-builder JSON.
 
-Enable it by starting the service with your **Anthropic API key** in the environment:
+### Two ways to power it (auto-detected)
+
+You don't need an API key if you already use **Claude Code** — the service picks a backend automatically:
+
+**A. Claude Code (your subscription — no API key, no extra billing).** If the `claude` CLI is installed
+and signed in, just start the service normally:
+
+```bash
+npm start            # if `claude` is on PATH + signed in, AI uses your subscription
+```
+
+The service shells out to `claude -p` locally for each refinement. First time, run `claude` once
+interactively to sign in. (Point it at a specific binary with `CLAUDE_CLI=/path/to/claude` if needed.)
+
+**B. Anthropic API key (pay-per-use).** Start it with a key from <https://console.anthropic.com>
+(billed separately from a Claude.ai subscription):
 
 ```bash
 # macOS / Linux
 ANTHROPIC_API_KEY=sk-ant-... npm start
 # Windows PowerShell
 $env:ANTHROPIC_API_KEY="sk-ant-..."; npm start
-# optional: pick a model (default: claude-sonnet-4-6)
-ANTHROPIC_MODEL=claude-opus-4-8 ANTHROPIC_API_KEY=sk-ant-... npm start
 ```
 
-`GET /health` then reports `"aiReady": true`, and the admin's AI status turns green. **Your key never
-leaves your machine** — it lives only in this local service; WordPress only ever receives the finished
-mapping + CSS. No key set → `/ai-convert` returns 503 and the converter falls back to the deterministic +
+Pick order: `AI_BACKEND` env (`api` / `claude-code`) overrides, else an API key wins, else the `claude`
+CLI, else AI is off. Optional: `ANTHROPIC_MODEL=claude-opus-4-8` to choose a model (API default:
+`claude-sonnet-4-6`; Claude Code uses your configured model).
+
+`GET /health` reports `"aiReady": true` and `"aiBackend": "claude-code" | "api"`, and the admin's AI
+status turns green ("AI ready (Claude Code subscription)" / "(API key)"). **Nothing leaves your machine** —
+your key/subscription lives only in this local service; WordPress only ever receives the finished mapping +
+CSS. Neither available → `/ai-convert` returns 503 and the converter falls back to the deterministic +
 manual-review flow.
 
 > The package is **not published to npm**, so `npx unysonplus-site-capture` will not resolve on

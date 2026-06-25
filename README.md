@@ -74,7 +74,11 @@ node serve.mjs
 You'll see `UnysonPlus capture service → http://localhost:8787`. **Leave this window open** while you
 convert — closing it stops the service. (To stop it later, click the window and press **Ctrl + C**.)
 
-**To turn on the AI option,** start it with your API key instead:
+**To turn on the AI option,** you have two choices (the service auto-detects which):
+
+- **Already use Claude Code?** Just `node serve.mjs` — if the `claude` command is installed and you've
+  signed in (run `claude` once), the AI uses **your Claude subscription**, no API key needed.
+- **Have an API key instead?** Start it with the key (pay-per-use, from <https://console.anthropic.com>):
 
 ```bash
 # Mac / Linux:
