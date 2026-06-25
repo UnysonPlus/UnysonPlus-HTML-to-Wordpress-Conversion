@@ -14,6 +14,98 @@ WordPress imports them. You can `git clone` this folder and point your own AI at
 
 ---
 
+## 🚀 Quick start — run the converter (for total beginners)
+
+You convert a site from inside WordPress at **Unyson+ → Convert**. There are **two ways**, and only the
+second one needs you to run anything from this repo:
+
+- **Convert from a file** — upload an export `.zip` (e.g. from Google Stitch). **Nothing to install or
+  run.** If that's all you need, you can skip the rest of this Quick start.
+- **Convert from a URL**, or **Use AI** to match the design more closely — these need the small
+  **capture service** that lives in this repo, running on your own computer. The steps below get it
+  running. (It's a tiny helper that opens the page in Chrome to read it, and — optionally — calls AI.
+  It runs **only on your machine**; nothing about your site or your API key is sent anywhere.)
+
+### What you need first
+
+1. **Node.js 20 or newer** — download from **<https://nodejs.org>** (pick the “LTS” button) and install it.
+2. **Google Chrome** — <https://www.google.com/chrome/> (the service uses it to open pages).
+3. *(Only if you want the AI option)* an **Anthropic API key** — get one at
+   <https://console.anthropic.com> (it looks like `sk-ant-...`). This is separate from a Claude.ai
+   subscription and is billed per use.
+
+### Step 1 — Download this repo
+
+Easiest: on the GitHub page, click the green **Code** button → **Download ZIP**, then unzip it
+anywhere (e.g. your Desktop). **Or**, if you have Git installed, open a terminal and run:
+
+```bash
+git clone https://github.com/UnysonPlus/UnysonPlus-HTML-to-Wordpress-Conversion.git
+```
+
+### Step 2 — Open a terminal *in the service folder*
+
+A “terminal” is the text window where you type commands.
+
+- **Windows:** open the unzipped folder in **File Explorer**, go into `tools\design-capture`, then click
+  the address bar, type `cmd`, and press **Enter** — a black command window opens already in that folder.
+- **Mac:** open **Terminal** (press ⌘+Space, type “Terminal”), type `cd ` (with a space), then drag the
+  `tools/design-capture` folder onto the window and press **Enter**.
+
+You should now be “inside” the `tools/design-capture` folder. (To check, type `ls` on Mac or `dir` on
+Windows and press Enter — you should see `serve.mjs` in the list.)
+
+### Step 3 — Install it (first time only)
+
+Type this and press Enter, then wait for it to finish (it downloads what the service needs):
+
+```bash
+npm install
+```
+
+You only ever do this **once** per download.
+
+### Step 4 — Start the service
+
+```bash
+node serve.mjs
+```
+
+You'll see `UnysonPlus capture service → http://localhost:8787`. **Leave this window open** while you
+convert — closing it stops the service. (To stop it later, click the window and press **Ctrl + C**.)
+
+**To turn on the AI option,** start it with your API key instead:
+
+```bash
+# Mac / Linux:
+ANTHROPIC_API_KEY=sk-ant-... node serve.mjs
+
+# Windows (PowerShell):
+$env:ANTHROPIC_API_KEY="sk-ant-..."; node serve.mjs
+```
+
+### Step 5 — Convert, in WordPress
+
+Go to **WordPress admin → Unyson+ → Convert**. At the top, the capture service status turns **green**
+once it's detected. Now either paste a site **URL**, or tick **Use AI** and upload a file, then click
+**Convert**. WordPress builds a child theme + pages and activates them for you.
+
+### Keeping it updated / common problems
+
+- **Update later:** if you cloned with Git, run `git pull` in the folder, then `npm install` again. (ZIP
+  users: download a fresh ZIP.)
+- **“service not detected” in WordPress:** make sure the Step 4 window is still open and running, and
+  that the **Service URL** on the Convert page matches (default `http://localhost:8787`).
+- **`node: command not found`:** Node.js isn't installed (or the terminal was open before you installed
+  it) — install it from nodejs.org and open a **new** terminal.
+- **Port already in use:** start it on another port, e.g. `PORT=9000 node serve.mjs`, and put that URL in
+  the Convert page's Service URL box.
+
+> The rest of this README is the deeper **spec + examples** an AI agent reads to do a fully custom
+> conversion. For the everyday “upload/URL → WordPress” flow above, you don't need it.
+
+---
+
 ## 1. Prerequisites (on the target WordPress site)
 
 The artifacts this kit produces are consumed by the UnysonPlus stack, so the WP site must have:
