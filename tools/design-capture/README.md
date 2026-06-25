@@ -77,6 +77,29 @@ your key/subscription lives only in this local service; WordPress only ever rece
 CSS. Neither available → `/ai-convert` returns 503 and the converter falls back to the deterministic +
 manual-review flow.
 
+## Staying up to date
+
+The service knows its own version (from `package.json`) and checks GitHub for a newer one — **offline-safe**
+(any failure is ignored, so a localhost/offline user is never blocked). `GET /health` returns
+`{ version, latest, updateAvailable }`, the startup log prints a one-line hint when behind, and the
+WordPress **Capture service** box shows e.g. *"✓ Service running — v1.7.0"* or *"⬆ Update available
+v1.8.0 — run `git pull && npm install`"*.
+
+To update (notify-by-default — you stay in control):
+
+```bash
+git pull && npm install   # then restart: node serve.mjs
+```
+
+Prefer it to self-update? Start it with **`AUTO_UPDATE=1`** and on launch it will `git pull --ff-only`
++ `npm install` + restart itself when a new version exists (skips silently with no internet or if it
+isn't a git clone):
+
+```bash
+AUTO_UPDATE=1 npm start                          # macOS / Linux
+$env:AUTO_UPDATE="1"; npm start                  # Windows PowerShell
+```
+
 > The package is **not published to npm**, so `npx unysonplus-site-capture` will not resolve on
 > a clean machine — use the `npm install` + `npm start` steps above. (To get the bare command
 > working locally without publishing, `npm link` once in this folder; then
