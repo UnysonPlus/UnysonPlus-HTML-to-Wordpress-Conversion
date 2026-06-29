@@ -603,7 +603,10 @@ export function extractDesign() {
   const W12 = { 12: '1_1', 8: '2_3', 6: '1_2', 4: '1_3', 3: '1_4', 2: '1_6' };
   const WN = { 1: '1_1', 2: '1_2', 3: '1_3', 4: '1_4', 5: '1_5', 6: '1_6' };
   const colWidth = (el, count) => {
-    const cls = el.className || '';
+    // getAttribute('class') is robust for BOTH HTML and SVG elements — an <svg>'s `.className`
+    // is an SVGAnimatedString (not a string), so `cls.match(...)` would throw and crash the whole
+    // capture (hit on Lovable/React markup that puts inline <svg> as a flex/grid child).
+    const cls = (el.getAttribute && el.getAttribute('class')) || '';
     for (const bp of ['xxl', 'xl', 'lg', 'md', 'sm', 'xs']) {
       const m = cls.match(new RegExp('\\bcol-' + bp + '-(\\d{1,2})\\b', 'i'));
       if (m) { const n = +m[1]; return W12[n] || (n >= 12 ? '1_1' : '1_3'); }
@@ -942,6 +945,50 @@ export function extractDesign() {
     set('maxWidth', s.maxWidth, 'none');
     return o;
   };
+  // Diagnostic-only style snapshot for the conversion report: the visually-significant
+  // properties the converter's `computed` summary does NOT carry (border, shadow, radius,
+  // gradient). The report compares this against `computed` to flag dropped styling — e.g. a
+  // "trust strip" whose top/bottom border never reaches the rebuilt section. Capture-only;
+  // it does NOT change conversion output.
+  const sectionDiag = (el) => {
+    const s = getComputedStyle(el);
+    const o = {};
+    const has = (w) => w && w !== '0px';
+    if (has(s.borderTopWidth)    && s.borderTopStyle    !== 'none') o.borderTop    = `${s.borderTopWidth} ${s.borderTopStyle} ${s.borderTopColor}`;
+    if (has(s.borderBottomWidth) && s.borderBottomStyle !== 'none') o.borderBottom = `${s.borderBottomWidth} ${s.borderBottomStyle} ${s.borderBottomColor}`;
+    if (has(s.borderLeftWidth)   && s.borderLeftStyle   !== 'none') o.borderLeft   = `${s.borderLeftWidth} ${s.borderLeftStyle} ${s.borderLeftColor}`;
+    if (has(s.borderRightWidth)  && s.borderRightStyle  !== 'none') o.borderRight  = `${s.borderRightWidth} ${s.borderRightStyle} ${s.borderRightColor}`;
+    if (s.boxShadow && s.boxShadow !== 'none') o.boxShadow = s.boxShadow;
+    if (s.borderRadius && s.borderRadius !== '0px') o.borderRadius = s.borderRadius;
+    if (/gradient/i.test(s.backgroundImage || '')) o.gradient = absUrlsIn(s.backgroundImage, location.href);
+    return o;
+  };
+  // Census of fidelity-critical computed properties used by a section's descendants — the
+  // visually-significant CSS the converted output must reproduce (background-image, padding,
+  // max-width, position, shadow, etc.). The style-coverage report compares this against what the
+  // carried CSS (sec.css) actually declares, to flag dropped styling (the Tailwind/runtime-CSS gap).
+  const censusStyles = (el) => {
+    const c = {};
+    const bump = (k) => { c[k] = (c[k] || 0) + 1; };
+    const els = [el].concat([].slice.call(el.querySelectorAll('*'), 0, 600));
+    for (const n of els) {
+      const tag = n.tagName;
+      if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT' || tag === 'PATH' || tag === 'path') continue;
+      const s = getComputedStyle(n);
+      if (s.backgroundImage && s.backgroundImage !== 'none') bump('background-image');
+      if (s.boxShadow && s.boxShadow !== 'none') bump('box-shadow');
+      if (s.borderTopWidth !== '0px' || s.borderRightWidth !== '0px' || s.borderBottomWidth !== '0px' || s.borderLeftWidth !== '0px') bump('border');
+      if (s.borderRadius && s.borderRadius !== '0px') bump('border-radius');
+      if (s.maxWidth && s.maxWidth !== 'none') bump('max-width');
+      if (s.transform && s.transform !== 'none') bump('transform');
+      if (s.position === 'absolute' || s.position === 'fixed' || s.position === 'sticky') bump('position-' + s.position);
+      if (s.display === 'flex' || s.display === 'grid') bump('display-' + s.display);
+      if (s.gap && s.gap !== 'normal' && s.gap !== '0px') bump('gap');
+      if (['Top', 'Right', 'Bottom', 'Left'].some((d) => { const v = s['padding' + d]; return v && v !== '0px'; })) bump('padding');
+      if (['Top', 'Right', 'Bottom', 'Left'].some((d) => { const v = s['margin' + d]; return v && v !== '0px' && v !== 'auto'; })) bump('margin');
+    }
+    return c;
+  };
   // Every image + CSS background image used inside a section (absolute URLs, de-duped).
   const sectionAssets = (el) => {
     const out = new Set();
@@ -979,6 +1026,9 @@ export function extractDesign() {
       }
     }
     sections[i].computed = sectionComputed(root); // appearance summary (spec)
+    sections[i].diag = sectionDiag(root);          // report-only: border/shadow/radius/gradient
+    sections[i].styleCensus = censusStyles(root);  // report-only: count of fidelity-critical computed props used by this section (vs what the carried CSS reproduces — drives the style-coverage report)
+    sections[i].h = Math.round((root.getBoundingClientRect && root.getBoundingClientRect().height) || 0); // report-only: section height (px) — flags over-large/under-segmented sections
     sections[i].assets = sectionAssets(root);      // images / bg-images used in this section
     // Full decomposition for the MAPPING editor — every section (heroes included) broken into
     // its candidate elements, so the user can map each. Roles are suggested plugin-side.

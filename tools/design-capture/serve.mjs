@@ -14,13 +14,14 @@
 // can fetch from http://localhost):
 //   GET  /health             → { ok, service, version, aiReady }
 //   GET  /capture?url=<url>   → convert-bundle.zip (application/zip)
-//   POST /ai-convert          → { ok, mapping, custom_css }  (refine a draft mapping with Claude)
+//   POST /ai-convert          → { ok, mapping, theme:{style_css,header_html,footer_html}, custom_css }  (Claude authors the child-theme design)
 import { createServer } from 'node:http';
 import { spawn, spawnSync } from 'node:child_process';
-import { readFileSync, mkdtempSync, rmSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, rmSync, existsSync } from 'node:fs';
+import { inflateRawSync } from 'node:zlib';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join, dirname } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { aiReady, aiBackend, refineMapping } from './to-ai.mjs';
 
 const PORT = Number(process.env.PORT) || 8787;
@@ -96,6 +97,47 @@ const readJson = (req, cap = 8 * 1024 * 1024) => new Promise((resolve, reject) =
   req.on('error', reject);
 });
 
+/** Read a raw binary request body (capped) into a Buffer. */
+const readBuffer = (req, cap = 32 * 1024 * 1024) => new Promise((resolve, reject) => {
+  const chunks = []; let n = 0;
+  req.on('data', (c) => { n += c.length; if (n > cap) { reject(new Error('Body too large.')); req.destroy(); return; } chunks.push(c); });
+  req.on('end', () => resolve(Buffer.concat(chunks)));
+  req.on('error', reject);
+});
+
+/**
+ * Minimal ZIP reader (STORED + DEFLATE) — enough to pull an exported HTML out of a Stitch / design-tool
+ * .zip without a dependency. Walks the End-Of-Central-Directory → central directory → each local entry.
+ * Returns { '<name>': Buffer }. Mirrors the writer in minimal-zip.mjs.
+ */
+function unzip(buf) {
+  let eocd = -1;
+  for (let i = buf.length - 22; i >= 0; i--) { if (buf.readUInt32LE(i) === 0x06054b50) { eocd = i; break; } }
+  if (eocd < 0) throw new Error('Not a .zip file.');
+  const count = buf.readUInt16LE(eocd + 10);
+  let off = buf.readUInt32LE(eocd + 16);
+  const files = {};
+  for (let k = 0; k < count; k++) {
+    if (buf.readUInt32LE(off) !== 0x02014b50) break;
+    const method = buf.readUInt16LE(off + 10);
+    const compSize = buf.readUInt32LE(off + 20);
+    const nameLen = buf.readUInt16LE(off + 28);
+    const extraLen = buf.readUInt16LE(off + 30);
+    const commentLen = buf.readUInt16LE(off + 32);
+    const localOff = buf.readUInt32LE(off + 42);
+    const name = buf.toString('utf8', off + 46, off + 46 + nameLen);
+    const lhNameLen = buf.readUInt16LE(localOff + 26);
+    const lhExtraLen = buf.readUInt16LE(localOff + 28);
+    const dataStart = localOff + 30 + lhNameLen + lhExtraLen;
+    const comp = buf.subarray(dataStart, dataStart + compSize);
+    if (!name.endsWith('/')) {
+      try { files[name] = method === 0 ? Buffer.from(comp) : inflateRawSync(comp); } catch { /* skip unreadable entry */ }
+    }
+    off += 46 + nameLen + extraLen + commentLen;
+  }
+  return files;
+}
+
 if (maybeAutoUpdate()) {
   // Updated and re-exec'd into a fresh process — leave this one idle until the child exits.
 } else {
@@ -117,8 +159,70 @@ createServer((req, res) => {
     if (!aiReady()) { json(res, 503, { error: 'AI is off — set ANTHROPIC_API_KEY, or install Claude Code (claude) and sign in, then restart.' }); return; }
     readJson(req)
       .then((body) => refineMapping({ html: body.html, mapping: body.mapping, source: body.source }))
-      .then((out) => { console.log('[ai-convert] refined via', out.model); json(res, 200, { ok: true, mapping: out.mapping, custom_css: out.custom_css, model: out.model }); })
+      .then((out) => { console.log('[ai-convert] refined via', out.model); json(res, 200, { ok: true, mapping: out.mapping, theme: out.theme, custom_css: out.custom_css, model: out.model }); })
       .catch((e) => { console.error('[ai-convert]', e.message); json(res, 500, { error: e.message }); });
+    return;
+  }
+
+  // POST /capture-file — render an UPLOADED design export (a Stitch .zip or raw HTML) through the SAME
+  // engine as /capture, so a file upload gets the full URL-path quality. Body = the raw file bytes; we
+  // detect .zip (PK signature) vs HTML, lay the files out in a temp dir (so any relative assets resolve),
+  // then point capture.mjs at the local code.html via a proper file:// URL (pathToFileURL handles the
+  // Windows drive letter + spaces). The deterministic engine then runs exactly as for a live URL.
+  if (u.pathname === '/capture-file') {
+    if (req.method !== 'POST') { json(res, 405, { error: 'POST only.' }); return; }
+    readBuffer(req).then((body) => {
+      if (!body || !body.length) { throw new Error('Empty upload.'); }
+      const srcDir = mkdtempSync(join(tmpdir(), 'sc-src-'));
+      const isZip = body.length > 4 && body[0] === 0x50 && body[1] === 0x4b && (body[2] === 0x03 || body[2] === 0x05);
+      let htmlPath = '';
+      if (isZip) {
+        const files = unzip(body);
+        let bestScore = Infinity;
+        for (const [name, data] of Object.entries(files)) {
+          const dest = join(srcDir, name.replace(/\\/g, '/'));
+          mkdirSync(dirname(dest), { recursive: true });
+          writeFileSync(dest, data);
+          if (/\.html?$/i.test(name)) {
+            const score = /(^|\/)(code|index)\.html?$/i.test(name) ? -1 : name.split('/').length; // prefer code/index.html, then shallowest
+            if (score < bestScore) { bestScore = score; htmlPath = dest; }
+          }
+        }
+      } else {
+        htmlPath = join(srcDir, 'code.html');
+        writeFileSync(htmlPath, body);
+      }
+      if (!htmlPath) { rmSync(srcDir, { recursive: true, force: true }); throw new Error('No HTML file found in the upload.'); }
+
+      const target = pathToFileURL(htmlPath).href;
+      const out = mkdtempSync(join(tmpdir(), 'sc-capture-'));
+      console.log('[capture-file]', isZip ? '(zip)' : '(html)', '→', htmlPath);
+      const child = spawn(process.execPath, [CAPTURE, target, out], { stdio: 'inherit' });
+      const cleanup = () => { rmSync(out, { recursive: true, force: true }); rmSync(srcDir, { recursive: true, force: true }); };
+      child.on('error', (e) => { json(res, 500, { error: e.message }); cleanup(); });
+      child.on('exit', () => {
+        // ?html=1 → return the RENDERED HTML so WordPress can run it through the PHP styling engine.
+        if (u.searchParams.get('html') === '1') {
+          const htmlOut = join(out, 'rendered.html');
+          if (existsSync(htmlOut)) {
+            const html = readFileSync(htmlOut);
+            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Length': html.length });
+            res.end(html);
+          } else { json(res, 500, { error: 'Render produced no HTML.' }); }
+          cleanup();
+          return;
+        }
+        const zipPath = join(out, 'convert-bundle.zip');
+        if (existsSync(zipPath)) {
+          const zip = readFileSync(zipPath);
+          res.writeHead(200, { 'Content-Type': 'application/zip', 'Content-Disposition': 'attachment; filename="convert-bundle.zip"', 'Content-Length': zip.length });
+          res.end(zip);
+        } else {
+          json(res, 500, { error: 'Capture produced no bundle (the file may have failed to render).' });
+        }
+        cleanup();
+      });
+    }).catch((e) => { console.error('[capture-file]', e.message); json(res, 500, { error: e.message }); });
     return;
   }
 
@@ -132,6 +236,17 @@ createServer((req, res) => {
 
     child.on('error', (e) => { json(res, 500, { error: e.message }); rmSync(out, { recursive: true, force: true }); });
     child.on('exit', () => {
+      // ?html=1 → return the RENDERED HTML so WordPress can run it through the PHP styling engine.
+      if (u.searchParams.get('html') === '1') {
+        const htmlOut = join(out, 'rendered.html');
+        if (existsSync(htmlOut)) {
+          const html = readFileSync(htmlOut);
+          res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Length': html.length });
+          res.end(html);
+        } else { json(res, 500, { error: 'Render produced no HTML.' }); }
+        rmSync(out, { recursive: true, force: true });
+        return;
+      }
       const zipPath = join(out, 'convert-bundle.zip');
       if (existsSync(zipPath)) {
         const zip = readFileSync(zipPath);
@@ -154,6 +269,7 @@ createServer((req, res) => {
   console.log(`UnysonPlus capture service v${VERSION} → http://localhost:${PORT}`);
   console.log('  GET  /health');
   console.log('  GET  /capture?url=https://example.com  → convert-bundle.zip');
+  console.log('  POST /capture-file  (Stitch .zip / HTML body)  → convert-bundle.zip');
   const be = aiBackend();
   console.log('  POST /ai-convert  → AI refine  (' + ( be === 'api' ? 'AI ON — Anthropic API key' : be === 'claude-code' ? 'AI ON — Claude Code subscription' : 'AI OFF — set ANTHROPIC_API_KEY, or install + sign in to Claude Code' ) + ')');
   // One-time update check on startup (offline-safe); print a hint if a newer version is on GitHub.

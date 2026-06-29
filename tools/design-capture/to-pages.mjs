@@ -91,6 +91,17 @@ export function toPages(capture, opts = {}) {
   // section would render id="hero").
   const stamp = (n) => { if (n.atts) { n.atts.unique_id = uid(); n.atts.css_id = ''; } return n; };
 
+  // Optional conversion-report trace (no-op unless opts.trace is an array). Records the
+  // per-section decision and per-element source→shortcode mapping so the deterministic
+  // capture can emit a report with NO AI. Additive: it never affects the returned tree, and
+  // keeping it here (the real mapper) means the report can't drift from the actual conversion.
+  const trace = Array.isArray(opts.trace) ? opts.trace : null;
+  const rec = (e) => { if (trace) trace.push(e); };
+  const snip = (h) => String(h == null ? '' : h).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 90);
+  // Richer fields for the HTML report's click-to-expand detail (kept out of the CSV).
+  const snipFull = (h) => String(h == null ? '' : h).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 600);
+  const rawCap = (h) => String(h == null ? '' : h).slice(0, 1600);
+
   const textBlock = (html) => {
     const n = stamp(clone('text_block'));
     n.atts.text = html;
@@ -128,11 +139,108 @@ export function toPages(capture, opts = {}) {
     return n;
   };
   const buttonBlockNode = (b) => ({ type: 'simple', shortcode: 'button', _items: [], atts: { label: b.label, link: localize(b.href), target: 'no', unique_id: uid() } });
-  const blockToNode = (b) => (b.t === 'heading' ? headingNode(b) : b.t === 'button' ? buttonBlockNode(b) : b.t === 'text' ? textBlock(b.html) : codeBlock(b.html));
+  const blockToNode = (b) => (b.t === 'heading' ? headingNode(b) : b.t === 'button' ? buttonBlockNode(b) : b.t === 'text' ? textBlock(b.html) : b.t === 'testimonials' ? testimonialsNode(b.items) : codeBlock(b.html));
+
+  // --- Grid-cell → editable shortcode builders (parity with the PHP mapper's n_icon_box /
+  //     n_counter). The JS path previously code_blocked every cell even though the extractor
+  //     already detected cards / counters; this restores the dedicated, editable shortcodes.
+  //     Nodes are cloned from the live default-att atoms (icon_box / counter) then overlaid, so
+  //     they carry the EXACT shape the builder stores (no missing nested atts).
+  // fa_icon: normalize a source icon class to a renderable Font Awesome class (FA is bundled).
+  const FA_MAP = {
+    'ti-light-bulb': 'lightbulb-o', 'ti-idea': 'lightbulb-o', 'ti-panel': 'th-list', 'ti-layout': 'th-large',
+    'ti-headphone-alt': 'headphones', 'ti-headphone': 'headphones', 'ti-bar-chart': 'bar-chart', 'ti-stats-up': 'line-chart',
+    'ti-mobile': 'mobile', 'ti-tablet': 'tablet', 'ti-desktop': 'desktop', 'ti-settings': 'cog', 'ti-cog': 'cog',
+    'ti-pencil': 'pencil', 'ti-pencil-alt': 'pencil', 'ti-heart': 'heart', 'ti-star': 'star', 'ti-shield': 'shield',
+    'ti-rocket': 'rocket', 'ti-cloud': 'cloud', 'ti-camera': 'camera', 'ti-email': 'envelope', 'ti-user': 'user',
+    'ti-search': 'search', 'ti-lock': 'lock', 'ti-world': 'globe', 'ti-check': 'check', 'ti-time': 'clock-o',
+    'ti-comment': 'comment', 'ti-comments': 'comments', 'ti-gift': 'gift', 'ti-target': 'bullseye', 'ti-wallet': 'credit-card',
+    'ti-bag': 'shopping-bag', 'ti-shopping-cart': 'shopping-cart', 'ti-cup': 'trophy', 'ti-medall': 'trophy', 'ti-medall-alt': 'trophy',
+    'ti-paint-roller': 'paint-brush', 'ti-paint-bucket': 'paint-brush', 'ti-ruler-pencil': 'pencil-square-o', 'ti-package': 'cube',
+    'ti-support': 'life-ring', 'ti-thumb-up': 'thumbs-up', 'ti-bell': 'bell', 'ti-calendar': 'calendar', 'ti-map': 'map-marker',
+  };
+  const faIcon = (cls) => {
+    cls = String(cls || '').trim(); if (!cls) return '';
+    const toks = cls.toLowerCase().split(/\s+/);
+    for (const t of toks) { if (/^(fa|fas|far|fab|fal|fad)$/.test(t) || t.indexOf('fa-') === 0) return cls; }
+    for (const t of toks) { if (FA_MAP[t]) return 'fa fa-' + FA_MAP[t]; }
+    return 'fa fa-star';
+  };
+  const iconValue = (cls) => ({ type: 'icon-font', 'icon-class': faIcon(cls), 'icon-class-without-root': false, 'pack-name': false, 'pack-css-uri': false });
+  const counterFont = (weight, size) => ({
+    google_font: false, subset: false, variation: false, family: '', style: 'normal',
+    weight: (weight !== '' && weight != null) ? String(weight) : '700',
+    size: (size !== '' && size != null) ? String(size) : '44',
+    'line-height': '', 'letter-spacing': '0', color: false,
+  });
+  const nearWhite = (hex) => { const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(String(hex || '')); return m ? (parseInt(m[1], 16) >= 240 && parseInt(m[2], 16) >= 240 && parseInt(m[3], 16) >= 240) : false; };
+  const counterColor = (hex) => { hex = String(hex || '').trim(); if (!hex) return { predefined: '', custom: '' }; return nearWhite(hex) ? { predefined: 'text-white', custom: '' } : { predefined: '', custom: hex }; };
+
+  const IB_STYLES = ['top-title', 'inline-left', 'inline-right', 'stack-left', 'stack-right', 'between-title-content'];
+  const IB_TAGS = ['h3', 'h4', 'h5', 'h6', 'span', 'p'];
+  const iconBoxNode = (card) => {
+    const n = stamp(clone('icon_box'));
+    const a = n.atts;
+    a.title = String(card.title || '');
+    const tag = String(card.titleTag || 'h3').toLowerCase();
+    a.title_tag = IB_TAGS.indexOf(tag) !== -1 ? tag : 'h3';
+    let content = String(card.text || '');
+    if (card.link && String(card.link.label || '').trim()) {
+      content += '<p><a href="' + esc(localize(card.link.href || '#')) + '">' + esc(String(card.link.label).trim()) + '</a></p>';
+    }
+    a.content = content;
+    if (card.customIcon) { a.custom_icon = String(card.customIcon); }
+    else if (card.icon) { a.icon = iconValue(card.icon); }
+    a.style = IB_STYLES.indexOf(card.iconLayout) !== -1 ? card.iconLayout : 'top-title';
+    const ic = String(card.iconColor || '').trim();
+    if (/^#[0-9a-f]{3,8}$/i.test(ic)) { a.icon_color = { predefined: '', custom: ic }; }
+    a.css_class = '';
+    return n;
+  };
+  // A testimonials collection → the editable `testimonials` shortcode (parity with PHP
+  // n_testimonials). Each detected item carries quote/name/position/image/site/rating.
+  const testimonialsNode = (rows) => {
+    const n = stamp(clone('testimonials'));
+    const a = n.atts;
+    a.testimonials = (rows || []).map((r) => {
+      const hasRating = r.rating != null && r.rating !== '';
+      return {
+        content: String(r.quote || ''),
+        author_avatar: { attachment_id: '', url: String(r.image || '') },
+        author_name: String(r.name || ''),
+        author_job: String(r.position || ''),
+        site_name: String(r.siteName || ''),
+        site_url: String(r.siteUrl || ''),
+        rating: hasRating ? Number(r.rating) : 5,
+      };
+    });
+    a.title = '';
+    a.container_type = 'container';
+    a.text_align = 'text-center';
+    a.avatar_shape = 'rounded-circle';
+    a.avatar_size = 'avatar-lg';
+    a.show_rating = 'yes';
+    return n;
+  };
+  const counterNode = (c) => {
+    const n = stamp(clone('counter'));
+    const a = n.atts;
+    a.number = String(c.number != null ? c.number : '100');
+    a.start = String(c.start || '0');
+    a.prefix = String(c.prefix || '');
+    a.suffix = String(c.suffix || '');
+    a.decimals = String(c.decimals || '0');
+    a.number_font = counterFont(c.numberWeight, c.numberSize);
+    a.number_color = counterColor(c.numberColor);
+    a.prefix_font = counterFont(c.numberWeight, '24');
+    a.suffix_font = counterFont(c.suffixWeight || c.numberWeight, c.suffixSize);
+    a.suffix_color = counterColor(c.suffixColor);
+    return n;
+  };
 
   // Build a section from decomposed blocks: consecutive intro blocks stack in a full-width
   // column; a `row` block becomes a row of builder columns (one code-block per grid cell).
-  const blocksSectionNode = (sec) => {
+  const blocksSectionNode = (sec, sIndex) => {
     const s = stamp(clone('section'));
     const srcCls = String(sec.sectionClass || '').split(/\s+/).filter((c) => c && !/^(swiper|owl|slick|splide|carousel|aos|init|wow)/i.test(c));
     if (s.atts) {
@@ -145,8 +253,47 @@ export function toPages(capture, opts = {}) {
     const items = []; let buf = [];
     const flush = () => { if (buf.length) { items.push(column('1_1', buf)); buf = []; } };
     for (const b of sec.blocks) {
-      if (b.t === 'row') { flush(); for (const c of b.cols) items.push(column(c.width, [codeBlock(c.html)])); }
-      else buf.push(blockToNode(b));
+      if (b.t === 'row') {
+        flush();
+        for (const c of b.cols) {
+          // Map each grid cell to a dedicated, editable shortcode using the role the extractor
+          // already detected (parity with the PHP mapper). Only a nested grid or an unrecognized
+          // cell still falls back to a verbatim code_block.
+          let detected, cellItems, why;
+          if (c.counter) {
+            detected = 'counter'; why = 'counter → counter shortcode';
+            cellItems = [counterNode(c.counter)];
+            const lbl = String(c.counter.label || '').trim();
+            if (lbl) { cellItems.push(textBlock('<p>' + esc(lbl) + '</p>')); }
+          } else if (c.card) {
+            detected = 'card'; why = 'card → icon_box'; cellItems = [iconBoxNode(c.card)];
+          } else if (c.text) {
+            detected = 'text'; why = 'text cell → text_block'; cellItems = [textBlock(c.html)];
+          } else if (c.grid) {
+            detected = 'grid'; why = 'nested grid → code_block (not yet split into nested columns)'; cellItems = [codeBlock(c.html)];
+          } else {
+            detected = 'html'; why = 'unrecognized cell → code_block'; cellItems = [codeBlock(c.html)];
+          }
+          const sc = cellItems[0].shortcode || 'simple';
+          rec({ kind: 'element', sIndex, role: 'row-cell', detected, shortcode: sc, why, width: c.width,
+                sourceClass: c.cls || '', text: snip(c.html), textFull: snipFull(c.html), html: rawCap(c.html),
+                fallback: sc === 'code_block', opportunity: false });
+          items.push(column(c.width, cellItems));
+        }
+      } else {
+        const node = blockToNode(b);
+        rec({ kind: 'element', sIndex, role: b.t, detected: b.t, shortcode: node.shortcode || 'simple',
+              why: b.t === 'heading' ? 'heading → special_heading'
+                 : b.t === 'button' ? 'button → button'
+                 : b.t === 'text' ? 'text → text_block'
+                 : b.t === 'testimonials' ? 'testimonials → testimonials'
+                 : `${b.t} → code_block (unmapped)`,
+              sourceTag: b.tag || '', sourceClass: b.cls || '', text: snip(b.text || b.label || b.html),
+              textFull: snipFull(b.text || b.label || b.html), html: rawCap(b.html || ''),
+              fallback: (node.shortcode || '') === 'code_block',
+              opportunity: (node.shortcode || '') === 'code_block' && ['testimonials', 'card', 'counter'].indexOf(b.t) !== -1 });
+        buf.push(node);
+      }
     }
     flush();
     s._items = items.length ? items : [column('1_1', [codeBlock(sec.rawHtml || '')])];
@@ -157,16 +304,39 @@ export function toPages(capture, opts = {}) {
   // INNER html goes in the code-block — so there's no nested <section>, and CSS scoped to inner
   // wrappers (e.g. `.banner .block h1`) still matches. `.sc-mirror` resets the builder
   // container/column gutters so the source markup renders edge-to-edge.
-  const mirrorSectionNode = (sec) => {
+  const mirrorSectionNode = (sec, sIndex) => {
     const s = stamp(clone('section'));
-    const srcCls = String(sec.sectionClass || '').split(/\s+/).filter((c) => c && !/^(swiper|owl|slick|splide|carousel|aos|init|wow)/i.test(c));
     if (s.atts) {
-      s.atts.css_class = ['sc-mirror'].concat(srcCls).join(' ');
+      s.atts.css_class = 'sc-mirror';
       s.atts.is_fullwidth = true;
+      // The verbatim source section owns 100% of its OWN vertical spacing (its py-/mb- classes ride
+      // inside the code-block), so zero the builder section's default padding (64px top/bottom) — it
+      // renders with id-specificity (.uXXXX{…}) that the .sc-mirror CSS reset can't beat, so the
+      // page would otherwise grow ~128px taller per mirror section.
+      s.atts.padding_top = '0px';
+      s.atts.padding_bottom = '0px';
       if (sec.css && sec.css.trim()) s.atts.custom_css = sec.css;
     }
-    const inner = (sec.rawInner != null ? sec.rawInner : sec.rawHtml) || '';
-    s._items = [column('1_1', [codeBlock(inner)])];
+    // Prefer the source section's OUTER html (its own `<section class="…flex items-center text-center
+    // max-w-[1280px] mx-auto…">`) so its self-layout classes (flex/grid centering, max-width
+    // container) wrap its children DIRECTLY. Hoisting the class onto the builder <section> + using
+    // the INNER html instead breaks that centering, because the builder interposes
+    // .fw-container/.fw-row/.fw-col between the section and its content (the heading went left + the
+    // buttons stretched full-width). A nested <section> is harmless under the `.sc-mirror` reset.
+    // Fall back to inner html + hoisted class for older captures that lack rawHtml.
+    let html;
+    if (sec.rawHtml) {
+      html = sec.rawHtml;
+    } else {
+      html = sec.rawInner || '';
+      const srcCls = String(sec.sectionClass || '').split(/\s+/).filter((c) => c && !/^(swiper|owl|slick|splide|carousel|aos|init|wow)/i.test(c));
+      s.atts.css_class = ['sc-mirror'].concat(srcCls).join(' ');
+    }
+    rec({ kind: 'element', sIndex, role: 'verbatim', detected: 'section-html', shortcode: 'code_block',
+          why: 'whole section kept verbatim (hero / media-bearing / undecomposable) → code_block',
+          sourceClass: sec.sectionClass || '', text: snip(html), textFull: snipFull(html), html: rawCap(html),
+          fallback: true, opportunity: false });
+    s._items = [column('1_1', [codeBlock(html)])];
     return s;
   };
 
@@ -209,9 +379,15 @@ export function toPages(capture, opts = {}) {
   };
   // Slider section → builder section (carries the source section's bg/padding via its class +
   // custom_css) → optional heading code-block + the carousel shortcode.
-  const sliderSectionNode = (sec) => {
+  const sliderSectionNode = (sec, sIndex) => {
     const items = [];
-    if (sec.slider.heading) items.push(codeBlock(`<h2 class="sc-slider-heading">${sec.slider.heading}</h2>`));
+    if (sec.slider.heading) {
+      rec({ kind: 'element', sIndex, role: 'slider-heading', detected: 'heading', shortcode: 'code_block',
+            why: 'slider heading → code_block', text: snip(sec.slider.heading), fallback: true, opportunity: false });
+      items.push(codeBlock(`<h2 class="sc-slider-heading">${sec.slider.heading}</h2>`));
+    }
+    rec({ kind: 'element', sIndex, role: 'slider', detected: 'carousel', shortcode: 'carousel',
+          why: `slider → carousel (${(sec.slider.slides || []).length} slides)`, fallback: false, opportunity: false });
     items.push(carouselNode(sec.slider));
     const s = stamp(clone('section'));
     if (s.atts) {
@@ -228,7 +404,10 @@ export function toPages(capture, opts = {}) {
   // No-rawHtml fallback (older captures / a section the capture couldn't snapshot): dump its
   // heading + paragraphs + buttons + lead image as one column of plain text-blocks.
   const headingTitle = (sec) => (sec.headingHtml && sec.headingHtml.trim()) ? sec.headingHtml : esc(sec.heading || '');
-  const buildPlain = (sec) => {
+  const buildPlain = (sec, sIndex) => {
+    rec({ kind: 'element', sIndex, role: 'plain', detected: 'no-rawhtml', shortcode: 'text_block',
+          why: 'no rawHtml captured → heading/paragraphs as plain text blocks',
+          sourceClass: sec.sectionClass || '', text: snip(sec.heading || ''), fallback: false, opportunity: false });
     const items = [];
     if (sec.heading) {
       const lvl = sec.level >= 1 && sec.level <= 6 ? sec.level : 2;
@@ -247,17 +426,32 @@ export function toPages(capture, opts = {}) {
   };
 
   const builder = [];
-  (capture.sections || []).forEach((sec) => {
-    let node;
+  (capture.sections || []).forEach((sec, sIndex) => {
+    let node, decision;
+    const hasRaw = !!(sec.rawHtml || sec.rawInner);
+    // Fidelity guard: decomposition only emits heading / text / button / grid-cell shortcodes, so
+    // a section whose visual MEDIA (images, CSS background-images) isn't inside a grid `row` would
+    // have that media DROPPED when decomposed — exactly what gutted the Auralis hero (its waveform
+    // card vanished, heading got re-styled by special_heading). Keep such sections — and, in
+    // --fidelity mode, EVERY raw-captured section — VERBATIM so the source markup + layout (which
+    // carry at ~100% CSS coverage) survive intact, edge-to-edge under the `.sc-mirror` reset.
+    const hasMedia = (sec.assets || []).length > 0;
+    const hasRow = (sec.blocks || []).some((b) => b.t === 'row');
+    const preferVerbatim = hasRaw && (opts.fidelity === true || (hasMedia && !hasRow));
     if (sec.slider && sec.slider.slides && sec.slider.slides.length >= 2) {
-      node = sliderSectionNode(sec);            // editable carousel shortcode
+      decision = 'carousel'; node = sliderSectionNode(sec, sIndex);     // editable carousel shortcode
+    } else if (preferVerbatim) {
+      decision = 'verbatim'; node = mirrorSectionNode(sec, sIndex);     // preserve design (media-bearing / --fidelity) — keep source markup
     } else if (sec.blocks && sec.blocks.length) {
-      node = blocksSectionNode(sec);            // special_heading / text_block / button + grid columns
-    } else if (sec.rawHtml || sec.rawInner) {
-      node = mirrorSectionNode(sec);            // verbatim (hero / undecomposable) — no nested <section>
+      decision = 'decomposed'; node = blocksSectionNode(sec, sIndex);   // special_heading / text_block / button + grid columns
+    } else if (hasRaw) {
+      decision = 'verbatim'; node = mirrorSectionNode(sec, sIndex);     // verbatim (hero / undecomposable) — no nested <section>
     } else {
-      node = buildPlain(sec);
+      decision = 'plain'; node = buildPlain(sec, sIndex);
     }
+    rec({ kind: 'section', sIndex, decision, sourceClass: sec.sectionClass || '',
+          hasCss: !!(sec.css && sec.css.trim()), computed: sec.computed || {}, diag: sec.diag || {},
+          height: sec.h || 0, assets: (sec.assets || []).length, blocks: (sec.blocks || sec.mapBlocks || []).length });
     if (node) builder.push(node);
   });
 

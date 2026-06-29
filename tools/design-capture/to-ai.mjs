@@ -3,7 +3,8 @@
 // The WordPress plugin deterministically parses an export into a draft MAPPING (sections → elements
 // with roles). This module hands that draft + the original markup to Claude and gets back:
 //   1. a refined mapping (corrected roles, dropped chrome/decorative blocks), and
-//   2. a global `custom_css` that styles the rebuilt shortcode markup to match the original's look.
+//   2. a complete child-theme DESIGN — { style_css, header_html, footer_html } — that reproduces the
+//      original's look (the stylesheet styles the rebuilt shortcode body + the authored chrome).
 //
 // The plugin then builds the WordPress page from the refined mapping (its own engine produces the
 // correct page-builder nodes) and folds the CSS into the generated child theme. So the AI works at the
@@ -25,34 +26,41 @@ const IS_WIN = process.platform === 'win32';
 
 const ROLES = ['overline', 'title', 'subtitle', 'heading', 'text', 'button', 'image', 'columns', 'code', 'skip'];
 
-const SYSTEM = `You convert an AI-built landing page into a clean, on-brand UnysonPlus WordPress page.
-You are given (a) the original page's HTML and (b) a DRAFT mapping the converter produced: an ordered
-tree of pages → sections → blocks, where each block has a "role". Your job is to RETURN AN IMPROVED
-mapping plus one stylesheet — nothing else.
+const SYSTEM = `You IMPROVE a draft element mapping for a website-to-WordPress converter. You do NOT write CSS or HTML.
 
-Rules for the mapping:
-- Keep the same JSON shape: { "pages":[ { "title","slug","front_page","sections":[ { "css_id","omit":false,"blocks":[ { "t","role", ... } ] } ] } ] }.
-- Roles you may use: ${ROLES.join(', ')}. Meaning: overline = small eyebrow label; title = the section's main heading (h1/h2); subtitle = a short line under a title; heading = a sub-heading; text = a paragraph (text block); button = a call-to-action; image = a real <img>; columns = a row of cards (keep its "cols"); code = keep verbatim; skip = drop this block.
-- Fix mis-detected roles. Drop pure chrome/decorative blocks (nav links, marquees, fake UI mockups, gradient-only divs) by setting their role to "skip" or omitting the section.
-- Keep block "text"/"html"/"label"/"cols" values intact — only change "role" (and you MAY set a section's "omit":true, or improve a section's "css_id" to a short semantic slug).
-- Do NOT invent new blocks or new sections. Preserve order.
+A DETERMINISTIC engine already reads the original page's real classes and reproduces the exact look (colors,
+sizes, spacing, layout, header/footer) faithfully and repeatably. Your ONLY job is to make that engine
+SMARTER by correcting the MAPPING: which element each block is, what is decorative, and what is a custom
+widget. You NEVER author a stylesheet or header/footer markup -- the engine does that.
 
-Rules for the CSS (the fidelity win):
-- Return a single "custom_css" string that makes the rebuilt page look like the original: the palette,
-  type scale, spacing, hero centering, card styling, button look.
-- EVERY selector MUST be scoped to "body:not(.wp-admin)" (the stylesheet also loads in wp-admin otherwise).
-- Target the rebuilt shortcode markup, NOT the original's Tailwind classes:
-  • headings → .special-heading__title / .special-heading__overline / .special-heading__subtitle (and h1–h4)
-  • paragraph → .text-block
-  • button → .btn
-  • feature/bento card → .icon-box / .icon-box__title / .icon-box__content / .icon-box__icon i
-  • a row of cards → .fw-row / [class*="fw-col-"]
-  • images → img
-  • a specific section → its "#<css_id>" (each section renders with id="<css_id>")
-- Use real hex colors and px/rem values pulled from the original. Center hero/CTA sections. Keep it clean.
+You are given (a) the original page's full HTML and (b) the DRAFT mapping (pages -> sections -> blocks, each
+block has a "role"). Return ONE JSON object, no markdown fences, no commentary:
+{ "mapping": { ...improved mapping... } }
 
-OUTPUT: a single JSON object only, no markdown fences, no commentary:
-{ "mapping": { ...the improved mapping... }, "custom_css": "body:not(.wp-admin){...} ..." }`;
+== rules ==
+- Keep the shape EXACTLY: { "pages":[ { "title","slug","front_page","sections":[ { "css_id","omit":false,"blocks":[ { "t","role", ... } ] } ] } ] }.
+- Roles: ${ROLES.join(', ')}. overline=eyebrow/pill label; title=section heading (h1/h2); subtitle=line under a title; heading=sub-heading; text=paragraph; button=CTA; image=real <img>; columns=row of cards (keep "cols"); code=a CUSTOM element kept VERBATIM; skip=drop.
+- You may ONLY change a block's "role", a section's "css_id", or "omit"/"skip". KEEP every block's
+  "text"/"html"/"label"/"cols" EXACTLY as given -- do NOT rewrite content, do NOT add or change classes,
+  do NOT rebuild markup. PRESERVE block + section ORDER.
+- Fix mis-detected roles. Set role "skip" (or a section "omit":true) ONLY for genuinely chrome/decorative
+  blocks: nav bars, marquees, gradient-only spacer divs. Do NOT skip real content.
+- CUSTOM / UNIQUE WIDGETS -- the fidelity escape hatch. For anything that does NOT cleanly map to a
+  heading/text/button/image/card (an audio/video player, an image with an OVERLAID UI, a bespoke
+  interactive or stat/pricing widget): set its role to "code". You MAY merge the cluster of blocks for that
+  ONE widget into a single { "t":"html", "role":"code", "html":"..." }, but "html" MUST be the original
+  markup VERBATIM (keep the real <img> src and EVERY sub-part) -- the engine reproduces it. Do NOT rebuild
+  it with your own classes; you are not writing CSS.
+- Give each section a short semantic "css_id" (hero, features, pricing, cta, ...).
+
+== layout judgments the engine relies on you for ==
+- An inline BADGE / PILL (e.g. "NEW - v2 is now live") is a real element -> role "overline" (the engine
+  styles it as a pill), never "skip".
+- A logo / "trusted by" strip is ONE horizontal row -> keep its single "columns"/"code" block intact; do
+  NOT split the logos back into separate stacked blocks.
+- SECTION ORDER: keep a section's heading + subtitle as SEPARATE blocks BEFORE its "columns" row (a
+  full-width heading, then the cards below). NEVER merge the heading into the cards row or move it into a
+  side column. Preserve the source's block order exactly.`;
 
 /* ---------------------------------------------------------------------- *
  * Backend detection
@@ -105,7 +113,7 @@ function buildUser({ html, mapping, source }) {
     `Source builder: ${source || 'unknown'}\n\n` +
     `=== ORIGINAL HTML (truncated) ===\n${markup}\n\n` +
     `=== DRAFT MAPPING (JSON) ===\n${JSON.stringify(mapping)}\n\n` +
-    `Return the improved { "mapping", "custom_css" } JSON object now.`
+    `Return the { "mapping", "theme": { "style_css", "header_html", "footer_html" } } JSON object now.`
   );
 }
 
@@ -131,7 +139,7 @@ async function refineViaApi({ html, mapping, source }) {
   const resp = await fetch(API_URL, {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model, max_tokens: 16000, system: SYSTEM, messages: [{ role: 'user', content: buildUser({ html, mapping, source }) }] }),
+    body: JSON.stringify({ model, max_tokens: 32000, system: SYSTEM, messages: [{ role: 'user', content: buildUser({ html, mapping, source }) }] }),
   });
   if (!resp.ok) {
     const t = await resp.text().catch(() => '');
@@ -183,7 +191,14 @@ function runClaude(cmd, args, input) {
     }
     let out = '';
     let err = '';
-    const timer = setTimeout(() => { try { child.kill(); } catch {} reject(new Error('Claude Code timed out (over 3 minutes).')); }, 180000);
+    // Authoring a full stylesheet + a refined mapping in one turn (Opus, up to 32k output tokens) can
+    // run many minutes, so there is NO time limit by default — we simply wait for Claude Code to finish
+    // (the earlier 3-minute cap timed out on design-heavy pages). Set AI_TIMEOUT_MS (milliseconds) to a
+    // positive value only if you'd rather impose a cap, e.g. AI_TIMEOUT_MS=600000 for 10 minutes.
+    const timeoutMs = parseInt(process.env.AI_TIMEOUT_MS || '', 10);
+    const timer = timeoutMs > 0
+      ? setTimeout(() => { try { child.kill(); } catch {} reject(new Error('Claude Code timed out (over ' + Math.round(timeoutMs / 60000) + ' minutes). Unset AI_TIMEOUT_MS to remove the cap.')); }, timeoutMs)
+      : null;
     child.stdout.on('data', (d) => { out += d; });
     child.stderr.on('data', (d) => { err += d; });
     child.on('error', (e) => { clearTimeout(timer); reject(new Error('Could not run Claude Code (`claude`): ' + e.message + ' — is it installed and on PATH?')); });
@@ -202,9 +217,13 @@ function finishParse(text, model, backend) {
   if (!parsed || !parsed.mapping || !Array.isArray(parsed.mapping.pages)) {
     throw new Error('The AI response did not contain a valid mapping.');
   }
+  // REFINE-ONLY: the AI returns just a corrected mapping. The deterministic engine produces the stylesheet
+  // and the header/footer chrome, so we deliberately DROP any theme/style_css an older model might emit --
+  // the two engines must not both author CSS (that's what made them conflict).
   return {
     mapping: parsed.mapping,
-    custom_css: typeof parsed.custom_css === 'string' ? parsed.custom_css : '',
+    theme: { style_css: '', header_html: '', footer_html: '' },
+    custom_css: '',
     model,
     backend,
   };
