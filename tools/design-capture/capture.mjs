@@ -15,6 +15,7 @@ import { toDesignConfig } from './to-design-config.mjs';
 import { toPages } from './to-pages.mjs';
 import { toStyleGuide } from './to-styleguide.mjs';
 import { toPresets } from './to-presets.mjs';
+import { toThemeSettings } from './to-theme-settings.mjs';
 import { makeZip } from './minimal-zip.mjs';
 import { extractDesign } from './capture-extract.mjs';
 import { toReport } from './to-report.mjs';
@@ -251,6 +252,14 @@ async function captureOne(browser, srcUrl, baseDir, reportOnly) {
     step('building theme, pages & conversion report…');
     const config = toDesignConfig(home);
     if (home.chrome) config.raw_chrome = home.chrome;
+    // CHROME → parent-theme Theme Settings (playbook: chrome = theme, not page content). Emit the
+    // header/footer as native Header/Footer Theme-Settings values + flag the theme-generator to
+    // ship a NEAR-EMPTY child theme (no header.php/footer.php) so the parent renders this chrome.
+    // MIRROR of the PHP tokens_to_theme_settings_chrome() + chrome_via_settings flag.
+    const themeSettings = toThemeSettings(config, home);
+    if (themeSettings && themeSettings.values && Object.keys(themeSettings.values).length) {
+      config.chrome_via_settings = true;
+    }
     const titleFor = (cap, slug) => {
       const t = (cap.title || '').split(/\s+[|–—·-]\s+/)[0].trim();
       return t || slug.replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
@@ -334,10 +343,12 @@ async function captureOne(browser, srcUrl, baseDir, reportOnly) {
       writeFileSync(`${outdir}/styleguide.json`, JSON.stringify(styleguide, null, 2));
       writeFileSync(`${outdir}/media.json`, JSON.stringify(media, null, 2));
       writeFileSync(`${outdir}/presets.json`, JSON.stringify(presets, null, 2));
+      writeFileSync(`${outdir}/theme-settings.json`, JSON.stringify(themeSettings, null, 2));
       const bundleZip = makeZip([
         { name: 'bundle.json', data: JSON.stringify({ name: config.theme.name, source: srcUrl, generated: 'design-capture', pages: builderPages.length }, null, 2) },
         { name: 'media.json', data: JSON.stringify(media, null, 2) },
         { name: 'theme-design.json', data: JSON.stringify(config, null, 2) },
+        { name: 'theme-settings.json', data: JSON.stringify(themeSettings, null, 2) },
         { name: 'styleguide.json', data: JSON.stringify(styleguide, null, 2) },
         { name: 'presets.json', data: JSON.stringify(presets, null, 2) },
         { name: 'mapping.json', data: JSON.stringify(mapping, null, 2) },

@@ -246,11 +246,27 @@ export function extractDesign() {
       .filter((el) => { const t = el.textContent.trim(); return t && t.length < 30; });
     const hcs = getComputedStyle(headerEl);
     const inner = headerEl.firstElementChild ? getComputedStyle(headerEl.firstElementChild) : null;
+    // Brand-mark icon → a Lucide id, so the plugin reproduces the native Logo Icon (icon + wordmark)
+    // instead of baking the mark into an image. Sniffs data-lucide / lucide-<name> class /
+    // iconify <… icon="lucide:<name>">. Mirrors the PHP detect_lucide_in().
+    const logoIcon = (scope) => {
+      if (!scope) return '';
+      const i = scope.querySelector('[data-lucide], i[class*="lucide-"], [icon^="lucide:"]');
+      if (!i) return '';
+      const dl = i.getAttribute('data-lucide');
+      if (dl) return 'lucide/' + dl.trim().toLowerCase();
+      const ic = i.getAttribute('icon') || '';
+      const m = ic.match(/^lucide:([a-z0-9-]+)$/i);
+      if (m) return 'lucide/' + m[1].toLowerCase();
+      const cls = (i.className && i.className.baseVal !== undefined ? i.className.baseVal : i.className) || '';
+      const cm = String(cls).match(/\blucide-([a-z0-9-]+)/);
+      return cm ? 'lucide/' + cm[1] : '';
+    };
     header = {
       element: pick(hcs, ['display', 'justifyContent', 'alignItems', 'backgroundColor', 'position', 'padding']),
       bar: pick(inner, ['display', 'justifyContent', 'backgroundColor', 'borderRadius', 'border', 'padding', 'maxWidth', 'backdropFilter']),
       logo: logoImg ? { type: 'image', src: abs(logoImg.currentSrc || logoImg.src) }
-        : (logoLink ? { type: 'text', text: logoLink.textContent.trim(), computed: pick(getComputedStyle(logoLink), ['fontFamily', 'fontSize', 'fontWeight', 'color', 'letterSpacing']) } : null),
+        : (logoLink ? { type: 'text', text: logoLink.textContent.trim(), icon: logoIcon(logoLink), computed: pick(getComputedStyle(logoLink), ['fontFamily', 'fontSize', 'fontWeight', 'color', 'letterSpacing']) } : null),
       nav: navLinks.map((a) => ({ label: a.textContent.trim(), href: abs(a.getAttribute('href') || ''), computed: pick(getComputedStyle(a), ['fontFamily', 'fontSize', 'fontWeight', 'color']) })),
       cta: cta ? { label: cta.textContent.trim(), href: abs(cta.getAttribute('href') || ''), computed: pick(getComputedStyle(cta), ['backgroundColor', 'color', 'borderRadius', 'padding', 'fontFamily', 'fontWeight']) } : null,
     };
@@ -1260,18 +1276,38 @@ export function extractDesign() {
   // `max-w-7xl mx-auto`, or any centered max-width wrapper all resolve to the same computed
   // max-width. Mapped onto our `.fw-container` so the converted content column matches the source
   // (instead of the frontend-grid default ~1320px).
+  // Site content-container width. A robust algorithm (the old one only knew Bootstrap `.container`
+  // and returned the FIRST match, missing Tailwind `max-w-[1600px]` and picking stray wrappers):
+  //   1. Collect every horizontally-CENTERED wrapper (margin-inline:auto, or equal non-zero L/R
+  //      margins) that carries an explicit `max-width` in a sane range (600–2400px) and is actually
+  //      rendered wide (≥480px) — i.e. a real content container, not an icon or a full-bleed band.
+  //   2. Bucket by max-width and WEIGHT each bucket by the content AREA it wraps, so the main
+  //      content container (header bar + hero + sections all share one max-width) dominates over a
+  //      one-off narrow card that happens to be centered.
+  //   3. The container width = the heaviest bucket's max-width.
+  // Returns e.g. "1600px". The importer maps it to `.fw-container`'s width (both are border-box with
+  // ~24px side padding, so the value transfers directly; see the demo-conversion playbook).
   const containerMax = (() => {
-    let el = document.querySelector('.container');
-    if (!el) {
-      el = [...document.querySelectorAll('main div, section div, body > div')].find((e) => {
-        const s = getComputedStyle(e);
-        return s.maxWidth !== 'none' && parseFloat(s.maxWidth) >= 600
-          && (s.marginLeft === 'auto' || s.marginInlineStart === 'auto');
-      });
+    const vw = window.innerWidth;
+    const buckets = new Map(); // rounded max-width px -> summed content area
+    for (const el of document.querySelectorAll('div,section,header,footer,main,article,nav')) {
+      const s = getComputedStyle(el);
+      const mw = parseFloat(s.maxWidth);
+      if (!mw || mw < 600 || mw > 2400) continue;
+      const r = el.getBoundingClientRect();
+      if (r.width < 480) continue;
+      // Centered = horizontally SYMMETRIC on the viewport (getComputedStyle resolves margin:auto
+      // to 0px, so test the rendered box, not the margin value). This holds whether the container
+      // fills the viewport (both gaps ~0) or is inset by auto margins (both gaps equal); an
+      // asymmetric / left-aligned block (a sidebar) is rejected.
+      const leftGap = r.left, rightGap = vw - r.right;
+      if (Math.abs(leftGap - rightGap) > Math.max(8, r.width * 0.05)) continue;
+      const key = Math.round(mw / 4) * 4; // tolerate sub-px rounding
+      buckets.set(key, (buckets.get(key) || 0) + r.width * Math.max(1, r.height));
     }
-    if (!el) return '';
-    const mw = getComputedStyle(el).maxWidth;
-    return (mw && mw !== 'none' && parseFloat(mw) >= 600) ? mw : '';
+    let best = 0, bestWeight = 0;
+    for (const [px, weight] of buckets) { if (weight > bestWeight) { bestWeight = weight; best = px; } }
+    return best ? best + 'px' : '';
   })();
 
   // Base heading typography (font-weight / color) read from the source's `h1..h6` / `.hN` rule.
