@@ -890,8 +890,38 @@ export function extractDesign() {
     if (items.length < 2) return null;
     return { items };
   };
+  // A native <video> OR a provider <iframe> → a `video` block (→ media_video). Mirrors the PHP
+  // stitch 'video' recognizer. Provider iframes are matched by host (a general IFRAME stays SKIPPED
+  // to avoid capturing tracking/ad frames). A self-hosted <video> is the only way to reproduce a
+  // muted/looping/autoplaying background clip, so its playback flags are carried through.
+  const VIDEO_PROVIDER_RE = /(youtube\.com|youtu\.be|youtube-nocookie\.com|player\.vimeo\.com|vimeo\.com\/\d|dailymotion\.com\/embed|wistia\.(net|com)|player\.twitch\.tv)/i;
+  const videoBlockOf = (el) => {
+    const tag = el.tagName;
+    if (tag === 'IFRAME') {
+      const src = el.getAttribute('src') || '';
+      if (!VIDEO_PROVIDER_RE.test(src)) return null;
+      return { t: 'video', mode: 'embed', embedUrl: abs(src) };
+    }
+    if (tag !== 'VIDEO') return null;
+    let src = el.getAttribute('src') || '', webm = '';
+    for (const s of el.querySelectorAll('source')) {
+      const ss = s.getAttribute('src') || '', stype = (s.getAttribute('type') || '').toLowerCase();
+      if (!ss) continue;
+      if (!webm && (stype === 'video/webm' || /\.webm(\?|$)/i.test(ss))) webm = ss;
+      if (!src && (stype === 'video/mp4' || /\.mp4(\?|$)/i.test(ss))) src = ss;
+    }
+    if (!src && !webm) return null;
+    return {
+      t: 'video', mode: 'self_hosted', src: abs(src), webm: abs(webm), poster: abs(el.getAttribute('poster') || ''),
+      autoplay: el.hasAttribute('autoplay') ? 'yes' : 'no', muted: el.hasAttribute('muted') ? 'yes' : 'no',
+      loop: el.hasAttribute('loop') ? 'yes' : 'no', controls: el.hasAttribute('controls') ? 'yes' : 'no',
+      playsinline: el.hasAttribute('playsinline') ? 'yes' : 'no',
+    };
+  };
   const decompose = (el, out) => {
     for (const child of [...el.children]) {
+      const vblk = videoBlockOf(child);          // before SKIP: provider IFRAMEs are otherwise skipped
+      if (vblk) { out.push(vblk); continue; }
       if (SKIP_TAGS.has(child.tagName) || !visibleEl(child)) continue;
       const tag = child.tagName;
       const cls = (child.className && child.className.toString) ? child.className.toString() : '';
@@ -937,6 +967,13 @@ export function extractDesign() {
             : ( ( ai === 'flex-start' || ai === 'start' ) ? 'start' : '' ) );
           out.push({ t: 'row', cols, valign });
         }
+      } else if (tag === 'IMG' || (/^(FIGURE|PICTURE)$/.test(tag) && child.querySelector('img') && !txt(child))) {
+        // A standalone <img> (or a figure/picture wrapping a lone image) → a `image` block →
+        // media_image (NOT a gallery, which is for multiple images; NOT a verbatim code_block).
+        const im = tag === 'IMG' ? child : child.querySelector('img');
+        const src = abs(im.currentSrc || im.src || '');
+        if (/^https?:/.test(src)) { out.push({ t: 'image', src, alt: im.alt || '' }); }
+        else { out.push({ t: 'html', html: rawHtmlOf(child, true) }); }
       } else if (child.children.length && !child.matches('table,figure,ul,ol,dl')) {
         decompose(child, out); // single-column wrapper → dive to reach the intro / the grid row
       } else {

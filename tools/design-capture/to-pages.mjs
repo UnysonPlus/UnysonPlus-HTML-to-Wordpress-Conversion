@@ -139,7 +139,50 @@ export function toPages(capture, opts = {}) {
     return n;
   };
   const buttonBlockNode = (b) => ({ type: 'simple', shortcode: 'button', _items: [], atts: { label: b.label, link: localize(b.href), target: 'no', unique_id: uid() } });
-  const blockToNode = (b) => (b.t === 'heading' ? headingNode(b) : b.t === 'button' ? buttonBlockNode(b) : b.t === 'text' ? textBlock(b.html) : b.t === 'testimonials' ? testimonialsNode(b.items) : codeBlock(b.html));
+
+  // A provider embed iframe src → an oEmbed-friendly PAGE url (WP oEmbed needs the page URL, not
+  // the /embed/ iframe src). Unknown hosts pass through. Mirrors PHP Mapper::embed_to_page_url().
+  const embedToPageUrl = (src) => {
+    src = String(src || '').trim();
+    if (!src) return '';
+    let m;
+    if ((m = src.match(/youtube(?:-nocookie)?\.com\/embed\/([\w-]+)/))) return 'https://www.youtube.com/watch?v=' + m[1];
+    if ((m = src.match(/player\.vimeo\.com\/video\/(\d+)/)))            return 'https://vimeo.com/' + m[1];
+    if ((m = src.match(/dailymotion\.com\/embed\/video\/([\w]+)/)))     return 'https://www.dailymotion.com/video/' + m[1];
+    return src;
+  };
+  // A source <video> / provider <iframe> block → the NATIVE media_video shortcode (self-hosted file
+  // OR oEmbed URL) — never a raw <video> in a text/code block. Mirrors PHP Mapper::n_video(): full
+  // source_type multi-picker shape (both branches) so the builder corrector accepts it; autoplay
+  // forces muted (browser policy). media_video is not in atom-templates, so build the node inline.
+  const videoNode = (b) => {
+    let mode = b.mode === 'embed' ? 'embed' : 'self_hosted';
+    const src = String(b.src || '').trim(), webm = String(b.webm || '').trim(), poster = String(b.poster || '').trim();
+    let embed = b.embedUrl ? embedToPageUrl(b.embedUrl) : '';
+    if (mode === 'self_hosted' && !src && !webm) { mode = 'embed'; if (!embed && src) embed = src; }
+    const up = (u) => (u ? { attachment_id: '', url: u } : []);
+    const st = {
+      source: mode,
+      embed: { url: embed, youtube_nocookie: 'no', lazy_facade: 'no', poster: up(mode === 'embed' ? poster : '') },
+      self_hosted: {
+        video_file: up(src), video_webm: up(webm), video_url: '', poster: up(mode === 'self_hosted' ? poster : ''),
+        autoplay: b.autoplay || 'no', muted: b.muted || 'no', loop: b.loop || 'no',
+        controls: b.controls || 'yes', playsinline: b.playsinline || 'yes', preload: 'metadata', object_fit: 'contain',
+      },
+    };
+    if (st.self_hosted.autoplay === 'yes') st.self_hosted.muted = 'yes';
+    return { type: 'simple', shortcode: 'media_video', _items: [], atts: { source_type: st, width: { value: 600, unit: 'px' }, ratio: '16x9', unique_id: uid() } };
+  };
+
+  // A standalone image → the native media_image element (NOT a gallery — that's for multiple
+  // images — and NOT a code_block). Mirrors PHP Mapper::n_media_image(); the importer sideloads src.
+  const mediaImageNode = (b) => ({ type: 'simple', shortcode: 'media_image', _items: [], atts: {
+    image: { attachment_id: '', url: b.src || '', alt: b.alt || '' },
+    width: { value: '', unit: 'px' }, height: { value: '', unit: 'px' },
+    fetchpriority: 'auto', link: '', target: '_self', unique_id: uid(),
+  } });
+
+  const blockToNode = (b) => (b.t === 'heading' ? headingNode(b) : b.t === 'button' ? buttonBlockNode(b) : b.t === 'text' ? textBlock(b.html) : b.t === 'image' ? mediaImageNode(b) : b.t === 'video' ? videoNode(b) : b.t === 'testimonials' ? testimonialsNode(b.items) : codeBlock(b.html));
 
   // --- Grid-cell → editable shortcode builders (parity with the PHP mapper's n_icon_box /
   //     n_counter). The JS path previously code_blocked every cell even though the extractor
@@ -286,6 +329,8 @@ export function toPages(capture, opts = {}) {
               why: b.t === 'heading' ? 'heading → special_heading'
                  : b.t === 'button' ? 'button → button'
                  : b.t === 'text' ? 'text → text_block'
+                 : b.t === 'image' ? 'image → media_image'
+                 : b.t === 'video' ? 'video → media_video (' + (b.mode === 'embed' ? 'oEmbed URL' : 'self-hosted') + ')'
                  : b.t === 'testimonials' ? 'testimonials → testimonials'
                  : `${b.t} → code_block (unmapped)`,
               sourceTag: b.tag || '', sourceClass: b.cls || '', text: snip(b.text || b.label || b.html),

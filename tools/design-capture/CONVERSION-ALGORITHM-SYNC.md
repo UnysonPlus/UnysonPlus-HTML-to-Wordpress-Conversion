@@ -8,7 +8,7 @@ The deterministic (**no‑AI**) converter — the logic that turns a source desi
 > The human-followed process these converters AUTOMATE, and every gotcha from building demos
 > (Theme-Settings-first mapping, Text Styles, the 3-tier Custom CSS escape hatch, logo strips /
 > inline SVG, `mask-image` background fades, the fidelity + computed-style diff gate, …) lives in the
-> **Demo Conversion Playbook**: `framework/extensions/site-converter/docs/demo-conversion-playbook.md`
+> **Site Conversion Playbook**: `framework/extensions/site-converter/docs/site-conversion-playbook.md`
 > (in the plugin / `UnysonPlus-Site-Converter-Extension` repo). The converters' north star is to EMIT
 > what that playbook builds by hand — keep them converging on it.
 
@@ -23,7 +23,32 @@ The deterministic (**no‑AI**) converter — the logic that turns a source desi
 ## What "conversion logic" means (any of these changed → sync the other side)
 
 - What counts as a **page section** vs. chrome.
-- How sections map to **shortcodes** (roles: `title` / `text` / `button` / `columns` / `icon_box` / `image` / `code` / `skip`).
+- How sections map to **shortcodes** (roles: `title` / `text` / `button` / `columns` / `icon_box` /
+  `counter` / `feature_list` / `image` / `video` / `scroll_indicator` / `code` / `skip`).
+  **Pick the purpose-built element for the content pattern** (see "element selection vs effect addition"
+  in the site playbook) — the resting state matches the source; never add motion the source lacks.
+  - **`video`** — a source `<video>` (self-hosted) or a provider `<iframe>` (YouTube/Vimeo/…) → the
+    native **`media_video`** shortcode (self-hosted file / oEmbed URL), **never** a raw `<video>` in a
+    text/code block. PHP: `stitch` `video` recognizer + `Mapper::n_video()` / `embed_to_page_url()`.
+    JS: `videoBlockOf()` (before `SKIP_TAGS`) + `videoNode()` / `embedToPageUrl()`. Self-hosted mode
+    carries autoplay/muted/loop/controls/playsinline; autoplay forces muted.
+  - **`counter`** — a big KPI/stat number → the **`counter`** (Animated Counter). Number-only; the
+    label is a sibling `special_heading`/`text_block`; prefix/suffix are inline captions ($, %, PB/s).
+    PHP `Mapper::n_counter()` + JS `counterNode()` (both already wired).
+  - **`feature_list`** — an icon-led list / checklist (`<ul>`/list of icon+text rows) → **`feature_list`**
+    (design `icon` = per-item icons, or `check`/`numbered`/`bullet`), NOT stacked `icon_box`es. Each item
+    = `{ text, subtext, icon, state }`. Carry an explicit icon size to `marker_size`.
+  - **`image`** — a standalone `<img>` → the native **`media_image`** shortcode, **never** a `gallery`
+    (that's for multiple images) and never a `code_block`. A `gallery` is only for a set of images.
+  - **`scroll_indicator`** — a bottom-of-hero `animate-bounce` label + chevron that anchors to the next
+    section → the **`scroll_indicator`** shortcode (text, icon, target `#anchor`, layout, animation).
+- **Per-section container width** — read each section's `mx-auto max-w-{3xl..6xl}` and set the section's
+  **Container Width** option (Narrow 768 / Medium 896 / Wide 1024 / Custom) instead of the global width or
+  per-element max-widths. The GLOBAL Container Width still maps the widest band (`max-w-7xl` → 1328px).
+- **Hover overlays** — a card's `absolute inset-0` + `opacity-0` + `group-hover:opacity-100` child is a
+  fade-in sheen; reproduce as a scoped `::before`/`::after` fade (+ the `hover:border-*` change).
+- **Icon size** — a source icon with an explicit size (`text-4xl`, `w-8 h-8`) → the element's **Icon Size**
+  option (icon / feature_list / icon_box), not child CSS.
 - What's treated as **chrome** (header / footer / nav) vs. body **content**.
 - **Header / footer detection** — e.g. a bare sticky `<nav class="fixed top-0">` as the header when
   there's no `<header>`; excluding the standalone brand link and the CTA from the nav menu.
