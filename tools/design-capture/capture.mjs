@@ -4,10 +4,15 @@
 // in a single Chrome — so you don't re-type the command per site, and two runs never collide.
 //
 //   node capture.mjs <url> [url2 url3 …] [base-outdir] [--report-only] [--list=urls.txt]
+//                     [--skip-header] [--skip-footer] [--skip-sections=0,2] [--only-sections=1,3]
 //
 // • Multiple URLs run one after another, each into its own capture-out/<site>/ folder.
 // • --list=urls.txt reads more URLs from a file (one per line; blank lines / #comments ignored).
 // • A non-URL positional arg is the base output dir (default: capture-out).
+// • SKIP FLAGS preserve QA'd parts on a re-run: --skip-header / --skip-footer drop the chrome;
+//   --skip-sections=<s_index list> drops those body bands; --only-sections=<list> keeps ONLY those.
+//   (s_index = the section number shown in conversion-report.csv.) Re-importing then leaves the
+//   parts you already accepted untouched.
 // • If a site fails (e.g. a flaky network), it writes <site>/error.txt and the queue CONTINUES.
 import { chromium } from 'playwright-core';
 import { writeFileSync, mkdirSync, readFileSync } from 'fs';
@@ -40,6 +45,14 @@ const FIDELITY = _flags.includes('--fidelity') || process.env.FIDELITY === '1';
 // inbox), an explicit per-run consent. See docs/report-sharing.md. `--share` implies building the preview.
 const SHARE = _flags.includes('--share') || process.env.UPW_SHARE === '1';
 const SHARE_PREVIEW = SHARE || _flags.includes('--share-preview') || process.env.UPW_SHARE_PREVIEW === '1';
+// Preserve QA'd parts on a RE-RUN: skip the header/footer chrome, or keep/drop specific body sections
+// (by the s_index shown in the conversion report). e.g. `--skip-header --skip-sections=0,2` or
+// `--only-sections=1,3` — so a re-convert only touches the parts you still want reconverted.
+const SKIP_HEADER = _flags.includes('--skip-header') || process.env.UPW_SKIP_HEADER === '1';
+const SKIP_FOOTER = _flags.includes('--skip-footer') || process.env.UPW_SKIP_FOOTER === '1';
+const _intList = (name) => { const f = _flags.find((x) => x.startsWith(name + '=')); return f ? f.slice(name.length + 1).split(',').map((n) => parseInt(n.trim(), 10)).filter((n) => !Number.isNaN(n)) : null; };
+const SKIP_SECTIONS = _intList('--skip-sections'); // drop these s_index sections
+const ONLY_SECTIONS = _intList('--only-sections'); // keep ONLY these s_index sections
 const baseOutdir = _pos.find((p) => !isUrl(p)) || 'capture-out';
 let urls = _pos.filter(isUrl);
 const listFlag = _flags.find((f) => f.startsWith('--list='));
@@ -52,7 +65,7 @@ if (listFlag) {
 // de-dupe, preserve order
 urls = [...new Set(urls)];
 if (!urls.length) {
-  console.error('usage: node capture.mjs <url> [url2 …] [base-outdir] [--report-only] [--fidelity] [--list=urls.txt] [--share-preview] [--share]');
+  console.error('usage: node capture.mjs <url> [url2 …] [base-outdir] [--report-only] [--fidelity] [--list=urls.txt] [--share-preview] [--share] [--skip-header] [--skip-footer] [--skip-sections=0,2] [--only-sections=1]');
   process.exit(1);
 }
 
@@ -257,6 +270,24 @@ async function captureOne(browser, srcUrl, baseDir, reportOnly) {
       if (typeof home.chrome.footer_copyright === 'string') { home.chrome.footer_copyright = relinkInternal(home.chrome.footer_copyright, pageMap); }
     }
     captures.forEach((c) => { (c.capture.sections || []).forEach((s) => { if (s.rawHtml) s.rawHtml = relinkInternal(s.rawHtml, pageMap); }); });
+
+    // 3b) SKIP FLAGS — preserve QA'd parts on a re-run. Drop skipped body sections (by s_index) and
+    // blank skipped header/footer chrome, so the emitted bundle + report carry only what you asked to
+    // reconvert. (Re-import then leaves the parts you already accepted untouched.)
+    if (SKIP_SECTIONS || ONLY_SECTIONS || SKIP_HEADER || SKIP_FOOTER) {
+      captures.forEach((c) => {
+        c.capture.sections = (c.capture.sections || []).filter((_, i) =>
+          ONLY_SECTIONS ? ONLY_SECTIONS.includes(i) : (SKIP_SECTIONS ? !SKIP_SECTIONS.includes(i) : true));
+      });
+      if (home.chrome && SKIP_HEADER) { home.chrome.header_html = ''; home.chrome.nav_tree = []; home.chrome.logo = null; home.chrome.header_skipped = true; }
+      if (home.chrome && SKIP_FOOTER) { home.chrome.footer_html = ''; home.chrome.footer_cols = []; home.chrome.footer_copyright = ''; home.chrome.footer_skipped = true; }
+      const parts = [];
+      if (ONLY_SECTIONS) parts.push('only sections ' + ONLY_SECTIONS.join(','));
+      else if (SKIP_SECTIONS) parts.push('skip sections ' + SKIP_SECTIONS.join(','));
+      if (SKIP_HEADER) parts.push('skip header');
+      if (SKIP_FOOTER) parts.push('skip footer');
+      step('skip flags → ' + parts.join(' · '));
+    }
 
     // 4) Theme + style guide + builder pages.
     step('building theme, pages & conversion report…');
