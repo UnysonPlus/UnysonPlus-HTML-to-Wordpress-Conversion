@@ -1,0 +1,4 @@
+node capture.mjs "file:///D:/Web Dev/test-sites/stitch_auralis_saas_landing_page/code.html"
+
+
+auto-run capture on upload.

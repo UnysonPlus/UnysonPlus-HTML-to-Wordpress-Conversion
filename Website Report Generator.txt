@@ -1,0 +1,17 @@
+cd "tools\design-capture"
+npm install
+
+
+Capture Test Site
+node capture.mjs https://example.com out/example
+
+
+node capture.mjs https://themewagon.github.io/Mentor/
+
+
+
+node capture.mjs https://scandi-haven-shop.lovable.app/ https://paper-light-insights.lovable.app/ https://cloud-calm-suite.lovable.app/ https://tranquil-treks-reserve.lovable.app/ https://warm-structure-hub.lovable.app/ https://webflow-to-wonder.lovable.app/ https://aquafix-flow.lovable.app/ https://amiable-arc-archive.lovable.app/ https://lab-lore.lovable.app/ https://swift-build-cost.lovable.app/ https://kind-echo-share.lovable.app/ https://cozy-gleam-logic.lovable.app/ https://creator-launchpad-68.lovable.app/ https://huggy-data-play.lovable.app/ https://nimble-event-hub.lovable.app/ https://open-page-base.lovable.app/ https://glee-flow-garden.lovable.app/ https://cozy-app-harmony.lovable.app/ https://happy-hugs-handbook.lovable.app/ https://sweet-smile-bot.lovable.app/ https://hug-friendly-files.lovable.app/ https://caring-code-haven.lovable.app/ https://goodcause-auctions.lovable.app/
+
+
+
+node capture.mjs https://happy-paws-hub-38.lovable.app/ https://tailwaggers-wag-central.lovable.app/ https://sweet-link-zone.lovable.app/ https://wagging-whiskers-haven.lovable.app/ https://pet-stay-pro.lovable.app/ https://pawpalace-hub.lovable.app/ https://waggle-cam-care.lovable.app/ https://meadowbrook-creations.lovable.app/ https://pamperpals-hub.lovable.app/ https://soft-hug-network.lovable.app/ https://daily-beacon-link.lovable.app/ https://vital-trade-news.lovable.app/ https://insight-flow-982.lovable.app/ https://sweet-dev-llama.lovable.app/ https://daily-neighbor.lovable.app/ https://dear-dream-forge.lovable.app/ https://pixel-mate-engine.lovable.app/
