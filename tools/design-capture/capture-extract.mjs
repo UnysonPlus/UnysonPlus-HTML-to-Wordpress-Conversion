@@ -211,18 +211,36 @@ export function extractDesign() {
   const bodyCS = getComputedStyle(document.body);
 
   // --- header chrome ---
+  // A full-viewport <header> that holds the H1 + CTA (openhero-style: `<header class="min-h-screen">`,
+  // with the real nav in a SEPARATE <nav>) is a HERO band, not the site masthead. Tell them apart:
+  // a masthead is short and nav-like; a hero is tall (~min-h-screen) with a big heading and is not a
+  // dense link bar. Used both to pick the right chrome element AND to let a hero header become a body
+  // section below (so its H1/subtitle/CTA aren't lost as "chrome").
+  const _vh = window.innerHeight || 800;
+  const isHeroHeader = (el) => {
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    if (r.height < _vh * 0.6) return false;                       // masthead-height → not a hero
+    if (!el.querySelector('h1, h2')) return false;                // a hero leads with a big heading
+    const navLinks = [...el.querySelectorAll('a, button')].filter((a) => { const t = a.textContent.trim(); return t && t.length < 30; });
+    return !(r.height <= 200 && navLinks.length >= 3);            // a short dense link bar is a nav, not a hero
+  };
   let headerEl = document.querySelector('header') || document.querySelector('[role=banner]');
-  if (!headerEl) {
-    // SPA sites (Lovable / v0 / React) often skip <header> — the nav is a top-pinned bar.
-    // Fall back to a <nav> (or navbar/header-classed element) at the very top of the page,
-    // full-ish width, with ≥2 links/buttons. Pick the topmost such bar.
+  const _heroAsHeader = isHeroHeader(headerEl);
+  if (!headerEl || _heroAsHeader) {
+    // SPA sites (Lovable / v0 / React) often skip <header> — the nav is a top-pinned bar. Also used
+    // when the first <header> is really a hero: find the SEPARATE top nav bar and use IT as the
+    // masthead. Topmost <nav>/navbar-classed element at the very top, full-ish width, ≥2 links/buttons.
     const cands = [...document.querySelectorAll('nav, [class*="navbar" i], [class*="header" i]')];
-    headerEl = cands
+    const navBar = cands
       .map((el) => ({ el, r: el.getBoundingClientRect() }))
       .filter(({ el, r }) => r.top <= 8 && r.height > 0 && r.height <= 130 && r.width >= 300
         && el.querySelectorAll('a, button').length >= 2)
       .sort((a, b) => a.r.top - b.r.top)
       .map(({ el }) => el)[0] || null;
+    // Only swap away from a hero header when a DISTINCT masthead nav exists (not one nested inside the
+    // hero). Otherwise keep the original (a header that bundles its own nav stays chrome, as before).
+    if (navBar && (!headerEl || !headerEl.contains(navBar))) headerEl = navBar;
   }
   let header = null;
   if (headerEl) {
@@ -314,6 +332,15 @@ export function extractDesign() {
   // --- body sections (full block model for the "copy the whole thing" path) ---
   const main = document.querySelector('main') || document.body;
   const sectionEls = [...main.querySelectorAll(':scope > section, :scope > div > section, :scope > div > div > section')].slice(0, 40);
+  // A hero rendered as a top-level <header> (not the chosen masthead) is real body content, not chrome
+  // — fold it into the section list in DOM order so its H1/subtitle/CTA convert like any other band.
+  const heroEls = [...document.querySelectorAll('header')].filter((el) => el !== headerEl && isHeroHeader(el));
+  for (const h of heroEls) {
+    if (!sectionEls.includes(h)) {
+      const at = sectionEls.findIndex((s) => (h.compareDocumentPosition(s) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0);
+      if (at === -1) sectionEls.push(h); else sectionEls.splice(at, 0, h);   // keep document order
+    }
+  }
   const sections = sectionEls.map((sec) => {
     const heading = sec.querySelector('h1,h2,h3');
     const cards = collectCards(sec);
@@ -647,18 +674,30 @@ export function extractDesign() {
   // An "icon card" inside a grid cell (icon + heading + text [+ link]) → maps to an icon_box.
   // Returns null when the cell isn't a card, so the cell falls back to a verbatim code-block.
   const cardOf = (cell) => {
-    const wrap = cell.firstElementChild || cell;            // e.g. <div class="about-item">
-    const iconEl = wrap.querySelector('i[class], svg');
+    // The card body is EITHER a single inner wrapper holding everything (e.g. <div class="about-item">),
+    // OR the cell itself with the icon-chip / heading / text as SIBLING direct children (the common
+    // Tailwind pattern: <div class="card"><div>[icon]</div><h3>…</h3><p>…</p></div>). Use the inner
+    // wrapper only when it actually contains the heading; otherwise fall back to the cell — else
+    // `firstElementChild` grabs just the icon-chip (no heading) and the card is missed → code_block.
+    const inner = cell.firstElementChild;
+    const wrap = (inner && inner.querySelector('h1,h2,h3,h4,h5,h6')) ? inner : cell;
+    // Icon = a font-icon <i>, an inline <svg>, an iconify web component (<iconify-icon icon="lucide:zap">),
+    // a material-symbol span, or any [class*=icon] glyph.
+    const iconEl = wrap.querySelector('svg, iconify-icon, i[class], [class*="icon" i], .material-symbols-outlined, .material-icons');
     const h = wrap.querySelector('h1,h2,h3,h4,h5,h6');
     if (!iconEl || !h) return null;                          // needs at least an icon + a heading
     const p = wrap.querySelector('p');
     const link = wrap.querySelector('a[href]');
-    let icon = '', customIcon = '';
-    if (iconEl.tagName === 'I') {
+    let icon = '', customIcon = '', lucide = '';
+    const iconTag = (iconEl.tagName || '').toLowerCase();
+    const iconAttr = String((iconEl.getAttribute && iconEl.getAttribute('icon')) || '');   // iconify's icon="pack:name"
+    if (/^lucide:/i.test(iconAttr)) {
+      lucide = iconAttr.replace(/^lucide:/i, '').trim();     // native Lucide → icon_box library icon (icon-v2)
+    } else if (iconTag === 'i') {
       icon = String(iconEl.className || '').split(/\s+/).filter(
         (c) => /^(ti-|fa[bsrl]?$|fa-|bi$|bi-|icon-|dashicons|glyphicon|material-icons)/i.test(c)
       ).join(' ');
-    } else if (iconEl.tagName === 'svg') {
+    } else if (iconTag === 'svg') {
       customIcon = iconEl.outerHTML;                          // icon_box custom_icon accepts inline SVG
     }
     // Detect the icon's position GEOMETRICALLY (no need for the source to "know" about icon
@@ -689,13 +728,43 @@ export function extractDesign() {
       else if (/^#[0-9a-f]{3,8}$/i.test(rc.trim())) { iconColor = rc.trim(); }
     } catch { /* no color */ }
     return {
-      icon, customIcon, iconLayout, iconColor,
+      icon, customIcon, lucide, iconLayout, iconColor,
       title: clip(txt(h), 160),
       titleTag: h.tagName.toLowerCase(),
       text: p ? rawHtmlOf(p, true) : '',
       link: link ? { label: clip(txt(link), 60), href: abs(link.getAttribute('href') || '') } : null,
       cls: String(wrap.className || ''),                      // the card wrapper class (.about-item …) → icon_box css_class
     };
+  };
+  // A single <a>/<button> styled as a button → the `button` block shape (same fields the block-level
+  // scan emits at line ~976), so the button-group cell detector and the block scan stay consistent.
+  const buttonInfo = (child) => {
+    const label = clip(txt(child), 80);
+    if (!label) return null;
+    const bcs = getComputedStyle(child);
+    const iconEl = child.querySelector('i, svg, [class*="fa-"], [class*="icon-"]');
+    let icon = '', iconPos = 'after';
+    if (iconEl && iconEl.className && iconEl.className.toString) {
+      icon = iconEl.className.toString().split(/\s+/).filter(
+        (c) => /^(fa[bsrl]?$|fa-|bi$|bi-|icon$|icon-|ti$|ti-|ion$|ion-|dashicons|glyphicon|material-icons)/i.test(c)
+      ).join(' ');
+      iconPos = (child.lastElementChild === iconEl) ? 'after' : 'before';
+    }
+    return { t: 'button', label, href: abs(child.getAttribute('href') || ''), tag: child.tagName.toLowerCase(),
+      cls: String(child.className || ''), align: (bcs.textAlign || 'left'), icon, iconPos,
+      bs: { bg: bcs.backgroundColor, fg: bcs.color, bd: bcs.borderTopColor, bds: bcs.borderTopStyle } };
+  };
+  // A grid cell that is ONLY call-to-action buttons (no heading/prose) → an array of button blocks
+  // (a CTA button group), so it maps to real button shortcodes instead of a verbatim code_block.
+  const buttonsOf = (cell) => {
+    if (cell.querySelector('h1,h2,h3,h4,h5,h6')) return null;      // a heading → it's a card, not a button group
+    const btns = [...cell.querySelectorAll('a,button,[role="button"]')].filter((b) => looksButton(b) && txt(b).trim());
+    const outer = btns.filter((b) => !btns.some((o) => o !== b && o.contains(b))); // drop nested (a wrapping a span)
+    if (!outer.length) return null;
+    const prose = txt(cell).replace(/\s+/g, ' ').trim().length;    // require the cell be dominated by button labels
+    const btnLen = outer.map((b) => txt(b).trim().length).reduce((a, n) => a + n, 0);
+    if (prose > btnLen + 24) return null;
+    return outer.map(buttonInfo).filter(Boolean);
   };
   // Find a nested row within a cell (the page-builder can't nest a builder row in a column, so a
   // grid-inside-a-column is mapped to a single column whose cards lay out as a CSS grid).
@@ -801,7 +870,11 @@ export function extractDesign() {
         cell.counter = counterOf(c);                            // animated stat counter
         if (!cell.counter) {
           cell.card = cardOf(c);                                // single icon card
-          if (!cell.card) { const t = textBlockOf(c); if (t) cell.text = t; } // else a text cell
+          if (!cell.card) {
+            const b = buttonsOf(c);                             // a CTA button group?
+            if (b && b.length) { cell.buttons = b; }
+            else { const t = textBlockOf(c); if (t) cell.text = t; } // else a text cell
+          }
         }
       }
       return cell;
@@ -911,8 +984,16 @@ export function extractDesign() {
       if (!src && (stype === 'video/mp4' || /\.mp4(\?|$)/i.test(ss))) src = ss;
     }
     if (!src && !webm) return null;
+    // A full-screen BACKGROUND <video> (absolutely/fixed positioned + object-cover, i.e. the hero clip
+    // that sits BEHIND the content) is flagged `bg` so the mapper wires it into the SECTION background
+    // instead of emitting a content media_video block. (The class check catches Tailwind object-cover /
+    // inset-0 even when computed objectFit is unavailable.)
+    const vcs = getComputedStyle(el);
+    const bgVideo = (vcs.position === 'absolute' || vcs.position === 'fixed')
+      && (vcs.objectFit === 'cover' || /\b(object-cover|inset-0)\b/.test(el.getAttribute('class') || ''));
     return {
       t: 'video', mode: 'self_hosted', src: abs(src), webm: abs(webm), poster: abs(el.getAttribute('poster') || ''),
+      bg: bgVideo,
       autoplay: el.hasAttribute('autoplay') ? 'yes' : 'no', muted: el.hasAttribute('muted') ? 'yes' : 'no',
       loop: el.hasAttribute('loop') ? 'yes' : 'no', controls: el.hasAttribute('controls') ? 'yes' : 'no',
       playsinline: el.hasAttribute('playsinline') ? 'yes' : 'no',
@@ -923,6 +1004,14 @@ export function extractDesign() {
       const vblk = videoBlockOf(child);          // before SKIP: provider IFRAMEs are otherwise skipped
       if (vblk) { out.push(vblk); continue; }
       if (SKIP_TAGS.has(child.tagName) || !visibleEl(child)) continue;
+      // Purely DECORATIVE chrome (a glow blob / gradient overlay): no text, no media/interactive
+      // descendants, AND it's out of flow (absolute/fixed) or non-interactive (pointer-events:none /
+      // aria-hidden). Drop it rather than emit an empty code_block — it's a background flourish, not
+      // content. (The section still captures its own background via sectionComputed.)
+      if (!txt(child).trim() && !child.querySelector('img,svg,video,iframe,picture,canvas,input,button,a[href]')) {
+        const dcs = getComputedStyle(child);
+        if (dcs.position === 'absolute' || dcs.position === 'fixed' || dcs.pointerEvents === 'none' || child.getAttribute('aria-hidden') === 'true') continue;
+      }
       const tag = child.tagName;
       const cls = (child.className && child.className.toString) ? child.className.toString() : '';
       // A testimonials collection → one `testimonials` block (content only; design not preserved).

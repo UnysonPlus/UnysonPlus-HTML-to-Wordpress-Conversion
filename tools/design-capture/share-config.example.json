@@ -1,0 +1,11 @@
+{
+  "_comment": "Copy this file to share-config.json (which is gitignored) and fill in the Google Form details from docs/report-sharing.md. Only `responseUrl` + `fields.payload` are required; `fields.summary` is optional. Until a form is configured, `--share` falls back to a mailto: draft to `email`.",
+  "email": "unysonplus@gmail.com",
+  "form": {
+    "responseUrl": "https://docs.google.com/forms/d/e/REPLACE_WITH_FORM_ID/formResponse",
+    "fields": {
+      "payload": "entry.REPLACE_WITH_PAYLOAD_FIELD_ID",
+      "summary": "entry.REPLACE_WITH_SUMMARY_FIELD_ID"
+    }
+  }
+}

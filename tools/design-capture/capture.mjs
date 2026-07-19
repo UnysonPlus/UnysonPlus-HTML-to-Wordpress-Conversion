@@ -11,6 +11,7 @@
 // • If a site fails (e.g. a flaky network), it writes <site>/error.txt and the queue CONTINUES.
 import { chromium } from 'playwright-core';
 import { writeFileSync, mkdirSync, readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
 import { toDesignConfig } from './to-design-config.mjs';
 import { toPages } from './to-pages.mjs';
 import { toStyleGuide } from './to-styleguide.mjs';
@@ -20,6 +21,10 @@ import { makeZip } from './minimal-zip.mjs';
 import { extractDesign } from './capture-extract.mjs';
 import { toReport } from './to-report.mjs';
 import { toStyleReport } from './to-style-report.mjs';
+import { sanitizeReport, postToForm, buildMailto, loadShareConfig } from './to-share.mjs';
+
+const SCRIPT_DIR = fileURLToPath(new URL('.', import.meta.url));
+const PKG_VERSION = (() => { try { return JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).version || ''; } catch { return ''; } })();
 
 // --- Args -------------------------------------------------------------------
 const _args = process.argv.slice(2);
@@ -30,6 +35,11 @@ const REPORT_ONLY = _flags.includes('--report-only') || process.env.REPORT_ONLY 
 // --fidelity: prefer VERBATIM mirroring for every section (max design fidelity, less granular
 // editing) instead of decomposing into shortcodes — for design-heavy / Tailwind / SPA sources.
 const FIDELITY = _flags.includes('--fidelity') || process.env.FIDELITY === '1';
+// Opt-in report sharing (default OFF). `--share-preview` builds the anonymized share-report.json so you
+// can inspect exactly what WOULD be sent; `--share` also submits it (Google Form → Sheet → the project
+// inbox), an explicit per-run consent. See docs/report-sharing.md. `--share` implies building the preview.
+const SHARE = _flags.includes('--share') || process.env.UPW_SHARE === '1';
+const SHARE_PREVIEW = SHARE || _flags.includes('--share-preview') || process.env.UPW_SHARE_PREVIEW === '1';
 const baseOutdir = _pos.find((p) => !isUrl(p)) || 'capture-out';
 let urls = _pos.filter(isUrl);
 const listFlag = _flags.find((f) => f.startsWith('--list='));
@@ -42,7 +52,7 @@ if (listFlag) {
 // de-dupe, preserve order
 urls = [...new Set(urls)];
 if (!urls.length) {
-  console.error('usage: node capture.mjs <url> [url2 …] [base-outdir] [--report-only] [--fidelity] [--list=urls.txt]');
+  console.error('usage: node capture.mjs <url> [url2 …] [base-outdir] [--report-only] [--fidelity] [--list=urls.txt] [--share-preview] [--share]');
   process.exit(1);
 }
 
@@ -307,6 +317,30 @@ async function captureOne(browser, srcUrl, baseDir, reportOnly) {
     writeFileSync(`${outdir}/style-coverage.csv`, styleReport.csv);
     writeFileSync(`${outdir}/style-coverage.html`, styleReport.html);
     step('reports → conversion-report + style-coverage (csv/html)');
+
+    // Opt-in, anonymized report sharing (structural only — no URL/content/PII). Default OFF: nothing is
+    // built or sent unless the developer explicitly passes --share-preview / --share.
+    if (SHARE_PREVIEW) {
+      const sanitized = sanitizeReport({ input: { url: srcUrl, pages: reportPages }, stats: report.stats, converterVersion: PKG_VERSION });
+      writeFileSync(`${outdir}/share-report.json`, JSON.stringify(sanitized, null, 2));
+      step('share: wrote anonymized share-report.json (structural only — no URLs/content) — inspect before sending');
+      if (SHARE) {
+        const cfg = loadShareConfig(SCRIPT_DIR);
+        if (cfg.form && cfg.form.responseUrl) {
+          try {
+            const r = await postToForm(sanitized, cfg);
+            step(r.ok ? 'share: submitted upstream via Google Form ✓ — thank you' : `share: Form POST failed (status ${r.status}); use the mailto draft instead:`);
+            if (!r.ok) console.log('   ', buildMailto(sanitized, cfg));
+          } catch (e) {
+            step('share: could not reach the Google Form (' + e.message + '); use the mailto draft instead:');
+            console.log('   ', buildMailto(sanitized, cfg));
+          }
+        } else {
+          step('share: no Google Form configured yet (copy share-config.example.json → share-config.json). Email it instead:');
+          console.log('   ', buildMailto(sanitized, cfg));
+        }
+      }
+    }
 
     if (reportOnly) {
       step('--report-only: skipped bundle, intermediate JSONs & screenshot');

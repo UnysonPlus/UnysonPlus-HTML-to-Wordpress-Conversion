@@ -232,7 +232,11 @@ export function toPages(capture, opts = {}) {
       content += '<p><a href="' + esc(localize(card.link.href || '#')) + '">' + esc(String(card.link.label).trim()) + '</a></p>';
     }
     a.content = content;
-    if (card.customIcon) { a.custom_icon = String(card.customIcon); }
+    if (card.lucide && a.icon && typeof a.icon === 'object') {
+      // Native Lucide (e.g. <iconify-icon icon="lucide:zap">) → icon_box library icon (icon-v2 SVG source).
+      a.icon = { ...a.icon, type: 'svg', 'svg-source': 'library', 'svg-id': 'lucide/' + card.lucide };
+    }
+    else if (card.customIcon) { a.custom_icon = String(card.customIcon); }
     else if (card.icon) { a.icon = iconValue(card.icon); }
     a.style = IB_STYLES.indexOf(card.iconLayout) !== -1 ? card.iconLayout : 'top-title';
     const ic = String(card.iconColor || '').trim();
@@ -294,6 +298,7 @@ export function toPages(capture, opts = {}) {
       if (sec.css && sec.css.trim()) s.atts.custom_css = flattenCss(sec.css);
     }
     const items = []; let buf = [];
+    let needBtnRowCss = false;
     const flush = () => { if (buf.length) { items.push(column('1_1', buf)); buf = []; } };
     for (const b of sec.blocks) {
       if (b.t === 'row') {
@@ -310,6 +315,9 @@ export function toPages(capture, opts = {}) {
             if (lbl) { cellItems.push(textBlock('<p>' + esc(lbl) + '</p>')); }
           } else if (c.card) {
             detected = 'card'; why = 'card → icon_box'; cellItems = [iconBoxNode(c.card)];
+          } else if (c.buttons && c.buttons.length) {
+            detected = 'buttons'; why = 'button group → button(s)';
+            cellItems = c.buttons.map((bt) => buttonBlockNode(bt));
           } else if (c.text) {
             detected = 'text'; why = 'text cell → text_block'; cellItems = [textBlock(c.html)];
           } else if (c.grid) {
@@ -321,7 +329,16 @@ export function toPages(capture, opts = {}) {
           rec({ kind: 'element', sIndex, role: 'row-cell', detected, shortcode: sc, why, width: c.width,
                 sourceClass: c.cls || '', text: snip(c.html), textFull: snipFull(c.html), html: rawCap(c.html),
                 fallback: sc === 'code_block', opportunity: false });
-          items.push(column(c.width, cellItems));
+          const col = column(c.width, cellItems);
+          // Two+ buttons in one cell would STACK (a builder column is flex-column); wrap them in a
+          // flex-row `.btn-row` inner wrapper so the CTA group sits side-by-side (mirrors the PHP
+          // mapper's btn_row_class). The rule is appended to the section's Custom CSS below.
+          if (detected === 'buttons' && cellItems.length > 1 && col.atts) {
+            col.atts.inner_class = 'btn-row';
+            col.atts.content_h = 'center';
+            needBtnRowCss = true;
+          }
+          items.push(col);
         }
       } else {
         const node = blockToNode(b);
@@ -341,6 +358,11 @@ export function toPages(capture, opts = {}) {
       }
     }
     flush();
+    if (needBtnRowCss && s.atts) {
+      // Self-contained flex-row rule for the CTA button group (matches PHP btn_row_class()).
+      const btnRow = '.btn-row{display:flex;gap:1rem;justify-content:center;align-items:center;flex-wrap:wrap;}.btn-row>.btn,.btn-row>a{flex:0 0 auto;width:auto;}';
+      s.atts.custom_css = (s.atts.custom_css ? s.atts.custom_css + '\n' : '') + btnRow;
+    }
     s._items = items.length ? items : [column('1_1', [codeBlock(sec.rawHtml || '')])];
     return s;
   };

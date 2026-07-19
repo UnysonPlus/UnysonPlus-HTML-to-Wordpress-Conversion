@@ -37,7 +37,7 @@ const VERSION = (() => { try { return JSON.parse(readFileSync(new URL('./package
  * localhost/offline user is never blocked. (Notify only — does NOT auto-update
  * unless AUTO_UPDATE=1; see maybeAutoUpdate.)
  * -------------------------------------------------------------------------- */
-const RAW_PKG = 'https://raw.githubusercontent.com/UnysonPlus/UnysonPlus-HTML-to-Wordpress-Conversion/master/tools/design-capture/package.json';
+const RAW_PKG = 'https://raw.githubusercontent.com/UnysonPlus/UnysonPlus-Capture-Service/master/tools/design-capture/package.json';
 let latestVersion = null;          // newest version seen on GitHub (null = unknown/offline)
 let lastChecked = 0;
 const CHECK_TTL = 60 * 60 * 1000;  // re-check at most hourly

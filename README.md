@@ -40,7 +40,7 @@ Easiest: on the GitHub page, click the green **Code** button → **Download ZIP*
 anywhere (e.g. your Desktop). **Or**, if you have Git installed, open a terminal and run:
 
 ```bash
-git clone https://github.com/UnysonPlus/UnysonPlus-HTML-to-Wordpress-Conversion.git
+git clone https://github.com/UnysonPlus/UnysonPlus-Capture-Service.git
 ```
 
 ### Step 2 — Open a terminal *in the service folder*

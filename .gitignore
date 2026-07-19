@@ -6,6 +6,17 @@ capture-out/
 **/capture-out/
 *.log
 
+# Local report-sharing config (Google Form ids) — never committed; copy from share-config.example.json
+share-config.json
+**/share-config.json
+
+# Maintainer-side report aggregation (local state + generated output + downloaded responses)
+.reports-watermark.json
+**/.reports-watermark.json
+reports-todo.md
+**/reports-todo.md
+responses*.csv
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db
