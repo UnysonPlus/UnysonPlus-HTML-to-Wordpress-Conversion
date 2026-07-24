@@ -331,7 +331,15 @@ export function extractDesign() {
 
   // --- body sections (full block model for the "copy the whole thing" path) ---
   const main = document.querySelector('main') || document.body;
-  const sectionEls = [...main.querySelectorAll(':scope > section, :scope > div > section, :scope > div > div > section')].slice(0, 40);
+  // Body bands = the OUTERMOST <section>s anywhere under main, at any nesting depth. (This used to
+  // be a hardcoded 3-level selector — `:scope > section, :scope > div > section,
+  // :scope > div > div > section` — which silently matched NOTHING on the very common WordPress
+  // wrapper chain `main > article > div.entry-content > div > section`, converting such pages to an
+  // empty page. Depth-agnostic + outermost-only keeps nested sections from double-counting.)
+  const allSections = [...main.querySelectorAll('section')];
+  const sectionEls = allSections
+    .filter((s) => !allSections.some((o) => o !== s && o.contains(s)))
+    .slice(0, 40);
   // A hero rendered as a top-level <header> (not the chosen masthead) is real body content, not chrome
   // — fold it into the section list in DOM order so its H1/subtitle/CTA convert like any other band.
   const heroEls = [...document.querySelectorAll('header')].filter((el) => el !== headerEl && isHeroHeader(el));

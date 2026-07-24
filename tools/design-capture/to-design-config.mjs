@@ -21,7 +21,10 @@ export function toDesignConfig(cap) {
   const origin = originOf(cap.url || '');
 
   const headingFace = head.logo?.computed?.fontFamily
-    || (cap.sections || []).find((s) => s.headingComputed?.fontFamily)?.headingComputed?.fontFamily || '';
+    || (cap.sections || []).find((s) => s.headingComputed?.fontFamily)?.headingComputed?.fontFamily
+    // Fallback: the page-wide heading sample (set by the brand-token sampler) — the only source
+    // on a scroll-hijacked page, where there are no in-flow sections to read a heading from.
+    || cap.baseHeading?.fontFamily || '';
   const headingFont = firstFamily(headingFace);
   const bodyFont = firstFamily(body.fontFamily);
 

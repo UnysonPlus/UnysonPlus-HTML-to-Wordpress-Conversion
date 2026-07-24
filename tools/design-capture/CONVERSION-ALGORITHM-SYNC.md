@@ -61,6 +61,15 @@ The deterministic (**no‑AI**) converter — the logic that turns a source desi
 The **capture service's extraction is usually the more‑complete** one (it has a live DOM + computed
 styles, not just static HTML). When in doubt, make the PHP match the JS behavior.
 
+**…but not always — check both before assuming.** A real case (fixed in v1.7.47): body-band
+detection. The PHP `walk_section_roots()` was a correct depth‑agnostic DFS (dive through plain
+wrappers, claim the outermost `<section>`s), while the JS used a hardcoded 3‑level selector
+(`:scope > section, :scope > div > section, :scope > div > div > section`). That silently matched
+**nothing** on the very common WordPress chain `main > article > div.entry-content > div > section`,
+so such pages converted to an EMPTY page with no error. The JS now mirrors the PHP: query every
+`<section>` under `main` and keep only the outermost ones. **Lesson: when the two paths disagree,
+the more‑complete one is whichever is depth/structure‑agnostic — verify, don't assume it's the JS.**
+
 ## Checklist before finishing any conversion change
 
 - [ ] PHP file‑path engine updated (`class-fw-site-converter-*`).

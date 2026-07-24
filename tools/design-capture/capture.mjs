@@ -25,8 +25,10 @@ import { toThemeSettings } from './to-theme-settings.mjs';
 import { makeZip } from './minimal-zip.mjs';
 import { extractDesign } from './capture-extract.mjs';
 import { toReport } from './to-report.mjs';
+import { contrastReview, contrastReviewCsv } from './contrast.mjs';
 import { toStyleReport } from './to-style-report.mjs';
 import { sanitizeReport, postToForm, buildMailto, loadShareConfig } from './to-share.mjs';
+import { traceAnimations, animationReport, extractStoryScenes, stageSectionNode, applyMotionToPage, extractBrandTokens } from './to-animations.mjs';
 
 const SCRIPT_DIR = fileURLToPath(new URL('.', import.meta.url));
 const PKG_VERSION = (() => { try { return JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')).version || ''; } catch { return ''; } })();
@@ -113,6 +115,39 @@ async function evalSafe(p, fn, arg) {
     }
   }
   throw lastErr;
+}
+
+// Record an emitted Scroll Story in the conversion report using the report's OWN row kinds
+// (`section` + one `element` per scene leaf) — otherwise a fully-converted scroll-hijacked page
+// reads as "0 elements / 0 sections", which is both wrong and hides the emit from the
+// report-driven improvement workflow.
+function traceStory(trace, sIndex, node, scenes, story) {
+  const frames = story && story.seq ? story.seq.count : 0;
+  trace.push({
+    kind: 'section', sIndex,
+    decision: 'scroll-story (scrollytelling stage)',
+    sourceClass: 'fixed-overlay story',
+    height: 0,
+    note: frames ? `${frames} backdrop frames → Media Library (user-replaceable)` : 'no backdrop',
+  });
+  (node._items || []).forEach((col, ci) => {
+    const sc = scenes[ci] || {};
+    (col._items || []).forEach((leaf) => {
+      const atts = leaf.atts || {};
+      const text = String(atts.title || atts.label || atts.text || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      trace.push({
+        kind: 'element', sIndex,
+        role: 'scene-' + (ci + 1),
+        detected: sc.headings && sc.headings.length ? 'story scene (heading)' : 'story scene',
+        shortcode: leaf.shortcode,
+        fallback: false,
+        opportunity: false,
+        why: `scene ${ci + 1} of ${scenes.length} · ${story && story.sceneLen ? story.sceneLen : '?'} screens`,
+        sourceTag: 'div', sourceClass: 'fixed overlay',
+        text: text.slice(0, 160),
+      });
+    });
+  });
 }
 
 // Render a URL: navigate, let late CDN runtimes settle, scroll to trigger lazy assets, extract.
@@ -231,6 +266,24 @@ async function captureOne(browser, srcUrl, baseDir, reportOnly) {
   mkdirSync(outdir, { recursive: true });
   _t0 = Date.now();
   page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  // Log image requests from the very first navigation — frame sequences often preload during
+  // initial render, long before the animation tracer runs its own passes.
+  const _imgReqs = new Set();
+  page.on('request', (r) => { try { const u = r.url().split('?')[0]; if (/\.(webp|avif|jpe?g|png)$/i.test(u)) _imgReqs.add(u); } catch (e) {} });
+  // Delivered JS, kept for BUNDLED library detection: Nuxt/Next/Vite keep libs module-scoped, so
+  // `window.gsap` is undefined even when GSAP drives the page. Scanning the script bodies is the
+  // only reliable read of a modern site's animation stack. Capped so a huge app can't blow memory.
+  const _scriptBodies = [];
+  let _scriptBytes = 0;
+  page.on('response', async (r) => {
+    try {
+      const u = r.url();
+      if (!/\.m?js(\?|$)/i.test(u) || _scriptBytes > 12e6) { return; }
+      const t = await r.text();
+      _scriptBytes += t.length;
+      _scriptBodies.push(t);
+    } catch (e) { /* body unavailable (redirect/abort) — ignore */ }
+  });
   try {
     // 1) Home.
     const home = await renderPage(page, srcUrl);
@@ -248,6 +301,49 @@ async function captureOne(browser, srcUrl, baseDir, reportOnly) {
         });
       });
     });
+
+    // 1c) ANIMATION TRACER — detect the source's motion design (libraries, ScrollTrigger dump,
+    // CSS keyframes/hover diffs, scroll motion traces, frame sequences / scroll-hijack) and map it
+    // onto Animation Engine fx suggestions. URL-path only (needs the live runtime).
+    // 1b2) BRAND TOKENS from the rendered page. The normal extractors read in-flow `sections[]` +
+    // body styles; a scroll-hijacked page has neither, so its brand would fall back to seeded
+    // defaults. This samples what's actually painted (text runs + button fills incl. GRADIENTS) and
+    // backfills only the tokens that came up empty — so it never overrides a good extraction.
+    try {
+      const bt = await evalSafe(page, extractBrandTokens);
+      if (bt) {
+        home.tokens = home.tokens || {};
+        home.tokens.body = home.tokens.body || {};
+        const blankish = (v) => !v || /rgba?\(\s*0,\s*0,\s*0(,\s*0)?\s*\)/.test(String(v)) || String(v) === 'transparent';
+        if (blankish(home.tokens.brandColor) && bt.brandColor) { home.tokens.brandColor = bt.brandColor; }
+        if (blankish(home.tokens.body.color) && bt.bodyColor) { home.tokens.body.color = bt.bodyColor; }
+        if (!home.tokens.body.fontFamily && bt.bodyFont) { home.tokens.body.fontFamily = bt.bodyFont; }
+        if (blankish(home.tokens.body.backgroundColor) && bt.surface) { home.tokens.body.backgroundColor = bt.surface; }
+        home.baseHeading = home.baseHeading || {};
+        if (!home.baseHeading.fontFamily && bt.headingFont) { home.baseHeading.fontFamily = bt.headingFont; }
+        if (!home.baseHeading.color && bt.headingColor) { home.baseHeading.color = bt.headingColor; }
+        if (!home.baseHeading.weight && bt.headingWeight) { home.baseHeading.weight = bt.headingWeight; }
+        step(`brand tokens → heading=${bt.headingFont || '?'} · body=${bt.bodyFont || '?'} · brand=${bt.brandColor || '?'}`);
+      }
+    } catch (e) { step('brand-token sampling skipped: ' + e.message); }
+
+    step('tracing animations (libraries, hover, scroll motion)…');
+    let anim = null;
+    try {
+      anim = await traceAnimations(page, { log: (m) => step('  ' + m), knownImageUrls: _imgReqs, scriptBodies: _scriptBodies });
+      step(`animations → ${((anim && anim.suggestions) || []).length} finding(s)` +
+        (anim && anim.hijack && anim.hijack.virtualScroll ? ' · scroll-hijacked page detected' : ''));
+    } catch (e) { step('animation tracer skipped: ' + e.message); }
+    home.animations = anim;
+
+    // Scroll-hijacked page → extract the fixed full-screen overlays as STORY SCENES, so the emit
+    // phase can produce one editable scrollytelling STAGE section instead of an empty page.
+    if (anim && anim.hijack && anim.hijack.virtualScroll && anim.hijack.fixedFullscreenOverlays >= 2) {
+      try {
+        anim.scenes = await page.evaluate(extractStoryScenes);
+        step(`scroll story → ${(anim.scenes || []).length} scene(s) extracted from fixed overlays`);
+      } catch (e) { step('scene extraction skipped: ' + e.message); }
+    }
 
     // 2) Optional nav crawl (disabled).
     const extraUrls = MULTIPAGE ? navPageUrls(home, srcUrl) : [];
@@ -311,6 +407,39 @@ async function captureOne(browser, srcUrl, baseDir, reportOnly) {
       const pg = toPages(c.capture, { trace, fidelity: FIDELITY }).pages[0];
       pg.title = titleFor(c.capture, c.slug);
       pg.slug = c.slug; pg.status = 'publish'; pg.front_page = c.front;
+      if (c.front && anim) {
+        // Scroll-hijacked source: emit editable Scroll Story stage section(s). With a sampled
+        // TIMELINE, each story stretch (scene run + its ride's backdrop + real pacing) becomes its
+        // own section — matching the source's choreography. Without one, fall back to a single
+        // section with the longest sequence as backdrop.
+        if ((anim.scenes || []).length && pg.builder.length === 0) {
+          const byOv = new Map(anim.scenes.filter((s) => s.ov != null).map((s) => [s.ov, s]));
+          if (anim.timeline && anim.timeline.stories.length && byOv.size) {
+            let emitted = 0;
+            anim.timeline.stories.forEach((story) => {
+              const scs = story.scenes.map((s) => byOv.get(s.ov)).filter(Boolean);
+              if (!scs.length) return;
+              const node = stageSectionNode(scs, story.seq, story.sceneLen);
+              pg.builder.push(node);
+              traceStory(trace, emitted, node, scs, story);
+              emitted++;
+            });
+            if (emitted) { step(`scroll story → emitted ${emitted} timed stage section(s) from the sampled timeline`); }
+          }
+          if (pg.builder.length === 0) {
+            const seq = (anim.sequences || []).slice().sort((a, b) => b.count - a.count)[0] || null;
+            const node = stageSectionNode(anim.scenes, seq);
+            pg.builder.push(node);
+            traceStory(trace, 0, node, anim.scenes, { seq, sceneLen: 1.5 });
+            step(`scroll story → emitted 1 stage section (${anim.scenes.length} scenes${seq ? ' + sequence backdrop' : ''})`);
+          }
+        }
+        // Motion profile: stamp detected reveal/hover/smooth-scroll fx onto the emitted nodes.
+        const applied = applyMotionToPage(pg, anim);
+        if (applied && (applied.reveal || applied.button || applied.card)) {
+          step(`motion profile → reveal×${applied.reveal} · button-hover×${applied.button} · card-hover×${applied.card}`);
+        }
+      }
       reportPages.push({ slug: c.slug, front: c.front, trace });
       return pg;
     });
@@ -328,6 +457,19 @@ async function captureOne(browser, srcUrl, baseDir, reportOnly) {
     // 5) Media + style guide + presets + mapping.
     const mediaSet = new Set();
     captures.forEach((c) => (c.capture.assets.images || []).forEach((u) => mediaSet.add(u)));
+    // Harvest EVERY http(s) url the emitted builder trees reference (scroll-story backdrop frames,
+    // slide media_image, …) so the media phase sideloads them and the pages phase rewrites each to
+    // its local attachment — nothing the converted page needs stays hotlinked to the source.
+    const harvestUrls = (n) => {
+      if (Array.isArray(n)) { n.forEach(harvestUrls); return; }
+      if (n && typeof n === 'object') {
+        for (const [k, v] of Object.entries(n)) {
+          if (k === 'url' && typeof v === 'string' && /^https?:\/\//i.test(v)) mediaSet.add(v);
+          else harvestUrls(v);
+        }
+      }
+    };
+    builderPages.forEach((pg) => harvestUrls(pg.builder));
     const media = { urls: [...mediaSet] };
     const styleguide = { pages: [toStyleGuide(home, config)] };
     const presets = toPresets(config, home);
@@ -347,7 +489,25 @@ async function captureOne(browser, srcUrl, baseDir, reportOnly) {
     writeFileSync(`${outdir}/conversion-report.html`, report.html);
     writeFileSync(`${outdir}/style-coverage.csv`, styleReport.csv);
     writeFileSync(`${outdir}/style-coverage.html`, styleReport.html);
-    step('reports → conversion-report + style-coverage (csv/html)');
+    if (anim) {
+      const animRep = animationReport(anim, srcUrl);
+      writeFileSync(`${outdir}/animations.json`, JSON.stringify(anim, null, 2));
+      writeFileSync(`${outdir}/animation-report.csv`, animRep.csv);
+      writeFileSync(`${outdir}/animation-report.html`, animRep.html);
+    }
+    step('reports → conversion-report + style-coverage + animation-report (csv/html)');
+
+    // WCAG contrast review of the extracted BRAND palette. We flag low-contrast text/bg
+    // pairs + suggest a nearest-AA shade, but NEVER change the user's colors (their brand).
+    const contrastFindings = contrastReview(config, presets);
+    writeFileSync(`${outdir}/contrast-review.csv`, contrastReviewCsv(contrastFindings));
+    if (contrastFindings.length) {
+      step(`contrast → ${contrastFindings.length} low-contrast brand pair(s) flagged (see contrast-review.csv — colors NOT changed)`);
+      contrastFindings.forEach((f) =>
+        console.log(`    ⚠ ${f.label}: ${f.fg} on ${f.bg} = ${f.ratio}:1 (below AA)${f.suggestion ? ' — try ' + f.suggestion : ''}`));
+    } else {
+      step('contrast → brand palette passes AA (no low-contrast pairs)');
+    }
 
     // Opt-in, anonymized report sharing (structural only — no URL/content/PII). Default OFF: nothing is
     // built or sent unless the developer explicitly passes --share-preview / --share.

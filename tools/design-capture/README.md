@@ -127,6 +127,7 @@ The manual `capture.mjs` → upload-`.zip` path still works as a fallback.
 | `design-config.json` | The **theme** config (fonts, colors, header logo/menu/button styling, footer menu/social/copyright, background). | Unyson+ → Convert → **Generate header & footer theme** (Child or Standalone). |
 | `pages.json` | The **body** as an editable page-builder **Home page** (sections → `special_heading` / `text_block` / `icon_box` columns). | Unyson+ → Convert → **Import Pages** (or drop into a Convert bundle). |
 | `full.png`, `header.png` | Screenshots for reference. | — |
+| `animations.json` + `animation-report.csv/html` | The **animation tracer**'s findings — detected libraries (GSAP/ScrollTrigger dump, Lenis, Lottie, Three.js, Swiper, AOS), CSS keyframes + hover diffs, scroll motion traces (reveal/parallax/pin), numbered **frame sequences** (`…/%d.webp` pattern + count + start), and scroll-hijacked-page detection — each mapped to a suggested Animation Engine fx (`gsap_motion` reveal, hover `lift`/`scale`/`color_shift`, marquee, `image_sequence`, scrollytelling **stage** backdrop). | Review the report; the JSON is the machine-readable input for emitting fx on converted pages. **URL path only** — a static HTML file has no runtime to trace, so the PHP file-upload path intentionally has no equivalent (documented asymmetry, not drift). |
 
 ## Raw chrome — pixel-faithful header & footer
 
